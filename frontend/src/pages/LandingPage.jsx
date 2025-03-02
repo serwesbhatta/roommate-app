@@ -1,20 +1,18 @@
 
-import { Navbar } from '../components/layouts';
-
-
 const LandingPage = () => {
-
-  const menuItems = [
-    { label: 'Home', link: '/' },
-    { label: 'About', link: '/about' },
-    { label: 'Contact', link: '/contact' },
-  ];
-
   return (
     <div>
-      <Navbar title="My App" menuItems={menuItems} />
+      landing page
     </div>
   )
 }
 
 export default LandingPage
+
+
+// about us --> footer
+// help ---> footer
+
+// login
+// signup
+//logo 

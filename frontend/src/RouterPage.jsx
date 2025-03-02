@@ -2,12 +2,13 @@
 // import { UserDashboard, AdminDashboard } from './Container'
 // import {Login, Registration, NotFound} from './Components'
 
-import { LandingPage } from './pages';
+import { LandingPage, Login, Signup } from './pages';
 import { Routes, Route, useNavigate } from 'react-router-dom'
+
 
 const RouterPage = () => {
 
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
 //   useEffect(() => {
 
@@ -23,8 +24,9 @@ const RouterPage = () => {
   return (
     <Routes>
         <Route path="/" element={<LandingPage/>} />
-        {/* <Route path="/login" element={<Login/>} />
-        <Route path="/userDashboard/*" element={<UserDashboard/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<Signup/>} />
+          {/* <Route path="/userDashboard/*" element={<UserDashboard/>} />
         <Route path= "/adminDashboard/*" element={<AdminDashboard/>} />
         <Route path="*" element={<NotFound/>}/> */}
     </Routes>
