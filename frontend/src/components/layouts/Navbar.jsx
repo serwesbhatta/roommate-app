@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import Logo from "../../assets/logo.svg"
 import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 const CustomNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -11,12 +12,14 @@ const CustomNavbar = () => {
 
   // Check login status on page load
   useEffect(() => {
-    const logInUser = localStorage.getItem("LogInUserName");
-    const logInAdmin = localStorage.getItem("LogInAdminName");
+    // const logInUser = localStorage.getItem("LogInUserName");
+    // const logInAdmin = localStorage.getItem("LogInAdminName");
 
-    if (logInUser) setUserType("user");
-    else if (logInAdmin) setUserType("admin");
-    else setUserType(null);
+    // if (logInUser) setUserType("user");
+    // else if (logInAdmin) setUserType("admin");
+    // else setUserType(null);
+    setUserType("admin")
+
   }, []);
 
   // Logout function
@@ -31,7 +34,7 @@ const CustomNavbar = () => {
   const leftMenuItems = userType
     ? userType === "user"
       ? [{ label: "Home", path: "/" }, { label: "User Dashboard", path: "/userDashboard" }]
-      : [{ label: "Home", path: "/" }, { label: "Admin Dashboard", path: "/adminDashboard" }]
+      : [{ label: "Home", path: "/admin" }, { label: "Events", path: "/events" }, { label: "Notifications", path: "/notifications" }]
     : [{ label: "Home", path: "/" }, { label: "About Us", path: "/" }, { label: "Contact", path: "/" }];
 
   const rightMenuItems = userType

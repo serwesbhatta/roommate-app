@@ -1,10 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Typography, TextField, Button, Link, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginUser } from '../../redux/slices/userSlice';
 import Roomate from '../../assets/roommates.jpg';
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { token, role, error, status } = useSelector((state) => state.user);
+
+  // State for input values
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  // State for errors
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+    // Redirect after login
+    useEffect(() => {
+      if (token) {
+        if (role === 'admin') {
+          navigate('/admin'); 
+        } else {
+          navigate('/user'); 
+        }
+      }
+    }, [token, role, navigate]);
+
+  // Mock authentication function (replace with actual API call)
+  const handleSubmit = async () => {
+    let valid = true;
+    setEmailError('');
+    setPasswordError('');
+
+    // Simple validation
+    if (!email) {
+      setEmailError('Email is required');
+      valid = false;
+    } else if (!/^[a-zA-Z0-9._%+-]+@msu\.edu$/.test(email)) {
+      setEmailError('Enter a valid MSU email');
+      valid = false;
+    }
+
+    if (!password) {
+      setPasswordError('Password is required');
+      valid = false;
+    } else if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    const result = await dispatch(loginUser({ email, password }));
+
+    if (result.meta.requestStatus === 'fulfilled') {
+      navigate('/dashboard'); // Navigate on successful login
+    }
+  };
 
   return (
     <Box
@@ -51,7 +106,6 @@ const Login = () => {
             padding: 4,
             borderRadius: '0 12px 12px 0',
             flex: 1,
-            //height: '100%',
             backgroundColor: '#FFFFFF',
             display: 'flex',
             justifyContent: 'center',
@@ -71,15 +125,40 @@ const Login = () => {
               Sign In
             </Typography>
 
-            <TextField fullWidth label="MSU Email" variant="outlined" sx={{ mb: 2 }} />
-            <TextField fullWidth label="Password" type="password" variant="outlined" sx={{ mb: 2 }} />
-
+            <TextField
+              fullWidth
+              label="MSU Email"
+              variant="outlined"
+              sx={{ mb: 2 }}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={!!emailError}
+              helperText={emailError}
+            />
+            <TextField
+              fullWidth
+              label="Password"
+              type="password"
+              variant="outlined"
+              sx={{ mb: 2 }}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              error={!!passwordError}
+              helperText={passwordError}
+            />
+            {error && (
+              <Typography color="error" sx={{ mb: 2, textAlign: 'center' }}>
+                {error}
+              </Typography>
+            )}
             <Button
               fullWidth
               variant="contained"
               sx={{ backgroundColor: '#1976D2', color: '#FFF', mb: 2 }}
+              onClick={handleSubmit}
+              disabled={status === 'loading'}
             >
-              Sign In
+              {status === 'loading' ? 'Signing In...' : 'Sign In'}
             </Button>
 
             <Typography variant="body2" sx={{ textAlign: 'center', color: '#666' }}>
