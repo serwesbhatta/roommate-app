@@ -1,45 +1,75 @@
 import React, { useState, useEffect } from "react";
 import Logo from "../../assets/logo.svg"
-import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import { useNavigate } from 'react-router-dom';
+import { 
+  AppBar, Toolbar, Button, IconButton, Box, Drawer, List, ListItem, 
+  ListItemButton, ListItemText,Avatar,Typography,Menu,MenuItem,Divider
+} from "@mui/material";
+import { Settings, Logout, Menu as MenuIcon, ArrowDropDown, Person, ModeEdit} from "@mui/icons-material";
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { logout } from "../../redux/slices/authSlice";
 
 const CustomNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [userType, setUserType] = useState(null); // "user", "admin", or null
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
 
-  // Check login status on page load
-  useEffect(() => {
-    // const logInUser = localStorage.getItem("LogInUserName");
-    // const logInAdmin = localStorage.getItem("LogInAdminName");
+  // const userRole = useSelector((state) => state.auth.role);  // for now commenting...
+  // const user = useSelector((state) => state.auth.user);  // Add this to get user data
 
-    // if (logInUser) setUserType("user");
-    // else if (logInAdmin) setUserType("admin");
-    // else setUserType(null);
-    setUserType("admin")
+  // For demo purposes - replace with actual user data from Redux
+  const userRole = "user";  
+  const user = {
+    name: "John Doe",
+    photoUrl: "https://via.placeholder.com/40" // Replace with actual photo URL from your state
+  };
 
-  }, []);
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem("LogInUserName");
-    localStorage.removeItem("LogInAdminName");
-    setUserType(null);
+    handleMenuClose();
+    dispatch(logout());
     navigate("/login");
   };
 
-  // Define menu items
-  const leftMenuItems = userType
-    ? userType === "user"
-      ? [{ label: "Home", path: "/" }, { label: "User Dashboard", path: "/userDashboard" }]
-      : [{ label: "Home", path: "/admin" }, { label: "Events", path: "/events" }, { label: "Notifications", path: "/notifications" }]
-    : [{ label: "Home", path: "/" }, { label: "About Us", path: "/" }, { label: "Contact", path: "/" }];
+  const handleMenuEvent = (navigateTo) => {
+    handleMenuClose();
+    userRole === "user"? navigate(`/user/${navigateTo}`):  navigate(`/admin/${navigateTo}`)
+  }
 
-  const rightMenuItems = userType
-    ? [{ label: "Logout", path: "/login", action: handleLogout }]
-    : [{ label: "Login", path: "/login" }, { label: "Sign Up", path: "/signup" }];
+  // Define menu items
+  const leftMenuItems = userRole
+    ? userRole === "user"
+      ? [
+          { label: "Home", path: "/user" }, 
+          { label: "Find Roommate", path: "user/roommate" },
+          { label: "Events", path: "user/events" },
+          { label: "Notifications", path: "user/notifications" },
+          { label: "Messages", path: "user/message" },
+        ]
+      : [
+          { label: "Home", path: "/admin" }, 
+          { label: "Events", path: "admin/events" }, 
+          { label: "Notifications", path: "admin/notifications" }
+        ]
+    : [
+        { label: "Home", path: "/" }, 
+        { label: "About Us", path: "/aboutus" }, 
+        { label: "Contact", path: "/contact" }
+      ];
+
+  const rightMenuItems = !userRole
+    ? [{ label: "Login", path: "/login" }, { label: "Sign Up", path: "/signup" }]
+    : [];
 
   return (
     <>
@@ -52,11 +82,17 @@ const CustomNavbar = () => {
         }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          {/* Left Side: Logo + Navigation Links */}
+          {/* Left Side: Logo */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box
               sx={{ cursor: "pointer", marginRight: 2}}
-              onClick={() => navigate("/")}
+              onClick={
+                () => userRole
+                ? userRole === "user"
+                  ? navigate("/user")
+                  : navigate("/admin")
+                : navigate("/")
+              }
             >
               <img
                 src={Logo}
@@ -68,19 +104,21 @@ const CustomNavbar = () => {
                   objectFit: "contain",
                   backgroundColor: "#f5f5f5", 
                 }}
-
               />
             </Box>
 
+            {/* Desktop Navigation Links */}
             <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
               {leftMenuItems.map((item) => (
                 <Button 
                   key={item.label} 
                   sx={{
-                    color: "black",
+                    color: location.pathname === item.path ? "white" : "black", 
+                    backgroundColor: location.pathname === item.path ? "#1976d2" : "transparent",
                     transition: "0.3s",
                     borderRadius: "8px",
                     "&:hover": {
+                      color:'black',
                       backgroundColor: "#f5f5f5", 
                       boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)", 
                     },
@@ -92,45 +130,172 @@ const CustomNavbar = () => {
             </Box>
           </Box>
 
-          {/* Right Side: Login, Sign Up, or Logout */}
-          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2}}>
-            {rightMenuItems.map((item) => (
-              <Button 
-                key={item.label} 
-                sx={{
-                  color: "black",
-                  transition: "0.3s",
-                  borderRadius: "8px",
-                  "&:hover": {
-                    backgroundColor: "#f5f5f5", 
-                    boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)", 
-                  },
-                }}
-                onClick={() => (item.action ? item.action() : navigate(item.path))}
+          {/* Right Side: User Profile or Login/Signup */}
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+            {userRole ? (
+              <>
+                {/* User Photo and Profile Dropdown */}
+                <Box 
+                  sx={{ 
+                    display: "flex", 
+                    alignItems: "center", 
+                    gap: 1, 
+                    cursor: "pointer",
+                    padding: "4px 8px",
+                    borderRadius: "8px",
+                    "&:hover": {
+                      backgroundColor: "#f5f5f5",
+                    }
+                  }}
+                  onClick={handleProfileMenuOpen}
+                >
+                  <Avatar 
+                    src={user.photoUrl} 
+                    alt={user.name}
+                    sx={{ width: 40, height: 40 }}
+                  />
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      fontWeight: 500, 
+                      color: "black",
+                      display: { xs: "none", sm: "block" } // Hide text on extra small screens
+                    }}
+                  >
+                    {user.name}
+                  </Typography>
+                  <ArrowDropDown sx={{ color: "black" }} />
+                </Box>
+                
+                {/* Profile Dropdown Menu */}
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  PaperProps={{
+                    elevation: 3,
+                    sx: {
+                      minWidth: "200px",
+                      borderRadius: "8px",
+                      mt: 1.5,
+                    }
+                  }}
+                >
+                  <MenuItem onClick={()=> handleMenuEvent("profile")}>
+                    <Person sx={{ mr: 1 }} />
+                    View Profile
+                  </MenuItem>
+                  <MenuItem onClick={()=> handleMenuEvent("settings")}>
+                    <Settings sx={{ mr: 1 }} />
+                    Settings
+                  </MenuItem>
+                  <MenuItem 
+                    onClick={()=> handleMenuEvent("edit-profile")}>
+                    <ModeEdit sx={{ mr: 1 }} />
+                    Edit Profile
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem onClick={handleLogout}>
+                    <Logout sx={{ mr: 1 }} />
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              // Show login/signup buttons on desktop, hide on mobile
+              <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+                {rightMenuItems.map((item) => (
+                  <Button 
+                    key={item.label} 
+                    sx={{
+                      color: location.pathname === item.path ? "white" : "black", 
+                      backgroundColor: location.pathname === item.path ? "#1976d2" : "transparent",
+                      transition: "0.3s",
+                      borderRadius: "8px",
+                      "&:hover": {
+                        color:'black',
+                        backgroundColor: "#f5f5f5", 
+                        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2)", 
+                      },
+                    }}
+                    onClick={() => navigate(item.path)}
+                  >
+                    {item.label}
+                  </Button>
+                ))}
+              </Box>
+            )}
 
-              >
-                {item.label}
-              </Button>
-            ))}
+            {/* Mobile Menu Icon - Always show on mobile regardless of login status */}
+            <IconButton 
+              edge="end" 
+              sx={{ 
+                color: "black",
+                display: { xs: "flex", md: "none" }  // Show on mobile (xs, sm), hide on desktop (md+)
+              }} 
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              <MenuIcon />
+            </IconButton>
           </Box>
-
-          {/* Mobile Menu Icon */}
-          <IconButton edge="end" sx={{ display: { md: "none" }, color: "black" }} onClick={() => setMobileOpen(!mobileOpen)}>
-            <MenuIcon />
-          </IconButton>
         </Toolbar>
       </AppBar>
 
       {/* Mobile Drawer */}
       <Drawer anchor="right" open={mobileOpen} onClose={() => setMobileOpen(false)}>
-        <List sx={{ width: 200 }}>
-          {[...leftMenuItems, ...rightMenuItems].map((item) => (
+        <List sx={{ width: 250 }}>
+          {/* Always show navigation links */}
+          {leftMenuItems.map((item) => (
             <ListItem key={item.label} disablePadding>
-              <ListItemButton onClick={() => { item.action ? item.action() : navigate(item.path); setMobileOpen(false); }}>
+              <ListItemButton 
+                onClick={() => { 
+                  navigate(item.path); 
+                  setMobileOpen(false); 
+                }}
+                sx={{
+                  backgroundColor: location.pathname === item.path ? "#1976d2" : "transparent",
+                  color: location.pathname === item.path ? "#ffffff" : "black",
+                  fontWeight: location.pathname === item.path ? "bold" : "normal",
+                  borderRadius: "8px",
+                  margin: "4px 8px",
+                  "&:hover": {
+                    backgroundColor: location.pathname === item.path ? "#1565c0" : "#f5f5f5",
+                  },
+                }}
+              >
                 <ListItemText primary={item.label} />
               </ListItemButton>
             </ListItem>
           ))}
+          
+          {/* Show login/signup only for non-logged in users */}
+          {!userRole && (
+            <>
+              <Divider sx={{ my: 1 }} />
+              {rightMenuItems.map((item) => (
+                <ListItem key={item.label} disablePadding>
+                  <ListItemButton 
+                    onClick={() => { 
+                      navigate(item.path); 
+                      setMobileOpen(false); 
+                    }}
+                    sx={{
+                      backgroundColor: location.pathname === item.path ? "#1976d2" : "transparent",
+                      color: location.pathname === item.path ? "#ffffff" : "black",
+                      fontWeight: location.pathname === item.path ? "bold" : "normal",
+                      borderRadius: "8px",
+                      margin: "4px 8px",
+                      "&:hover": {
+                        backgroundColor: location.pathname === item.path ? "#1565c0" : "#f5f5f5",
+                      },
+                    }}
+                  >
+                    <ListItemText primary={item.label} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </>
+          )}
         </List>
       </Drawer>
     </>

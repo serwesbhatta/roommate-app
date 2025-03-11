@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Card, Typography, TextField, Button, Link, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../redux/slices/userSlice';
+import { loginUser } from '../../redux/slices/authSlice';
 import Roomate from '../../assets/roommates.jpg';
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { token, role, error, status } = useSelector((state) => state.user);
+  const { token, role, error, status } = useSelector((state) => state.auth);
 
   // State for input values
   const [email, setEmail] = useState('');
@@ -18,16 +18,16 @@ const Login = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-    // Redirect after login
-    useEffect(() => {
-      if (token) {
-        if (role === 'admin') {
-          navigate('/admin'); 
-        } else {
-          navigate('/user'); 
-        }
+  // Redirect after login
+  useEffect(() => {
+    if (token) {
+      if (role === 'admin') {
+        navigate('/admin'); 
+      } else {
+        navigate('/user'); 
       }
-    }, [token, role, navigate]);
+    }
+  }, [token, role, navigate]);
 
   // Mock authentication function (replace with actual API call)
   const handleSubmit = async () => {
@@ -39,7 +39,7 @@ const Login = () => {
     if (!email) {
       setEmailError('Email is required');
       valid = false;
-    } else if (!/^[a-zA-Z0-9._%+-]+@msu\.edu$/.test(email)) {
+    } else if (!/^[a-zA-Z0-9._%+-]+@my\.msutexas\.edu$/.test(email)) {
       setEmailError('Enter a valid MSU email');
       valid = false;
     }
@@ -54,11 +54,7 @@ const Login = () => {
 
     if (!valid) return;
 
-    const result = await dispatch(loginUser({ email, password }));
-
-    if (result.meta.requestStatus === 'fulfilled') {
-      navigate('/dashboard'); // Navigate on successful login
-    }
+    await dispatch(loginUser({ email, password }));
   };
 
   return (
@@ -122,8 +118,14 @@ const Login = () => {
                 mb: 2,
               }}
             >
-              Sign In
+              Login
             </Typography>
+
+            {error && (
+              <Typography color="error" sx={{ mb: 2, textAlign: 'left' }}>
+                {error}
+              </Typography>
+            )}
 
             <TextField
               fullWidth
@@ -146,11 +148,6 @@ const Login = () => {
               error={!!passwordError}
               helperText={passwordError}
             />
-            {error && (
-              <Typography color="error" sx={{ mb: 2, textAlign: 'center' }}>
-                {error}
-              </Typography>
-            )}
             <Button
               fullWidth
               variant="contained"
@@ -158,7 +155,7 @@ const Login = () => {
               onClick={handleSubmit}
               disabled={status === 'loading'}
             >
-              {status === 'loading' ? 'Signing In...' : 'Sign In'}
+              {status === 'loading' ? 'Signing In...' : 'Login'}
             </Button>
 
             <Typography variant="body2" sx={{ textAlign: 'center', color: '#666' }}>
