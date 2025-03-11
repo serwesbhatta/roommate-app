@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Typography, TextField, Button, Link, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../redux/slices/authSlice';
 import Roomate from '../../assets/roommates.jpg';
 
 const Signup = () => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  const { token, role, error, status } = useSelector((state) => state.auth);
+  
   // State for input values
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,7 +20,18 @@ const Signup = () => {
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
-  const handleSignUp = () => {
+  // Redirect after login
+  useEffect(() => {
+    if (token) {
+      if (role === 'admin') {
+        navigate('/admin'); 
+      } else {
+        navigate('/user'); 
+      }
+    }
+  }, [token, role, navigate]);
+
+  const handleSignUp = async () => {
     let valid = true;
 
     // Reset errors
@@ -28,7 +43,7 @@ const Signup = () => {
     if (!email) {
       setEmailError('Email is required');
       valid = false;
-    } else if (!/^[a-zA-Z0-9._%+-]+@msu\.edu$/.test(email)) {
+    } else if (!/^[a-zA-Z0-9._%+-]+@my\.msutexas\.edu$/.test(email)) {
       setEmailError('Enter a valid MSU email');
       valid = false;
     }
@@ -51,13 +66,8 @@ const Signup = () => {
       valid = false;
     }
 
-    // If all validations pass
-    if (valid) {
-      // Simulate successful signup (Replace with API call)
-      console.log('User Signed Up:', { email, password });
-
-      navigate('/dashboard'); // Redirect after signup
-    }
+    if (!valid) return;
+    await dispatch(registerUser({ email, password, confirmPassword}));
   };
 
   return (
@@ -124,6 +134,12 @@ const Signup = () => {
               Sign Up
             </Typography>
 
+            {error && (
+              <Typography color="error" sx={{ mb: 2, textAlign: 'left' }}>
+                {error}
+              </Typography>
+            )}
+
             <TextField
               fullWidth
               label="MSU Email"
@@ -162,8 +178,9 @@ const Signup = () => {
               variant="contained"
               sx={{ backgroundColor: '#1976D2', color: '#FFF', mb: 2 }}
               onClick={handleSignUp}
+              disabled={status === 'loading'}
             >
-              Sign Up
+              {status === 'loading' ? 'Signing Up...' : 'Sign Up'}
             </Button>
 
             <Typography variant="body2" sx={{ textAlign: 'center', color: '#666' }}>
@@ -172,7 +189,7 @@ const Signup = () => {
                 href="/login"
                 sx={{ color: '#1976D2', fontWeight: 'bold', textDecoration: 'none' }}
               >
-                Sign In
+                Login
               </Link>
             </Typography>
 
