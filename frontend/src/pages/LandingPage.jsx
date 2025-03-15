@@ -9,10 +9,3 @@ const LandingPage = () => {
 
 export default LandingPage
 
-
-// about us --> footer
-// help ---> footer
-
-// login
-// signup
-//logo 

@@ -9,7 +9,7 @@ const User = () => {
     <Routes>
       <Route path="/" element={<UserHome />} /> 
       <Route path="profile" element={<Profile />} />
-  </Routes>
+    </Routes>
   )
 }
 
