@@ -1,9 +1,11 @@
 import React from "react";
-import { Box, TextField, MenuItem, Button, Typography } from "@mui/material";
+import { Box, TextField, MenuItem, Typography } from "@mui/material";
 import SearchBar from "../layouts/SearchBar";
 import BlueButton from "./BlueButton";
 
-const AdminTableController = ({ title }) => {
+const AdminTableController = ({ onSearchChange, onCategoryChange, onStatusChange, 
+  onSearchClick, categoryOptions, statusOptions, searchPlaceholder}) => {
+    
   return (
     <Box
       sx={{
@@ -13,13 +15,9 @@ const AdminTableController = ({ title }) => {
         backgroundColor: "white",
         boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
         borderRadius: "8px",
+        marginBottom: "16px"
       }}
     >
-      {/* Page Title */}
-      <Typography variant="h5" fontWeight="bold" mb={2}>
-        {title}
-      </Typography>
-
       {/* Filters Section */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         {/* Question */}
@@ -36,7 +34,10 @@ const AdminTableController = ({ title }) => {
           }}
         >
           {/* Search Box */}
-          <SearchBar placeHolder="Search name, email.." />
+          <SearchBar 
+            placeHolder={searchPlaceholder} 
+            onChange={onSearchChange} 
+          />
 
           {/* Category Dropdown */}
           <TextField
@@ -45,10 +46,14 @@ const AdminTableController = ({ title }) => {
             variant="outlined"
             size="small"
             sx={{ minWidth: 150 }}
+            onChange={(e) => onCategoryChange && onCategoryChange(e.target.value)}
           >
-            <MenuItem value="users">Users</MenuItem>
-            <MenuItem value="rooms">Rooms</MenuItem>
-            <MenuItem value="events">Events</MenuItem>
+            <MenuItem value="">All</MenuItem>
+            {categoryOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </TextField>
 
           {/* Status Dropdown */}
@@ -58,14 +63,18 @@ const AdminTableController = ({ title }) => {
             variant="outlined"
             size="small"
             sx={{ minWidth: 150 }}
+            onChange={(e) => onStatusChange && onStatusChange(e.target.value)}
           >
-            <MenuItem value="active">Active</MenuItem>
-            <MenuItem value="inactive">Inactive</MenuItem>
-            <MenuItem value="pending">Pending</MenuItem>
+            <MenuItem value="">All</MenuItem>
+            {statusOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
           </TextField>
 
           {/* Search Button */}
-          <BlueButton btuTxt={"Search"} />
+          <BlueButton btuTxt={"Search"} onClick={onSearchClick} />
         </Box>
       </Box>
     </Box>

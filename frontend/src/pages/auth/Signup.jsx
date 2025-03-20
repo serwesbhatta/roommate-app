@@ -21,15 +21,15 @@ const Signup = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
   // Redirect after login
-  useEffect(() => {
-    if (token) {
-      if (role === 'admin') {
-        navigate('/admin'); 
-      } else {
-        navigate('/user'); 
-      }
-    }
-  }, [token, role, navigate]);
+  // useEffect(() => {
+  //   if (token) {
+  //     if (role === 'admin') {
+  //       navigate('/admin'); 
+  //     } else {
+  //       navigate('/user'); 
+  //     }
+  //   }
+  // }, [token, role, navigate]);
 
   const handleSignUp = async () => {
     let valid = true;

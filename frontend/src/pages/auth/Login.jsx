@@ -19,15 +19,15 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState('');
 
   // Redirect after login
-  useEffect(() => {
-    if (token) {
-      if (role === 'admin') {
-        navigate('/admin'); 
-      } else {
-        navigate('/user'); 
-      }
-    }
-  }, [token, role, navigate]);
+  // useEffect(() => {
+  //   if (token) {
+  //     if (role === 'admin') {
+  //       navigate('/admin'); 
+  //     } else {
+  //       navigate('/user'); 
+  //     }
+  //   }
+  // }, [token, role, navigate]);
 
   // Mock authentication function (replace with actual API call)
   const handleSubmit = async () => {

@@ -31,7 +31,7 @@ import {
 } from '@mui/icons-material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import {AdminWidgets} from '../../components/layouts'
-import { AdminHeader } from '../../components/commons';
+import { AdminHeaders } from '../../components/commons';
 
 // Sample data for chart
 const newUsersData = [
@@ -85,7 +85,7 @@ const AdminDashboard = () => {
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f5f5f5' }}>      
         {/* Main content */}
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <AdminHeader title="Dashboard" subtitle="View your analytics here."/>
+        <AdminHeaders title="Dashboard" subtitle="View your analytics here."/>
 
             
             {/* Stat cards */}

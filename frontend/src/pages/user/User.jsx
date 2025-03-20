@@ -7,8 +7,8 @@ import UserHome from './UserHome';
 const User = () => {
   return (
     <Routes>
-      <Route path="/" element={<UserHome />} /> 
-      <Route path="profile" element={<Profile />} />
+      <Route path="/user_home" element={<UserHome />} /> 
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   )
 }

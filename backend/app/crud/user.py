@@ -1,5 +1,5 @@
-from .models import User
-from .database import session_factory
+from ..models.user import User
+from ..database import session_factory
 
 def create_user(first_name:str, last_name:str, msu_id:int, msu_email:str, password:str):
     try:

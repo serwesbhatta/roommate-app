@@ -2,13 +2,15 @@ import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import BlueButton from "./BlueButton";
+import { useNavigate } from "react-router-dom";
 
-const AdminHeaders = ({ title, subtitle }) => {
+const AdminHeaders = ({ title, subtitle, onAddClick }) => {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
         display: "flex",
-        //flexDirection: "column",
         justifyContent: "space-between",
         height: "100px",
       }}
@@ -23,8 +25,9 @@ const AdminHeaders = ({ title, subtitle }) => {
           </Typography>
         )}
       </Box>
-
-      <BlueButton btuTxt="Add New" />
+      {(title === "Users" || title == "Rooms") &&
+        <BlueButton btuTxt="Add New" onClicked= {onAddClick} />
+      }
     </Box>
   );
 };

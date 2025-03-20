@@ -35,6 +35,7 @@ const authSlice = createSlice({
     // token: localStorage.getItem('token') || null,  // Stores the authentication token
     // role: localStorage.getItem('role') || null,
     // status: 'idle', // Tracks request status: 'idle' | 'loading' | 'succeeded' | 'failed'
+
     error: null,  // Stores error messages if any API call fails
     //test
     token: "sd2342de22scxasd##2wec2",  // Stores the authentication token

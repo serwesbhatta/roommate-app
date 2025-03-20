@@ -16,7 +16,7 @@ import SearchBar from "../layouts/SearchBar";
 import NavLinks from "../layouts/NavLinks";
 import ProfileMenu from "../layouts/ProfileMenu";
 import MobileDrawer from "./MobileDrawer";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import Logo from "../../assets/logo.svg";
 import { getRightSideMenuItems } from "../../utils/menuUtils";
@@ -31,7 +31,9 @@ const CustomNavbar = () => {
   const handleProfileMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
   const toggleDrawer = () => setMobileOpen(!mobileOpen);
+  
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
@@ -95,33 +97,36 @@ const CustomNavbar = () => {
             }
 
             {/* Show login/signup only for non-logged in users */}
-            {!userRole && (
+            {!userRole && 
               <>
                 <Divider sx={{ my: 1 }} />
-                {getRightSideMenuItems().map((item) => (
-                  <ListItem key={item.label} disablePadding>
-                    <ListItemButton
-                      onClick={() => {
-                        navigate(item.path);
-                        setMobileOpen(false);
-                      }}
-                      sx={{
-                        backgroundColor: location.pathname === item.path ? "#1976d2" : "transparent",
-                        color: location.pathname === item.path ? "#ffffff" : "black",
-                        fontWeight: location.pathname === item.path ? "bold" : "normal",
-                        borderRadius: "8px",
-                        margin: "4px 8px",
-                        "&:hover": {
-                          backgroundColor: location.pathname === item.path ? "#1565c0" : "#f5f5f5",
-                        },
-                      }}
-                    >
-                      <ListItemText primary={item.label} />
-                    </ListItemButton>
-                  </ListItem>
+                {getRightSideMenuItems.map((item) => (
+                  <Box
+                    key={item.label}
+                    onClick={() => {
+                      navigate(item.path);
+                      setMobileOpen(false);
+                      console.log(item.path)
+                    }}
+                    sx={{
+                      backgroundColor: location.pathname === item.path ? "#1976d2" : "transparent",
+                      color: location.pathname === item.path ? "#ffffff" : "black",
+                      fontWeight: location.pathname === item.path ? "bold" : "normal",
+                      borderRadius: "8px",
+                      margin: "4px 8px",
+                      padding: "10px",
+                      cursor: "pointer",
+                      "&:hover": {
+                        backgroundColor: location.pathname === item.path ? "#1565c0" : "#f5f5f5",
+                      },
+                    }}
+                  >
+                    {item.label}
+                  </Box>
+
                 ))}
               </>
-            )}
+            }
 
             {/* Mobile hamburger Menu Button, it toggle the drawer with menus options */}
             <IconButton
