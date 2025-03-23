@@ -1,7 +1,7 @@
 //import RouterPage from './RouterPage'
 import { Navbar } from './components/commons';
 import { LandingPage, Login, Signup, Admin, User, NotFound} from './pages';
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 function App() {
@@ -19,7 +19,7 @@ function App() {
         <Route path="*" element={<NotFound/>}/> 
       </Routes>
     </> 
-  )
+  );
 }
 
-export default App
+export default App;
