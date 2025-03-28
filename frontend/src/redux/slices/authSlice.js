@@ -32,15 +32,14 @@ export const registerUser = createAsyncThunk('user/register', async (userData, t
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    // token: localStorage.getItem('token') || null,  // Stores the authentication token
-    // role: localStorage.getItem('role') || null,
-    // status: 'idle', // Tracks request status: 'idle' | 'loading' | 'succeeded' | 'failed'
-
+    token: localStorage.getItem('token') || null,  // Stores the authentication token
+    role: localStorage.getItem('role') || null,
+    status: 'idle', // Tracks request status: 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null,  // Stores error messages if any API call fails
     //test
-    token: "sd2342de22scxasd##2wec2",  // Stores the authentication token
-    role: "admin",
-    status: 'succeeded', // Tracks request status: 'idle' | 'loading' | 'succeeded' | 'failed'
+    // token: "sd2342de22scxasd##2wec2",  // Stores the authentication token
+    // role: "admin",
+    // status: 'succeeded', // Tracks request status: 'idle' | 'loading' | 'succeeded' | 'failed'
 
   },
   reducers: {
@@ -68,13 +67,8 @@ const authSlice = createSlice({
         state.role = action.payload.user.role;
       })
       .addCase(loginUser.rejected, (state, action) => {
-       //state.status = 'failed';
-       // state.error = action.payload; 
-
-       // test
-       state.status = 'succeeded';
-       state.token = "sd2342de22scxasd##2wec2";
-       state.role = "admin";
+       state.status = 'failed';
+       state.error = action.payload; 
       })
 
       // Handles register state changes

@@ -4,3 +4,7 @@ sqlalchemy
 psycopg2-binary
 python-dotenv
 pydantic
+python-jose
+passlib
+python-multipart
+alembic

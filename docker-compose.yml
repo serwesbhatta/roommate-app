@@ -16,6 +16,8 @@ services:
       - DATABASE_URL=postgresql://postgres:password@db/roommate_app
     depends_on:
       - db
+    volumes:
+      - ./backend/alembic/versions:/app/alembic/versions
     restart: unless-stopped
 
   db:

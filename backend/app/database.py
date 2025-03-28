@@ -1,16 +1,20 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
+from .core.config import Settings
 
-DATABASE_URL = "postgresql://postgres:password@db/roommate_app"
+# Use a single, consistent Base
+Base = declarative_base()
 
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(Settings.DATABASE_URL, echo=True)
 
-Session_Factory = sessionmaker(bind=engine)
+SessionLocal = sessionmaker(bind=engine)
 
-class Base(DeclarativeBase):
-    pass
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-def session_factory():
-    Base.metadata.create_all(engine)
-    return Session_Factory()
+def create_tables():
+    Base.metadata.create_all(bind=engine)

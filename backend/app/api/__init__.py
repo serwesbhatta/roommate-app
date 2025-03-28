@@ -1,0 +1,1 @@
+# Contains all endpoint definitions grouped by resource

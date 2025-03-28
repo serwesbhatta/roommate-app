@@ -3,6 +3,8 @@
 
 A FastAPI application for finding roommates.
 
+API Route → Service Layer → CRUD Layer → Database
+
 ## Setup
 
 1. Clone this repository
