@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, Session
 from typing import Generator
-from core.config import Settings  # Assuming you have a Settings class
+from .core.config import Settings  # Assuming you have a Settings class
+
 
 # Create engine with robust configuration
 engine = create_engine(
