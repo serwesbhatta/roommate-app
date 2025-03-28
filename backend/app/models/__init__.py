@@ -5,3 +5,4 @@
 # Inherit from SQLAlchemy's Base class
 # Directly map to database tables
 from .user_model import AuthUser, UserProfile
+from .residence_hall import ResidenceHall
