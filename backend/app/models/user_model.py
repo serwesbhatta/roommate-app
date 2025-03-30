@@ -32,7 +32,7 @@ class AuthUser(Base):
     )
 
     # Room Model
-    auth_users = relationship("AuthUser", back_populates="room")
+    room = relationship("Room", back_populates="auth_users")
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"

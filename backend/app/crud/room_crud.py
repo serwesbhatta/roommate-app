@@ -118,3 +118,25 @@ def delete_room(
     except SQLAlchemyError as e:
         db.rollback()
         raise ValueError(f"Error deleting room: {str(e)}")
+    
+def get_total_rooms(
+    db: Session,
+    model: Room
+) -> int:
+    try:
+        total_rooms = db.query(model).count()
+        return total_rooms
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise ValueError(f"Error fetching total number of rooms: {str(e)}")
+
+def get_available_rooms(
+    db: Session,
+    model: Room,
+) -> int:
+    try:
+        available_rooms = db.query(model).filter(model.capacity > model.current_occupants).count()
+        return available_rooms
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise ValueError(f"Error getting total number of available rooms: {str(e)}")

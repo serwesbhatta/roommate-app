@@ -8,7 +8,9 @@ from ..crud.room_crud import (
     get_all_rooms,
     get_room_by_id,
     update_room,
-    delete_room
+    delete_room,
+    get_total_rooms,
+    get_available_rooms
 )
 
 class RoomService:
@@ -81,3 +83,19 @@ class RoomService:
             raise ValueError(f"Room with the room number {room_number} not found.")
         
         return True
+
+    def get_total_rooms(self) -> int:
+        total_rooms = get_total_rooms(db=self.db, model=Room)
+
+        if total_rooms is None:
+            raise ValueError(f"Cannot fetch total rooms.")
+        
+        return total_rooms
+
+    def get_available_rooms(self) -> int:
+        available_rooms = get_available_rooms(db=self.db, model=Room)
+
+        if available_rooms is None:
+            raise ValueError(f"Couldn't get available rooms.")
+        
+        return available_rooms
