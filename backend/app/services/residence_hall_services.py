@@ -1,9 +1,9 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 
-from ..models.residence_hall import ResidenceHall
-from ..schemas.residence_hall import ResidenceHallCreate, ResidenceHallUpdate
-from ..crud.residence_hall import (
+from ..models.residence_hall_model import ResidenceHall
+from ..schemas.residence_hall_schema import ResidenceHallCreate, ResidenceHallUpdate
+from ..crud.crud import (
     create_record, 
     get_record_by_id, 
     get_all_records, 

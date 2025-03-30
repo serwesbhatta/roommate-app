@@ -4,7 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .database import engine, Base
 from .api.routes.users_routes import router as users_router
-from .api.routes.residence_halls import router as residence_halls_router
+from .api.routes.residence_halls_routes import router as residence_halls_router
+from .api.routes.room_routes import router as room_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -53,4 +54,5 @@ def root():
 
 # Include routers with appropriate prefixes
 app.include_router(users_router, prefix="/api/users")
-app.include_router(residence_halls_router, prefix="/api/residence-halls")
+app.include_router(residence_halls_router, prefix="/api")
+app.include_router(room_router, prefix="/api")

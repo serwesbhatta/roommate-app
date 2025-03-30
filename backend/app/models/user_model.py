@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, func, Boolean
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, func, Boolean, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -19,6 +19,20 @@ class AuthUser(Base):
     # One-to-One Relationship with UserProfile
     profile = relationship("UserProfile", back_populates="auth_user", uselist=False, cascade="all, delete")
 
+    # Composite Foreign Key to Room
+    room_number = Column(Integer, nullable=True)
+    residence_hall_id = Column(Integer, nullable=True)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["room_number", "residence_hall_id"],
+            ["rooms.room_number", "rooms.residence_hall_id"],
+            ondelete="SET NULL"
+        ),
+    )
+
+    # Room Model
+    auth_users = relationship("AuthUser", back_populates="room")
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"
@@ -32,7 +46,6 @@ class UserProfile(Base):
     profile_image = Column(String(255),nullable=True)  # Image path
     modified_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
     created_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
-
 
     # Relationship with AuthUser
     auth_user = relationship("AuthUser", back_populates="profile")
