@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List
 
-from ...schemas.residence_hall import ResidenceHallCreate, ResidenceHallUpdate, ResidenceHallResponse
-from ...services.residence_hall import ResidenceHallService
+from ...schemas.residence_hall_schema import ResidenceHallCreate, ResidenceHallUpdate, ResidenceHallResponse
+from ...services.residence_hall_services import ResidenceHallService
 from ...database import get_db
 
 router = APIRouter()

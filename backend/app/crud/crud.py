@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from typing import List, Optional, Type, TypeVar
+from sqlalchemy.sql.expression import BinaryExpression
 
 T = TypeVar('T')
 
@@ -115,3 +116,29 @@ def delete_record(
     except SQLAlchemyError as e:
         db.rollback()
         raise ValueError(f"Error deleting record: {str(e)}")
+    
+def get_count(
+    db: Session,
+    model: Type[T],
+    filter_condition: Optional[BinaryExpression] = None
+) -> int:
+    """
+    Generic method to get total record.
+    If you want to apply filter then pass the filter_condition.
+    If you want to get total count then do not pass any filter_condition.
+    
+    :param db: Database session
+    :param model: SQLAlchemy model class
+    :filter_condition: Filters the data queried from db.
+    """
+    try:
+        query = db.query(model)
+
+        if filter_condition is not None:
+            query.filter(filter_condition)
+        
+        total_count = query.count()
+        return total_count
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise ValueError(f"Error fetching total count from db: {str(e)}")
