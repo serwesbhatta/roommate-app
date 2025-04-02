@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, TextField, MenuItem, Typography } from "@mui/material";
-import SearchBar from "../layouts/SearchBar";
-import BlueButton from "./BlueButton";
+import SearchBar from "../others/SearchBar";
+import {BlueButton} from "../buttons";
 
 const AdminTableController = ({ onSearchChange, onCategoryChange, onStatusChange, 
   onSearchClick, categoryOptions, statusOptions, searchPlaceholder}) => {

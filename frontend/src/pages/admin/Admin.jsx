@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Routes, Route, useParams, useNavigate } from "react-router-dom";
 import AdminDashboard from "./AdminDashboard";
-import { MobileDrawer } from "../../components/commons";
 import { Box } from "@mui/system";
-import { Navbar } from "../../components/commons";
+import { Navbar,MobileDrawer } from "../../components/navigations";
 import { useSelector } from "react-redux";
 import Users from "./users/Users";
 import Rooms from "./Rooms";
@@ -15,6 +14,7 @@ import AddNewUsers from "./users/AddNewUsers";
 const Admin = () => {
   const userRole = useSelector((state) => state.auth.role);
   const [mobileOpen, setMobileOpen] = useState(false);
+
 
   return (
     <Box sx={{ display: "flex" }}>

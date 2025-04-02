@@ -33,7 +33,7 @@ export const getMenuItems = (userRole) => {
     if (!userRole) {
       return [
         { label: "Home", path: "/" },
-        { label: "About Us", path: "/aboutus" },
+        { label: "About Us", path: "/about-us" },
         { label: "Contact", path: "/contact" },
       ];
     }
@@ -41,6 +41,6 @@ export const getMenuItems = (userRole) => {
     return []; // Default empty menu for other roles
   };
   
-  export const getRightSideMenuItems = [{ label: "Login", path: "/login" }, { label: "SignUp", path: "/signup" }]
+  export const getRightSideMenuItems = [{ label: "Login", path: "/login" }]
   
 

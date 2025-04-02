@@ -1,7 +1,7 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import BlueButton from "./BlueButton";
+import {BlueButton} from "../buttons";
 import { useNavigate } from "react-router-dom";
 
 const AdminHeaders = ({ title, subtitle, onAddClick }) => {

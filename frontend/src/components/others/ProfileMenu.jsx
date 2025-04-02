@@ -2,12 +2,15 @@ import React from "react";
 import { Avatar, Box, Menu, MenuItem, Divider } from "@mui/material";
 import { Person, Settings, Logout } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
 
 const ProfileMenu = ({ user, anchorEl, handleMenuClose }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userId = useSelector((state) => state.auth.id);
+  const role = useSelector((state) => state.auth.role);
+
 
   const handleLogout = () => {
     dispatch(logout());
@@ -17,7 +20,7 @@ const ProfileMenu = ({ user, anchorEl, handleMenuClose }) => {
 
   return (
     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
-      <MenuItem onClick={() => navigate("/profile")}>
+      <MenuItem onClick={() => navigate(`/${role}/profile/${userId}`)}>
         <Person sx={{ mr: 1 }} />
         View Profile
       </MenuItem>

@@ -12,11 +12,10 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
-import SearchBar from "../layouts/SearchBar";
-import NavLinks from "../layouts/NavLinks";
-import ProfileMenu from "../layouts/ProfileMenu";
+import {SearchBar, ProfileMenu} from "../others";
+import NavLinks from "./NavLinks";
 import MobileDrawer from "./MobileDrawer";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Logo from "../../assets/logo.svg";
 import { getRightSideMenuItems } from "../../utils/menuUtils";
@@ -25,13 +24,13 @@ const CustomNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const userRole =  useSelector((state) => state.auth.role);
-  const user = { name: "John", photoUrl: "https://via.placeholder.com/40" }; //dummy 
+  const userRole = useSelector((state) => state.auth.role);
+  const user = { name: "John", photoUrl: "https://via.placeholder.com/40" }; //dummy
 
   const handleProfileMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
   const toggleDrawer = () => setMobileOpen(!mobileOpen);
-  
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -63,7 +62,7 @@ const CustomNavbar = () => {
           </Box>
 
           {/* Search Bar  for admin and users*/}
-          {userRole && <SearchBar placeHolder = "Search.."/>}
+          {userRole && <SearchBar placeHolder="Search.." />}
 
           {/* Right Section: Profile & Menu for admins and user, login and signup for not login/signup users */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -88,16 +87,16 @@ const CustomNavbar = () => {
                 </Box>
 
                 {/*  ProfileMenu upon clicking avatar */}
-                <ProfileMenu 
-                  user={user} 
-                  anchorEl={anchorEl} 
-                  handleMenuClose={handleMenuClose} 
+                <ProfileMenu
+                  user={user}
+                  anchorEl={anchorEl}
+                  handleMenuClose={handleMenuClose}
                 />
-              </>)
-            }
+              </>
+            )}
 
             {/* Show login/signup only for non-logged in users */}
-            {!userRole && 
+            {!userRole && (
               <>
                 <Divider sx={{ my: 1 }} />
                 {getRightSideMenuItems.map((item) => (
@@ -106,27 +105,33 @@ const CustomNavbar = () => {
                     onClick={() => {
                       navigate(item.path);
                       setMobileOpen(false);
-                      console.log(item.path)
                     }}
                     sx={{
-                      backgroundColor: location.pathname === item.path ? "#1976d2" : "transparent",
-                      color: location.pathname === item.path ? "#ffffff" : "black",
-                      fontWeight: location.pathname === item.path ? "bold" : "normal",
+                      backgroundColor:
+                        location.pathname === item.path
+                          ? "#1976d2"
+                          : "transparent",
+                      color:
+                        location.pathname === item.path ? "#ffffff" : "black",
+                      fontWeight:
+                        location.pathname === item.path ? "bold" : "normal",
                       borderRadius: "8px",
                       margin: "4px 8px",
                       padding: "10px",
                       cursor: "pointer",
                       "&:hover": {
-                        backgroundColor: location.pathname === item.path ? "#1565c0" : "#f5f5f5",
+                        backgroundColor:
+                          location.pathname === item.path
+                            ? "#1565c0"
+                            : "#f5f5f5",
                       },
                     }}
                   >
                     {item.label}
                   </Box>
-
                 ))}
               </>
-            }
+            )}
 
             {/* Mobile hamburger Menu Button, it toggle the drawer with menus options */}
             <IconButton

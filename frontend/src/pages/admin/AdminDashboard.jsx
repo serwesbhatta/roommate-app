@@ -30,8 +30,8 @@ import {
   Menu as MenuIcon
 } from '@mui/icons-material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import {AdminWidgets} from '../../components/layouts'
-import { AdminHeaders } from '../../components/commons';
+import {AdminWidgets, AdminHeaders} from '../../components/adminComponent'
+
 
 // Sample data for chart
 const newUsersData = [

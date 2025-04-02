@@ -1,6 +1,6 @@
 import { Box } from '@mui/system'
 import React, { useState, useEffect } from 'react'
-import { AdminHeaders, AdminTable, AdminTableController } from '../../components/commons'
+import { AdminHeaders, AdminTable, AdminTableController } from '../../components/adminComponent'
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);

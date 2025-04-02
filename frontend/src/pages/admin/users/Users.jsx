@@ -3,7 +3,7 @@ import {
   AdminHeaders,
   AdminTable,
   AdminTableController,
-} from "../../../components/commons";
+} from "../../../components/adminComponent";
 import { Routes, Route } from "react-router-dom";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";

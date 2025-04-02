@@ -1,6 +1,6 @@
 import { Box } from '@mui/system'
 import React from 'react'
-import { AdminHeaders } from '../../components/commons'
+import { AdminHeaders } from '../../components/adminComponent'
 
 const Inbox = () => {
   return (

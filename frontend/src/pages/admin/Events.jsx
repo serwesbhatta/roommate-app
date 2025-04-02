@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/system';
-import { AdminHeaders, AdminTable, AdminTableController } from '../../components/commons';
+import { AdminHeaders, AdminTable, AdminTableController } from '../../components/adminComponent';
 
 const Events = () => {
   const [events, setEvents] = useState([]);

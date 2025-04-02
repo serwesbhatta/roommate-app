@@ -1,4 +1,4 @@
-const Base_URL = "http://localhost:8000"
+const Base_URL = "http://localhost:8000/api"
 
-export const login_api = `${Base_URL}/api/login`
-export const register_api = `${Base_URL}/api/register`
+export const login_api = `${Base_URL}/users/login`
+export const register_api = `${Base_URL}/users/register`

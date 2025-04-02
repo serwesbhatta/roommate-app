@@ -1,1 +1,0 @@
-# Reusable components like buttons, headers, footers, etc.

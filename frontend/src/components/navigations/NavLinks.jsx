@@ -7,7 +7,7 @@ const NavLinks = ({ userRole }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const menuItems =  getMenuItems(userRole)
+  const menuItems = getMenuItems(userRole);
 
   return (
     <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
@@ -16,18 +16,18 @@ const NavLinks = ({ userRole }) => {
           key={item.label}
           sx={{
             color: location.pathname === item.path ? "white" : "black",
-            backgroundColor: location.pathname === item.path ? "#1976d2" : "transparent",
+            backgroundColor:
+              location.pathname === item.path ? "#1976d2" : "transparent",
             padding: "10px",
             borderRadius: "8px",
             cursor: "pointer",
-            "&:hover": { backgroundColor: "#f5f5f5", color:"black" }
+            "&:hover": { backgroundColor: "#f5f5f5", color: "black" },
           }}
           onClick={() => navigate(item.path)}
         >
           {item.label}
         </Box>
       ))}
-      
     </Box>
   );
 };

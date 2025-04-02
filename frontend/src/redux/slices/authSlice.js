@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginUserAPI, registerUserAPI } from '../services/authService';
+import { loginUserAPI } from '../services/authService';
 
 /**
  * Async Thunk for logging in a user.
@@ -7,24 +7,29 @@ import { loginUserAPI, registerUserAPI } from '../services/authService';
  */
 export const loginUser = createAsyncThunk('user/login', async (credentials, thunkAPI) => {
   try {
-    const response = await loginUserAPI(credentials);
-    localStorage.setItem('token', response.token);  
+    const modifiedCredentials = {
+      msu_email: credentials.email, // Change 'email' to 'msu_email'
+      password: credentials.password,
+    };
+    const response = await loginUserAPI(modifiedCredentials);
+    localStorage.setItem('token', response.access_token);  
     localStorage.setItem('role', response.user.role); 
+    localStorage.setItem('id',response.user.id);
+    localStorage.setItem('msu_email',response.user.msu_email);
+
+    // Handle navigation based on role
+    if (credentials.navigate) {
+      const role = response.user.role;
+      if (role === 'admin') {
+        credentials.navigate('/admin');
+      } else {
+        credentials.navigate('/user');
+      }
+    }
+
     return response;
   } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Login failed');
-  }
-});
-
-/**
- * Async Thunk for registering a new user.
- * Calls the registerUserAPI function and handles success or failure.
- */
-export const registerUser = createAsyncThunk('user/register', async (userData, thunkAPI) => {
-  try {
-    return await registerUserAPI(userData);
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Registration failed');
+    return thunkAPI.rejectWithValue(error.response?.data?.detail || 'Login failed');
   }
 });
 
@@ -32,15 +37,12 @@ export const registerUser = createAsyncThunk('user/register', async (userData, t
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    token: localStorage.getItem('token') || null,  // Stores the authentication token
+    token: localStorage.getItem('token') || null,  
     role: localStorage.getItem('role') || null,
-    status: 'idle', // Tracks request status: 'idle' | 'loading' | 'succeeded' | 'failed'
-    error: null,  // Stores error messages if any API call fails
-    //test
-    // token: "sd2342de22scxasd##2wec2",  // Stores the authentication token
-    // role: "admin",
-    // status: 'succeeded', // Tracks request status: 'idle' | 'loading' | 'succeeded' | 'failed'
-
+    id: localStorage.getItem('id') || null,
+    msu_email: localStorage.getItem('msu_email') || null,
+    status: 'idle', 
+    error: null, 
   },
   reducers: {
     /**
@@ -50,8 +52,14 @@ const authSlice = createSlice({
     logout: (state) => {
       state.token = null;
       state.role = null;
+      state.id = null;
+      state.msu_email = null;
+      state.status = 'idle';
+      state.error = null
       localStorage.removeItem('token');
       localStorage.removeItem('role');
+      localStorage.removeItem('id');
+      localStorage.removeItem('msu_email');
     },
   },
   extraReducers: (builder) => {
@@ -63,24 +71,15 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.token = action.payload.token;
+        state.token = action.payload.access_token;
         state.role = action.payload.user.role;
+        state.id = action.payload.user.id;
+        state.msu_email = action.payload.user.msu_email
       })
       .addCase(loginUser.rejected, (state, action) => {
        state.status = 'failed';
        state.error = action.payload; 
       })
-
-      // Handles register state changes
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.token = action.payload.token;
-        state.role = action.payload.user.role;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      });
   },
 });
 
