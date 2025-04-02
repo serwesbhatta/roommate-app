@@ -31,6 +31,9 @@ class AuthUser(Base):
         ),
     )
 
+    requested_events = relationship("Event", back_populates="requested_user", foreign_keys="[Event.requested_by]")
+    approved_events = relationship("Event", back_populates="approved_user", foreign_keys="[Event.approved_by]")
+
     # Room Model
     room = relationship("Room", back_populates="auth_users")
 

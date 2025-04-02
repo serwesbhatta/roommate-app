@@ -52,7 +52,7 @@ def update_room_route(room_number: int, residence_hall_id: int, room: RoomUpdate
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@router.delete("/rooms/{residence_hall_id}/{room_id}")
+@router.delete("/rooms/{residence_hall_id}/{room_id}", response_model=bool)
 def delete_room_route(room_number: int, residence_hall_id: int, db: Session = Depends(get_db)):
     try:
         service = RoomService(db)
@@ -61,13 +61,13 @@ def delete_room_route(room_number: int, residence_hall_id: int, db: Session = De
             residence_hall_id=residence_hall_id
         )
         if deleted_room:
-            return {"Successfully deleted room"}
+            return True
         
-        return {"Couldn't delete room."}
+        return False
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-@router.get("/rooms/total_count")
+@router.get("/rooms_total_count", response_model=int)
 def get_total_rooms_route(db: Session = Depends(get_db)):
     try:
         service = RoomService(db)
@@ -77,7 +77,7 @@ def get_total_rooms_route(db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-@router.get("/rooms/available_count")
+@router.get("/rooms_available_count", response_model=int)
 def get_available_rooms_route(db: Session = Depends(get_db)):
     try:
         service = RoomService(db)
