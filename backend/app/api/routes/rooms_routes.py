@@ -26,8 +26,8 @@ def get_room_route(room_number: int, residence_hall_id: int, db: Session = Depen
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-@router.get("/rooms", response_model=RoomResponse)
-def list_rooms_route(skip: int, limit: int, db: Session = Depends(get_db)):
+@router.get("/rooms", response_model=List[RoomResponse])
+def list_rooms_route(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     try:
         service = RoomService(db)
         rooms = service.list_rooms(

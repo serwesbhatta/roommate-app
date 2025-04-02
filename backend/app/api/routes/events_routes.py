@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
+from typing import List
 
 from ...schemas.event_schema import EventCreate, EventResponse, EventUpdate
 from ...services.event_services import EventService
@@ -25,8 +26,8 @@ def get_event_route(event_id: int, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@router.get("/events", response_model=EventResponse)
-def list_event_route(skip: int, limit: int, db: Session = Depends(get_db)):
+@router.get("/events", response_model=List[EventResponse])
+def list_event_route(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     try:
         service = EventService(db)
         events = service.list_event(skip=skip, limit=limit)

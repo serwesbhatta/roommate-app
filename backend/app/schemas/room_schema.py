@@ -6,7 +6,7 @@ from .user_schema import AuthUserResponse
 
 # Base Room Schema (shared properties)
 class RoomBase(BaseModel):
-    room_number: str
+    room_number: int
     room_type: str
     capacity: int
     price: float
@@ -15,7 +15,7 @@ class RoomBase(BaseModel):
     
 # Schema for creating a new room
 class RoomCreate(RoomBase):
-    room_number: Optional[str] = None
+    room_number: Optional[int] = None
     room_type: Optional[str] = None
     capacity: Optional[int] = None
     price: Optional[float] = None
@@ -27,7 +27,7 @@ class RoomCreate(RoomBase):
 
 # Schema for updating a room
 class RoomUpdate(BaseModel):
-    room_number: Optional[str] = None
+    room_number: Optional[int] = None
     room_type: Optional[str] = None
     capacity: Optional[int] = None
     price: Optional[float] = None

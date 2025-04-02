@@ -38,7 +38,7 @@ class RoomService:
         room = get_room_by_id(
             db=self.db,
             model=Room,
-            room_id=room_number,
+            room_number=room_number,
             residence_hall_id=residence_hall_id
         )
 
@@ -61,7 +61,7 @@ class RoomService:
         updated_room = update_room(
             db=self.db,
             model=Room,
-            room_id=room_number,
+            room_number=room_number,
             residence_hall_id=residence_hall_id,
             update_data=update_data
         )
@@ -75,7 +75,7 @@ class RoomService:
         deleted_room = delete_room(
             db=self.db,
             model=Room,
-            room_id=room_number,
+            room_number=room_number,
             residence_hall_id=residence_hall_id
         )
 
