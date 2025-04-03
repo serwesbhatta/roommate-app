@@ -44,3 +44,49 @@ class OptionService:
             raise ValueError(f"Could not find the option with option id {option_id}")
         
         return option
+
+    def list_option(self, skip: int = 0, limit: int = 100) -> List[OptionResponse]:
+        return get_all_records(
+            db=self.db,
+            model=Option,
+            skip=skip,
+            limit=limit
+        )
+    
+    def update_option(self, option_id: int, new_option: OptionUpdate) -> OptionResponse:
+        update_data = new_option.model_dump()
+
+        updated_option = update_record(
+            db=self.db,
+            model=Option,
+            record_id=option_id,
+            update_data=update_data
+        )
+
+        if not updated_option:
+            raise ValueError(f"Option with option id {option_id} could not be updated.")
+        
+        return updated_option
+
+    def delete_option(self, option_id: int) -> bool:
+        deleted_option = delete_record(
+            db=self.db,
+            model=Option,
+            record_id=option_id
+        ) 
+
+        if not deleted_option:
+            raise ValueError(f"Option with option id {option_id} could not be deleted.")
+        
+        return deleted_option
+
+    def get_total_option(self) -> int:
+        total_option = get_count(
+            db=self.db,
+            model=Option
+        )
+
+        if total_option is None:
+            raise ValueError("Total count of option could not be calculated.")
+        
+        return total_option
