@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Profile from '../profile/Profile';
 import UserHome from './UserHome';
 import RoommateFinder from './roommateFinder/RoommateFinder';
+import UserEvents from './userevents/UserEvents';
 
 const User = () => {
   // const currentUserId = useSelector((state) => state.auth.id);
@@ -14,6 +15,7 @@ const User = () => {
     <Routes>
       <Route path="user_home" element={<UserHome />} /> 
       <Route path="roommate" element={<RoommateFinder />} /> 
+      <Route path="events" element={<UserEvents/>} /> 
       <Route path="profile/:userId" element={<Profile />} />
     </Routes>
   );
