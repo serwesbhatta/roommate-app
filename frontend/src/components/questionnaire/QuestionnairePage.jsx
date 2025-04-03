@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import React from 'react'
 import QuestionProgress from './QuestionProgress';
-import { ActionButton } from '../Buttons';
+import { ActionButton } from '../buttons';
 import HighlightText from '../others/HighlightText';
 import QuestionForm from './QuestionForm';
 

@@ -26,7 +26,7 @@ def get_question(question_id: int, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-@router.get("/questions", response_model=QuestionResponse)
+@router.get("/questions", response_model=List[QuestionResponse])
 def list_questions_route(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     try:
         service = QuestionService(db)
