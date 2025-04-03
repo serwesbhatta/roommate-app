@@ -19,6 +19,23 @@ class AuthUser(Base):
     # One-to-One Relationship with UserProfile
     profile = relationship("UserProfile", back_populates="auth_user", uselist=False, cascade="all, delete")
 
+
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("auth_users.id", ondelete="CASCADE"), unique=True, nullable=False)
+    msu_email = Column(String(100), unique=True, nullable=False)
+    first_name = Column(String(50), nullable=True)
+    last_name = Column(String(50), nullable=True)
+    msu_id = Column(String(50), unique=True, nullable=True)
+    profile_image = Column(String(255),nullable=True)  # Image path
+    modified_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
+    created_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
+
+    # Relationship with AuthUser
+    auth_user = relationship("AuthUser", back_populates="profile")
+
     # Composite Foreign Key to Room
     room_number = Column(Integer, nullable=True)
     residence_hall_id = Column(Integer, nullable=True)
@@ -37,21 +54,5 @@ class AuthUser(Base):
     # Room Model
     room = relationship("Room", back_populates="auth_users")
 
-    # User responses to questionnaire
-    reponses = relationship("UserResponse", back_populates="user")
-
-class UserProfile(Base):
-    __tablename__ = "user_profiles"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("auth_users.id", ondelete="CASCADE"), unique=True, nullable=False)
-    msu_email = Column(String(100), unique=True, nullable=False)
-    first_name = Column(String(50), nullable=True)
-    last_name = Column(String(50), nullable=True)
-    msu_id = Column(String(50), unique=True, nullable=True)
-    profile_image = Column(String(255),nullable=True)  # Image path
-    modified_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
-    created_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
-
-    # Relationship with AuthUser
-    auth_user = relationship("AuthUser", back_populates="profile")
+    # # User responses to questionnaire
+    # reponses = relationship("UserResponse", back_populates="user")

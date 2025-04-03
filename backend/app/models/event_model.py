@@ -15,8 +15,8 @@ class Event(Base):
     approved_by = Column(Integer, ForeignKey("auth_users.id"), nullable=True)
     requested_by = Column(Integer, ForeignKey("auth_users.id"), nullable=True)
 
-    requested_user = relationship("AuthUser", foreign_keys=[requested_by], back_populates="requested_events")
-    approved_user = relationship("AuthUser", foreign_keys=[approved_by], back_populates="approved_events")
+    requested_user = relationship("UserProfile", foreign_keys=[requested_by], back_populates="requested_events")
+    approved_user = relationship("UserProfile", foreign_keys=[approved_by], back_populates="approved_events")
 
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
