@@ -37,6 +37,9 @@ class AuthUser(Base):
     # Room Model
     room = relationship("Room", back_populates="auth_users")
 
+    # User responses to questionnaire
+    reponses = relationship("UserResponse", back_populates="user")
+
 class UserProfile(Base):
     __tablename__ = "user_profiles"
 

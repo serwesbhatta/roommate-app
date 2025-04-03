@@ -7,6 +7,9 @@ from .api.routes.users_routes import router as users_router
 from .api.routes.residence_halls_routes import router as residence_halls_router
 from .api.routes.rooms_routes import router as room_router
 from .api.routes.events_routes import router as event_router
+from .api.routes.questions_routes import router as question_router
+from .api.routes.options_routes import router as option_router
+from .api.routes.question_option_routes import router as question_option_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -58,3 +61,6 @@ app.include_router(users_router, prefix="/api/users")
 app.include_router(residence_halls_router, prefix="/api")
 app.include_router(room_router, prefix="/api")
 app.include_router(event_router, prefix="/api")
+app.include_router(question_router, prefix="/api")
+app.include_router(option_router, prefix="/api")
+app.include_router(question_option_router, prefix="/api")
