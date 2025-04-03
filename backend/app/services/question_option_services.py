@@ -13,8 +13,10 @@ class QuestionOptionService:
     def __init__(self, db: Session):
         self.db = db
     
-    def get_question_with_options(self, question_id: int, skip: int = 0, limit: int = 100) -> QuestionOptionResponse:
+    def get_question_with_options(self, question_id: int) -> QuestionOptionResponse:
         filter_condition = Option.question_id == question_id
+        skip = 0
+        limit = 100
 
         options = get_all_records(
             db=self.db,
