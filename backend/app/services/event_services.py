@@ -17,10 +17,6 @@ class EventService:
     def __init__(self, db: Session):
         self.db = db
 
-<<<<<<< HEAD
-    def create_event(self, event: EventCreate):
-        existingEvent = self.db.query(Event).filter(
-=======
     def get_event_with_user_name(self, event_id: int) -> EventResponse:
         event_with_users = self.db.query(Event).options(
             joinedload(Event.requested_user),
@@ -48,7 +44,6 @@ class EventService:
 
     def create_event(self, event: EventCreate) -> EventResponse:
         existingEvent = self.db.query(event).filter(
->>>>>>> 7fcaf72 (fix: merge conflict:)
             Event.title == event.title
         ).first()
 
@@ -63,13 +58,10 @@ class EventService:
             data=event_data
         )
 
-<<<<<<< HEAD
-=======
         event_with_users = self.get_event_with_user_name(created_event.id)
 
         return event_with_users
 
->>>>>>> 7fcaf72 (fix: merge conflict:)
     def get_event(self, event_id: int) -> EventResponse:
         event = get_record_by_id(
             db=self.db,
