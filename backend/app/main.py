@@ -41,7 +41,7 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Adjust as needed
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],  
     allow_headers=["*"], 
@@ -57,7 +57,7 @@ def root():
     return {"message": "Roommate Backend App"}
 
 # Include routers with appropriate prefixes
-app.include_router(users_router, prefix="/api/users")
+app.include_router(users_router, prefix="/api")
 app.include_router(residence_halls_router, prefix="/api")
 app.include_router(room_router, prefix="/api")
 app.include_router(event_router, prefix="/api")
