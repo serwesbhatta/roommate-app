@@ -2,7 +2,6 @@ from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, func, Bool
 from sqlalchemy.orm import relationship
 from app.database import Base
 
-
 class AuthUser(Base):
     __tablename__ = "auth_users"
 
@@ -38,7 +37,7 @@ class AuthUser(Base):
     room = relationship("Room", back_populates="auth_users")
 
     # User responses to questionnaire
-    reponses = relationship("UserResponse", back_populates="user")
+    responses = relationship("UserResponse", back_populates="user") 
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"
