@@ -1,5 +1,5 @@
 from typing import List, Optional
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from ..models.event_model import Event
 from ..schemas.event_schema import EventCreate, EventResponse, EventUpdate
@@ -17,8 +17,8 @@ class EventService:
     def __init__(self, db: Session):
         self.db = db
 
-    def create_event(self, event: EventCreate) -> Event:
-        existingEvent = self.db.query(event).filter(
+    def create_event(self, event: EventCreate) -> EventResponse:
+        existingEvent = self.db.query(Event).filter(
             Event.title == event.title
         ).first()
 
@@ -33,7 +33,7 @@ class EventService:
             data=event_data
         )
 
-    def get_event(self, event_id: int) -> Event:
+    def get_event(self, event_id: int) -> EventResponse:
         event = get_record_by_id(
             db=self.db,
             model=Event,
@@ -42,18 +42,18 @@ class EventService:
 
         if not event:
             raise ValueError(f"Event with event id {event_id} doesn't exist.")
-        
+                
         return event
     
-    def list_event(self, skip: int = 0, limit: int = 100) -> List[Event]:
+    def list_event(self, skip: int = 0, limit: int = 100) -> List[EventResponse]:
         return get_all_records(
             db=self.db,
             model=Event,
             skip=skip,
             limit=limit
         )
-    
-    def update_event(self, event_id: int, event_update: EventUpdate) -> Event:
+
+    def update_event(self, event_id: int, event_update: EventUpdate) -> EventResponse:
         update_data = event_update.model_dump()
 
         updated_event = update_record(
@@ -65,7 +65,7 @@ class EventService:
 
         if not updated_event:
             raise ValueError(f"Event with event id {event_id} not found.")
-
+        
         return updated_event
     
     def delete_event(self, event_id: int) -> bool:
