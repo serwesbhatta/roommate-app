@@ -66,20 +66,20 @@ def total_events_route(db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@router.get("/events_pending_count", response_model=int)
-def pending_events_route(db: Session = Depends(get_db)):
+@router.get("/events_pending", response_model=List[EventResponse])
+def pending_events_route(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     try:
         service = EventService(db)
-        pending_events = service.get_pending_events()
+        pending_events = service.get_pending_events(skip, limit)
         return pending_events
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-@router.get("/events_approved_count", response_model=int)
-def approved_events_route(db: Session = Depends(get_db)):
+@router.get("/events_approved", response_model=List[EventResponse])
+def approved_events_route(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     try:
         service = EventService(db)
-        approved_events = service.get_approved_events()
+        approved_events = service.get_approved_events(skip, limit)
         return approved_events
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))

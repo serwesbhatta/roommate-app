@@ -61,7 +61,7 @@ def get_all_records(
     """
     query = db.query(model)
 
-    if filter_condition:
+    if filter_condition is not None:
         query = query.filter(filter_condition)
     
     return query.offset(skip).limit(limit).all()
