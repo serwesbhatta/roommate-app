@@ -13,9 +13,9 @@ class Event(Base):
     event_start = Column(DateTime, nullable=False)
     event_end = Column(DateTime, nullable=False)
     location = Column(String(200), nullable=False)
-    status = Column(String(50), default="pending", nullable=False)
+    status = Column(String(50), default="pending", nullable=True)
     approved_by = Column(Integer, ForeignKey("user_profiles.id"), nullable=True)
-    requested_by = Column(Integer, ForeignKey("user_profiles.id"), nullable=True)
+    requested_by = Column(Integer, ForeignKey("user_profiles.id"), nullable=False)
 
     requested_user = relationship("UserProfile", foreign_keys=[requested_by], back_populates="requested_events")
     approved_user = relationship("UserProfile", foreign_keys=[approved_by], back_populates="approved_events")

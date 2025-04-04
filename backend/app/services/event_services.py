@@ -23,8 +23,11 @@ class EventService:
             joinedload(Event.approved_user)
         ).filter(Event.id == event_id).first()
 
-        approved_user_name = event_with_users.approved_user.username if event_with_users.approved_user else None
-        requested_user_name = event_with_users.requested_user.username if event_with_users.requested_user else None
+        if not event_with_users:
+            raise ValueError(f"Event with event id {event_id} not found.")
+
+        approved_user_name = event_with_users.approved_user.first_name if event_with_users.approved_user else None
+        requested_user_name = event_with_users.requested_user.first_name if event_with_users.requested_user else None
 
         return EventResponse(
             id=event_with_users.id,
@@ -43,7 +46,7 @@ class EventService:
         )
 
     def create_event(self, event: EventCreate) -> EventResponse:
-        existingEvent = self.db.query(event).filter(
+        existingEvent = self.db.query(Event).filter(
             Event.title == event.title
         ).first()
 
