@@ -12,11 +12,11 @@ class Event(Base):
     description = Column(String(500), nullable=False)
     date = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
     status = Column(String(50), default="pending", nullable=False)
-    approved_by = Column(Integer, ForeignKey("auth_users.id"), nullable=True)
-    requested_by = Column(Integer, ForeignKey("auth_users.id"), nullable=True)
+    approved_by = Column(Integer, ForeignKey("user_profiles.id"), nullable=True)
+    requested_by = Column(Integer, ForeignKey("user_profiles.id"), nullable=True)
 
-    requested_user = relationship("AuthUser", foreign_keys=[requested_by], back_populates="requested_events")
-    approved_user = relationship("AuthUser", foreign_keys=[approved_by], back_populates="approved_events")
+    requested_user = relationship("UserProfile", foreign_keys=[requested_by], back_populates="requested_events")
+    approved_user = relationship("UserProfile", foreign_keys=[approved_by], back_populates="approved_events")
 
     created_at = Column(DateTime, default=datetime.now(timezone.utc))
     updated_at = Column(DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))

@@ -12,8 +12,8 @@ from alembic import context
 
 # IMPORTANT: Import your Base and all models
 from app.database import Base
-from app.models.user_model import AuthUser, UserProfile  # Import all your models
-from app.core.config import Settings
+# from app.models.user_model import AuthUser, UserProfile  # Import all your models
+import app.models
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

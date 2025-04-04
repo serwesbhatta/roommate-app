@@ -18,26 +18,6 @@ class AuthUser(Base):
     # One-to-One Relationship with UserProfile
     profile = relationship("UserProfile", back_populates="auth_user", uselist=False, cascade="all, delete")
 
-    # Composite Foreign Key to Room
-    room_number = Column(Integer, nullable=True)
-    residence_hall_id = Column(Integer, nullable=True)
-
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["room_number", "residence_hall_id"],
-            ["rooms.room_number", "rooms.residence_hall_id"],
-            ondelete="SET NULL"
-        ),
-    )
-
-    requested_events = relationship("Event", back_populates="requested_user", foreign_keys="[Event.requested_by]")
-    approved_events = relationship("Event", back_populates="approved_user", foreign_keys="[Event.approved_by]")
-
-    # Room Model
-    room = relationship("Room", back_populates="auth_users")
-
-    # User responses to questionnaire
-    responses = relationship("UserResponse", back_populates="user") 
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"
@@ -54,3 +34,24 @@ class UserProfile(Base):
 
     # Relationship with AuthUser
     auth_user = relationship("AuthUser", back_populates="profile")
+
+    # Composite Foreign Key to Room
+    room_number = Column(Integer, nullable=True)
+    residence_hall_id = Column(Integer, nullable=True)
+
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["room_number", "residence_hall_id"],
+            ["rooms.room_number", "rooms.residence_hall_id"],
+            ondelete="SET NULL"
+        ),
+    )
+
+    requested_events = relationship("Event", back_populates="requested_user", foreign_keys="[Event.requested_by]")
+    approved_events = relationship("Event", back_populates="approved_user", foreign_keys="[Event.approved_by]")
+
+    # Room Model
+    room = relationship("Room", back_populates="user_profiles")
+
+    # # User responses to questionnaire
+    # responses = relationship("UserResponse", back_populates="user")

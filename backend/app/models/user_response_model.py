@@ -10,6 +10,6 @@ class UserResponse(Base):
     question_id = Column(Integer, ForeignKey("questions.id", nullable=False))
     option_id = Column(Integer, ForeignKey("options.id"), nullable=False)
 
-    user = relationship("AuthUser", back_populates="responses")
-    question = relationship("Question")
-    option = relationship("Option")
+    # user = relationship("UserProfile", back_populates="responses")
+    # question = relationship("Question")
+    # option = relationship("Option")

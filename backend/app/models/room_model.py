@@ -24,7 +24,7 @@ class Room(Base):
     residence_hall = relationship("ResidenceHall", back_populates="rooms")
 
     # For occupants in a room
-    auth_users = relationship("AuthUser", back_populates="room")
+    user_profiles = relationship("UserProfile", back_populates="room")
 
     room_status = Column(String(20), default="available")
     lease_end = Column(Date, default="N/A")
