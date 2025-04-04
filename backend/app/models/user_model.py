@@ -52,7 +52,7 @@ class UserProfile(Base):
     approved_events = relationship("Event", back_populates="approved_user", foreign_keys="[Event.approved_by]")
 
     # Room Model
-    room = relationship("Room", back_populates="auth_users")
+    room = relationship("Room", back_populates="user_profiles")
 
     # # User responses to questionnaire
     # reponses = relationship("UserResponse", back_populates="user")
