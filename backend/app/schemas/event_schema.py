@@ -5,7 +5,9 @@ from datetime import datetime, timezone
 class EventBase(BaseModel):
     title: str
     description: str
-    datetime: datetime
+    event_start: datetime
+    event_end: datetime
+    location: str
 
 class EventCreate(EventBase):
     requested_by: int
@@ -14,6 +16,9 @@ class EventUpdate(EventBase):
     title: Optional[str]
     description: Optional[str]
     date: Optional[datetime]
+    event_start: Optional[datetime]
+    event_end: Optional[datetime]
+    location: Optional[str]
     status: Optional[str]
     approved_by: Optional[int]
     updated_at: Optional[datetime] = datetime.now(timezone.utc)
@@ -23,6 +28,8 @@ class EventResponse(EventBase):
     status: str
     approved_by: int
     requested_by: int
+    approved_user_name: str
+    requested_user_name: str
     created_at: datetime
     updated_at: datetime
 
