@@ -13,7 +13,11 @@ class Event(Base):
     event_start = Column(DateTime, nullable=False)
     event_end = Column(DateTime, nullable=False)
     location = Column(String(200), nullable=False)
+<<<<<<< HEAD
     status = Column(String(50), default="pending", nullable=True)
+=======
+    status = Column(String(50), default="pending", nullable=False)
+>>>>>>> 7fcaf72 (fix: merge conflict:)
     approved_by = Column(Integer, ForeignKey("user_profiles.id"), nullable=True)
     requested_by = Column(Integer, ForeignKey("user_profiles.id"), nullable=False)
 
