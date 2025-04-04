@@ -17,33 +17,8 @@ class EventService:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_event_with_user_name(self, event_id: int) -> EventResponse:
-        event_with_users = self.db.query(Event).options(
-            joinedload(Event.requested_user),
-            joinedload(Event.approved_user)
-        ).filter(Event.id == event_id).first()
-
-        approved_user_name = event_with_users.approved_user.username if event_with_users.approved_user else None
-        requested_user_name = event_with_users.requested_user.username if event_with_users.requested_user else None
-
-        return EventResponse(
-            id=event_with_users.id,
-            title=event_with_users.title,
-            description=event_with_users.description,
-            event_start=event_with_users.event_start,
-            event_end=event_with_users.event_end,
-            location=event_with_users.location,
-            status=event_with_users.status,
-            approved_by=event_with_users.approved_by,
-            requested_by=event_with_users.requested_by,
-            approved_user_name=approved_user_name,
-            requested_user_name=requested_user_name,
-            created_at=event_with_users.created_at,
-            updated_at=event_with_users.updated_at
-        )
-
     def create_event(self, event: EventCreate) -> EventResponse:
-        existingEvent = self.db.query(event).filter(
+        existingEvent = self.db.query(Event).filter(
             Event.title == event.title
         ).first()
 
@@ -52,15 +27,11 @@ class EventService:
         
         event_data = event.model_dump()
 
-        created_event = create_record(
+        return create_record(
             db=self.db,
             model=Event,
             data=event_data
         )
-
-        event_with_users = self.get_event_with_user_name(created_event.id)
-
-        return event_with_users
 
     def get_event(self, event_id: int) -> EventResponse:
         event = get_record_by_id(
@@ -71,28 +42,17 @@ class EventService:
 
         if not event:
             raise ValueError(f"Event with event id {event_id} doesn't exist.")
-        
-        event_with_users = self.get_event_with_user_name(event.id)
-        
-        return event_with_users
+                
+        return event
     
     def list_event(self, skip: int = 0, limit: int = 100) -> List[EventResponse]:
-        events = get_all_records(
+        return get_all_records(
             db=self.db,
             model=Event,
             skip=skip,
             limit=limit
         )
 
-        events_with_user_name = []
-
-        for event in events:
-            event_with_users = self.get_event_with_user_name(event.id)
-            events_with_user_name.append(event_with_users)
-        
-        return events_with_user_name
-
-    
     def update_event(self, event_id: int, event_update: EventUpdate) -> EventResponse:
         update_data = event_update.model_dump()
 
@@ -106,9 +66,7 @@ class EventService:
         if not updated_event:
             raise ValueError(f"Event with event id {event_id} not found.")
         
-        updated_event_with_user = self.get_event_with_user_name(updated_event.id)
-
-        return updated_event_with_user
+        return updated_event
     
     def delete_event(self, event_id: int) -> bool:
         deleted_event = delete_record(

@@ -26,10 +26,10 @@ class EventUpdate(EventBase):
 class EventResponse(EventBase):
     id: int
     status: str
-    approved_by: int
+    approved_by: Optional[int] = None
     requested_by: int
-    approved_user_name: str
-    requested_user_name: str
+    approved_user_name: Optional[str] = None
+    requested_user_name: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 
