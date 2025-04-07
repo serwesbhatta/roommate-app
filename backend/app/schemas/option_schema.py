@@ -10,7 +10,7 @@ class OptionCreate(OptionBase):
 
 class OptionUpdate(OptionBase):
     option_text: Optional[str]
-    question_id: Optional[str]
+    question_id: Optional[int]
 
 class OptionResponse(OptionBase):
     id: int
