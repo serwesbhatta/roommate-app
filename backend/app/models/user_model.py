@@ -54,4 +54,4 @@ class UserProfile(Base):
     room = relationship("Room", back_populates="user_profiles")
 
     # # User responses to questionnaire
-    # responses = relationship("UserResponse", back_populates="user")
+    responses = relationship("UserResponse", back_populates="user_profile", cascade="all, delete")

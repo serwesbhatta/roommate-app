@@ -10,3 +10,5 @@ class Question(Base):
     category = Column(String(100), nullable=False)
 
     options = relationship("Option", back_populates="question", cascade="all, delete-orphan")
+    responses = relationship("UserResponse", back_populates="question", cascade="all, delete")
+

@@ -1,19 +1,9 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import List
 
-class UserResponseBase(BaseModel):
-    user_id: int
+class SingleUserResponse(BaseModel):
     question_id: int
-    option_id: int
+    selected_option: str
 
-class UserResponseCreate(UserResponseBase):
-    pass
-
-class UserResponseUpdate(UserResponseBase):
-    option_id: Optional[int]
-
-class UserReponseResponse(UserResponseBase):
-    id: int
-
-    class Config:
-        orm_mode = True
+class UserResponseCreate(BaseModel):
+    responses: List[SingleUserResponse]
