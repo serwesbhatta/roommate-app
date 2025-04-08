@@ -35,11 +35,13 @@ class QuestionOptionService:
         if not question:
             raise ValueError(f"Question with question_id {question_id} not found.")
         
+        options_text = [option.option_text for option in options]
+        
         response = QuestionOptionResponse(
             id=question_id,
             question_text=question.question_text,
             category=question.category,
-            options=[option.text for option in options]
+            options=options_text
         )
 
         return response
