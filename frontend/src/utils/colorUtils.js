@@ -12,3 +12,12 @@
         return 'primary';
     }
   };
+
+  const getStatusChipColor = (status) => {
+    switch (status) {
+      case 'approved': return 'success';
+      case 'pending': return 'warning';
+      case 'rejected': return 'error';
+      default: return 'default';
+    }
+  };

@@ -13,15 +13,15 @@ class EventCreate(EventBase):
     requested_by: int
 
 class EventUpdate(EventBase):
-    title: Optional[str]
-    description: Optional[str]
-    date: Optional[datetime]
-    event_start: Optional[datetime]
-    event_end: Optional[datetime]
-    location: Optional[str]
-    status: Optional[str]
-    approved_by: Optional[int]
+    # title: Optional[str] = None
+    # description: Optional[str] = None
+    # event_start: Optional[datetime] = None
+    # event_end: Optional[datetime] = None
+    # location: Optional[str] = None
+    status: Optional[str] = None
+    approved_by: Optional[int] = None
     updated_at: Optional[datetime] = datetime.now(timezone.utc)
+
 
 class EventResponse(EventBase):
     id: int
