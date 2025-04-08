@@ -1,10 +1,17 @@
 import React from "react";
 import { Box, TextField, MenuItem, Typography } from "@mui/material";
 import SearchBar from "../others/SearchBar";
-import {BlueButton} from "../buttons";
 
-const AdminTableController = ({ onSearchChange, onCategoryChange, onStatusChange, 
-  onSearchClick, categoryOptions, statusOptions, searchPlaceholder}) => {
+const AdminTableController = ({
+  onSearchChange,
+  onCategoryChange,
+  onStatusChange,
+  onSearchClick,
+  categoryOptions,
+  statusOptions,
+  searchPlaceholder,
+  searchTerm,
+})=> {
     
   return (
     <Box
@@ -35,46 +42,50 @@ const AdminTableController = ({ onSearchChange, onCategoryChange, onStatusChange
         >
           {/* Search Box */}
           <SearchBar 
-            placeHolder={searchPlaceholder} 
-            onChange={onSearchChange} 
+            placeHolder={searchPlaceholder}
+            onChange={onSearchChange}
+            value={searchTerm}
+            onSearchClick={onSearchClick}
           />
 
           {/* Category Dropdown */}
-          <TextField
-            select
-            label="Category"
-            variant="outlined"
-            size="small"
-            sx={{ minWidth: 150 }}
-            onChange={(e) => onCategoryChange && onCategoryChange(e.target.value)}
-          >
-            <MenuItem value="">All</MenuItem>
-            {categoryOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+          {categoryOptions.length !== 0 && (
+            <TextField
+              select
+              label="Category"
+              variant="outlined"
+              size="small"
+              sx={{ minWidth: 150 }}
+              onChange={(e) => onCategoryChange && onCategoryChange(e.target.value)}
+            >
+              <MenuItem value="">All</MenuItem>
+              {categoryOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+
 
           {/* Status Dropdown */}
-          <TextField
-            select
-            label="Status"
-            variant="outlined"
-            size="small"
-            sx={{ minWidth: 150 }}
-            onChange={(e) => onStatusChange && onStatusChange(e.target.value)}
-          >
-            <MenuItem value="">All</MenuItem>
-            {statusOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          {/* Search Button */}
-          <BlueButton btuTxt={"Search"} onClick={onSearchClick} />
+          {statusOptions.length !== 0 && (
+            <TextField
+              select
+              label="Status"
+              variant="outlined"
+              size="small"
+              sx={{ minWidth: 150 }}
+              onChange={(e) => onStatusChange && onStatusChange(e.target.value)}
+            >
+              <MenuItem value="">All</MenuItem>
+              {statusOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
         </Box>
       </Box>
     </Box>

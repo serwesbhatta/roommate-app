@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -31,6 +31,10 @@ import {
 } from '@mui/icons-material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import {AdminWidgets, AdminHeaders} from '../../components/adminComponent'
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTotalEventCount, fetchPendingEvents,  fetchEvents } from '../../redux/slices/eventsSlice';
+
+
 
 
 // Sample data for chart
@@ -49,37 +53,37 @@ const newUsersData = [
   { name: '60k', value: 60 }
 ];
 
-// Sample events data
-const eventsData = [
-  {
-    id: 1,
-    name: 'Mustangs Rally',
-    location: 'Bridwell Activities Center',
-    dateTime: '12.09.2025 - 12.53 PM',
-    roomNo: '423',
-    requester: 'John Doe',
-    status: 'Accepted'
-  }
-];
+
 
 const AdminDashboard = () => {
+
+  const dispatch = useDispatch();
+  const { events, pendingEvents, totalCount } = useSelector((state) => state.events);
+  const topEvents = events.slice(0, 4);
+
+  
+  useEffect(() => {
+    dispatch(fetchEvents());
+    dispatch(fetchTotalEventCount());
+    dispatch(fetchPendingEvents());
+  }, [dispatch]);
+
+
   const [month, setMonth] = useState('October');
-  const [eventMonth, setEventMonth] = useState('February');
 
   const handleMonthChange = (event) => {
     setMonth(event.target.value);
   };
 
-  const handleEventMonthChange = (event) => {
-    setEventMonth(event.target.value);
-  };
 
-  const statsData = [
-    { label: "Total User", value: 782, icon: <PersonIcon sx={{ color: "#2196f3" }} />, bgcolor: "#e3f2fd" },
-    { label: "Total Rooms", value: 234, icon: <RoomIcon sx={{ color: "#ffc107" }} />, bgcolor: "#fff8e1" },
-    { label: "Available Rooms", value: 54, icon: <RoomIcon sx={{ color: "#4caf50" }} />, bgcolor: "#e8f5e9" },
-    { label: "Pending Events", value: 21, icon: <EventIcon sx={{ color: "#ff5252" }} />, bgcolor: "#ffebee" },
-  ];
+const statsData = [
+  { label: "Total User", value: 782, icon: <PersonIcon sx={{ color: "#2196f3" }} />, bgcolor: "#e3f2fd" },
+  { label: "Total Rooms", value: 234, icon: <RoomIcon sx={{ color: "#ffc107" }} />, bgcolor: "#fff8e1" },
+  { label: "Available Rooms", value: 54, icon: <RoomIcon sx={{ color: "#4caf50" }} />, bgcolor: "#e8f5e9" },
+  { label: "Total Events", value: totalCount, icon: <EventIcon sx={{ color: "#3f51b5" }} />, bgcolor: "#e8eaf6" },
+  { label: "Pending Events", value: pendingEvents.length, icon: <EventIcon sx={{ color: "#ff5252" }} />, bgcolor: "#ffebee" },
+];
+
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f5f5f5' }}>      
@@ -136,59 +140,59 @@ const AdminDashboard = () => {
                 </Box>
             </Paper>
             
-            {/* Events table */}
-            <Paper sx={{ p: 3, borderRadius: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
-                Events
-                </Typography>
-                <FormControl size="small" sx={{ width: 120 }}>
-                <Select value={eventMonth} onChange={handleEventMonthChange}>
-                    <MenuItem value="January">January</MenuItem>
-                    <MenuItem value="February">February</MenuItem>
-                    <MenuItem value="March">March</MenuItem>
-                </Select>
-                </FormControl>
-            </Box>
             
+          {/* Events table */}
+          <Paper sx={{ p: 3, borderRadius: 3 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
+                Events
+              </Typography>
+            </Box>
+
             <TableContainer>
-                <Table>
+              <Table>
                 <TableHead sx={{ bgcolor: '#f8f9fa' }}>
-                    <TableRow>
+                  <TableRow>
                     <TableCell>Event Name</TableCell>
                     <TableCell>Location</TableCell>
                     <TableCell>Date - Time</TableCell>
-                    <TableCell>Room No.</TableCell>
                     <TableCell>Requester</TableCell>
                     <TableCell>Status</TableCell>
-                    </TableRow>
+                  </TableRow>
                 </TableHead>
                 <TableBody>
-                    {eventsData.map((event) => (
+                  {topEvents.map((event) => (
                     <TableRow key={event.id}>
-                        <TableCell>
+                      <TableCell>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar sx={{ mr: 2, bgcolor: '#e0e0e0' }} />
-                            {event.name}
+                          {event.title}
                         </Box>
-                        </TableCell>
-                        <TableCell>{event.location}</TableCell>
-                        <TableCell>{event.dateTime}</TableCell>
-                        <TableCell>{event.roomNo}</TableCell>
-                        <TableCell>{event.requester}</TableCell>
-                        <TableCell>
-                        <Chip 
-                            label={event.status} 
-                            color="success" 
-                            sx={{ borderRadius: 5 }} 
+                      </TableCell>
+                      <TableCell>{event.location}</TableCell>
+                      <TableCell>
+                        {new Date(event.event_start).toLocaleDateString()} - {new Date(event.event_start).toLocaleTimeString()}
+                      </TableCell>
+                      <TableCell>{event.requested_user_name || "—"}</TableCell>
+                      <TableCell>
+                        <Chip
+                          label={event.status}
+                          color={
+                            event.status === 'approved'
+                              ? 'success'
+                              : event.status === 'pending'
+                              ? 'warning'
+                              : 'error'
+                          }
+                          sx={{ borderRadius: 5 }}
                         />
-                        </TableCell>
+                      </TableCell>
                     </TableRow>
-                    ))}
+                  ))}
                 </TableBody>
-                </Table>
+              </Table>
             </TableContainer>
-            </Paper>
+          </Paper>
+
         </Box>
     </Box>
   );
