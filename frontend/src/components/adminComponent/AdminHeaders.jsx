@@ -25,9 +25,6 @@ const AdminHeaders = ({ title, subtitle, onAddClick }) => {
           </Typography>
         )}
       </Box>
-      {(title === "Users" || title == "Rooms") &&
-        <BlueButton btuTxt="Add New" onClicked= {onAddClick} />
-      }
     </Box>
   );
 };

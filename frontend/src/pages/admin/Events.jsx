@@ -1,126 +1,333 @@
-import React, { useState, useEffect } from 'react';
-import { Box } from '@mui/system';
-import { AdminHeaders, AdminTable, AdminTableController } from '../../components/adminComponent';
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Stack,
+  Typography,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Grid,
+} from "@mui/material";
+import {
+  AdminHeaders,
+  AdminTable,
+  AdminTableController,
+} from "../../components/adminComponent";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchEvents,
+  updateEvent,
+  deleteEvent,
+  createEvent,
+} from "../../redux/slices/eventsSlice";
+import { EventForm } from "../../components/events";
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
+  const dispatch = useDispatch();
+  const { events, loading } = useSelector((state) => state.events);
+  const { id: currentAdminId } = useSelector((state) => state.auth);
+
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [eventForm, setEventForm] = useState({
+    title: "",
+    description: "",
+    event_start: "",
+    event_end: "",
+    location: "",
+    requested_by: "",
+  });
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const menuActionsList = ["View", "Edit", "Block", "Delete"]
+  const menuActionsList = ["Add", "Edit", "Approve", "Reject", "Delete"];
 
-  // Sample data fetching (replace with actual API call)
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const sampleData = Array.from({ length: 30 }, (_, i) => ({
-        id: i + 1,
-        title: `Event ${i + 1}`,
-        image: `https://picsum.photos/id/${i + 20}/200`,
-        organizer: `Organizer ${(i % 5) + 1}`,
-        location: `Location ${(i % 8) + 1}`,
-        date: `March ${i + 1}, 2025`,
-        attendees: Math.floor(Math.random() * 150),
-        status: i % 3 === 0 ? "Active" : i % 3 === 1 ? "Pending" : "Cancelled",
-      }));
-      setEvents(sampleData);
-      setFilteredEvents(sampleData);
-      setLoading(false);
-    }, 500);
-  }, []);
+    dispatch(fetchEvents());
+  }, [dispatch]);
 
-  // Filter events based on search and filters
+  useEffect(() => {
+    filterEvents();
+  }, [events, searchTerm, statusFilter]);
+
   const filterEvents = () => {
     let result = [...events];
-    
-    // Apply search term
     if (searchTerm) {
-      result = result.filter(event => 
-        event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        event.organizer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        event.location.toLowerCase().includes(searchTerm.toLowerCase())
+      result = result.filter(
+        (event) =>
+          event.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          event.requested_user_name
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          event.location?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
-    // Apply status filter
     if (statusFilter) {
-      result = result.filter(event => 
-        event.status.toLowerCase() === statusFilter.toLowerCase()
+      result = result.filter(
+        (event) => event.status?.toLowerCase() === statusFilter.toLowerCase()
       );
     }
-    
-    // Apply category filter (in a real app, this might filter by event type)
-    if (categoryFilter) {
-      // Apply event type filtering logic here
-    }
-    
     setFilteredEvents(result);
   };
 
-  // Handle search button click
-  const handleSearchClick = () => {
-    filterEvents();
+  const formatDateTime = (datetime) =>
+    new Date(datetime).toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+  const formatDateTimeForInput = (datetimeStr) => {
+    const date = new Date(datetimeStr);
+    return date.toISOString().slice(0, 16);
   };
 
-  // Define table columns
-  const columns = [
-    { field: 'title', headerName: 'Event Name' },
-    { field: 'organizer', headerName: 'Organizer' },
-    { field: 'location', headerName: 'Location' },
-    { field: 'date', headerName: 'Date' },
-    { field: 'attendees', headerName: 'Attendees' },
-  ];
-
-  // Handle row actions
   const handleRowAction = (action, id) => {
-    console.log(`Action: ${action} on event ID: ${id}`);
-    // Implement actual actions here
+    const event = filteredEvents.find((e) => e.id === id);
+    switch (action) {
+      case "delete":
+        dispatch(deleteEvent(id));
+        break;
+
+      case "approve":
+        if (event?.status === "pending" || event?.status === "rejected") {
+          const { title, description, event_start, event_end, location } =
+            event;
+
+          const payload = {
+            title,
+            description,
+            event_start,
+            event_end,
+            location,
+            status: "approved",
+            approved_by: currentAdminId,
+            updated_at: new Date().toISOString(),
+          };
+
+          dispatch(updateEvent({ id: event.id, data: payload }));
+        }
+        break;
+
+      case "reject":
+        if (event?.status === "pending" || event?.status === "approved") {
+          const { title, description, event_start, event_end, location } =
+            event;
+
+          const payload = {
+            title,
+            description,
+            event_start,
+            event_end,
+            location,
+            status: "rejected",
+            approved_by: currentAdminId,
+            updated_at: new Date().toISOString(),
+          };
+
+          dispatch(updateEvent({ id: event.id, data: payload }));
+        }
+        break;
+
+      case "add":
+        setIsEditMode(false);
+        setEventForm({
+          title: "",
+          description: "",
+          event_start: "",
+          event_end: "",
+          location: "",
+          requested_by: currentAdminId,
+        });
+        setDialogOpen(true);
+        break;
+
+      case "edit":
+
+        setIsEditMode(true);
+        setEventForm({
+          ...event,
+          event_start: formatDateTimeForInput(event.event_start),
+          event_end: formatDateTimeForInput(event.event_end),
+        });
+        setDialogOpen(true);
+        break;
+
+      default:
+        break;
+    }
   };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setEventForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFormSubmit = () => {
+
+    const { title, description, location } = eventForm;
+    const payload = {
+      title,
+      description,
+      location,
+      event_start: new Date(eventForm.event_start).toISOString(),
+      event_end: new Date(eventForm.event_end).toISOString(),
+    };
+
+    if (isEditMode) {
+      const data = {
+        ...payload,
+        status: "rejected",   
+        approved_by: currentAdminId, 
+        updated_at: new Date().toISOString(),  
+      };
+      dispatch(updateEvent({ id: eventForm.id, data }));
+
+    } else {
+      const data = {
+        ...payload,
+        requested_by: currentAdminId
+      }
+      dispatch(createEvent(data));
+    }
+
+    setDialogOpen(false);
+    setIsEditMode(false);
+    setEventForm({
+      title: "",
+      description: "",
+      event_start: "",
+      event_end: "",
+      location: "",
+      requested_by: currentAdminId,
+    });
+  };
+
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#f5f5f5' }}>    
+    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f5f5f5" }}>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {/* Admin header with add button */}
-        <AdminHeaders 
+        <AdminHeaders
           title="Events"
-          subtitle="View and manage events."
-          addButtonText="Add Events"
-          onAddClick="/admin/events/add_user"
+          subtitle="Manage all user-submitted events"
+          addButtonText="Add Event"
+          onAddClick={() => handleRowAction("add")}
         />
-        
-        {/* Search and filter controls */}
-        <AdminTableController 
+
+        <AdminTableController
           title="Event Management"
+          searchPlaceholder="Search title, location, user..."
           onSearchChange={(e) => setSearchTerm(e.target.value)}
-          onCategoryChange={setCategoryFilter}
           onStatusChange={setStatusFilter}
-          onSearchClick={handleSearchClick}
-          searchPlaceholder="Search event name, organizer..."
-          categoryOptions={[
-            { value: "workshop", label: "Workshop" },
-            { value: "conference", label: "Conference" },
-            { value: "meetup", label: "Meetup" }
-          ]}
+          onSearchClick={filterEvents}
+          searchTerm={searchTerm}
+          categoryOptions={[]} // placeholder
           statusOptions={[
-            { value: "active", label: "Active" },
+            { value: "approved", label: "Approved" },
             { value: "pending", label: "Pending" },
-            { value: "cancelled", label: "Cancelled" }
+            { value: "rejected", label: "Rejected" },
           ]}
         />
-        
-        {/* Table component displaying filtered data */}
-        <AdminTable 
+
+        <AdminTable
           data={filteredEvents}
-          columns={columns}
+          columns={[
+            { field: "id", headerName: "ID" },
+            { field: "title", headerName: "Title" },
+            { field: "location", headerName: "Location" },
+            {
+              field: "event_start",
+              headerName: "Start",
+              render: (value) => formatDateTime(value),
+            },
+            {
+              field: "event_end",
+              headerName: "End",
+              render: (value) => formatDateTime(value),
+            },
+            {
+              field: "requested_user_name",
+              headerName: "Requested By",
+              render: (value) => value || "N/A",
+            },
+            {
+              field: "approved_user_name",
+              headerName: "Approved By",
+              render: (value) => value || "—",
+            },
+            {
+              field: "description",
+              headerName: "Description",
+              render: (value) => {
+                const maxLength = 60;
+                const shortText =
+                  value?.length > maxLength
+                    ? value.slice(0, maxLength) + "..."
+                    : value;
+                return (
+                  <Tooltip title={value || "No description"} arrow>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth: 200,
+                        display: "inline-block",
+                      }}
+                    >
+                      {shortText || "—"}
+                    </Typography>
+                  </Tooltip>
+                );
+              },
+            },
+            {
+              field: "status",
+              headerName: "Status",
+              render: (value) => (
+                <Button
+                  size="small"
+                  variant="contained"
+                  color={
+                    value === "approved"
+                      ? "success"
+                      : value === "rejected"
+                      ? "error"
+                      : "warning"
+                  }
+                >
+                  {value}
+                </Button>
+              ),
+            },
+          ]}
           onRowAction={handleRowAction}
           menuActions={menuActionsList}
-          showStatus={true}
-          showImage={true}
+          showImage={false}
         />
       </Box>
+
+      {/* Event Form Dialog */}
+      <EventForm
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        formData={eventForm}
+        onChange={handleFormChange}
+        onSubmit={handleFormSubmit}
+        isEdit={isEditMode}
+      />
     </Box>
   );
 };
