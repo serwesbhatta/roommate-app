@@ -55,3 +55,7 @@ class UserProfile(Base):
 
     # # User responses to questionnaire
     responses = relationship("UserResponse", back_populates="user_profile", cascade="all, delete")
+    
+    # Feedback
+    given_feedbacks = relationship("Feedback", foreign_keys="[Feedback.giver_user_id]", back_populates="giver")
+    received_feedbacks = relationship("Feedback", foreign_keys="[Feedback.receiver_user_id]", back_populates="receiver")
