@@ -1,6 +1,9 @@
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, func, Boolean, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
+from app.models.event_model import Event
+from app.models.user_response_model import UserResponse
+from app.models.room_model import Room
 
 class AuthUser(Base):
     __tablename__ = "auth_users"
