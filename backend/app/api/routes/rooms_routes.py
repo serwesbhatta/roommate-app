@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
+from fastapi import Body
 from typing import List
 
-from ...schemas.room_schema import RoomCreate, RoomUpdate, RoomResponse
+from ...schemas.room_schema import RoomCreate, RoomUpdate, RoomResponse, StudentIDs
 from ...services.room_services import RoomService
 from ...database import get_db
 
@@ -52,7 +53,7 @@ def update_room_route(room_number: int, residence_hall_id: int, room: RoomUpdate
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
-@router.delete("/rooms/{residence_hall_id}/{room_id}", response_model=bool)
+@router.delete("/rooms/{residence_hall_id}/{room_number}", response_model=bool)
 def delete_room_route(room_number: int, residence_hall_id: int, db: Session = Depends(get_db)):
     try:
         service = RoomService(db)
@@ -86,3 +87,35 @@ def get_available_rooms_route(db: Session = Depends(get_db)):
         return available_rooms
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    
+@router.post("/rooms/{residence_hall_id}/{room_number}/allocate")
+def allocate_students_route(
+    room_number: int,
+    residence_hall_id: int,
+    student_data: StudentIDs,  
+    db: Session = Depends(get_db)
+):
+    try:
+        service = RoomService(db)
+        updated_room = service.allocate_students_to_room(room_number, residence_hall_id, student_data.student_ids)
+        return updated_room
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+@router.post("/rooms/{residence_hall_id}/{room_number}/vacate", response_model=RoomResponse)
+def vacate_room_route(
+    room_number: int,
+    residence_hall_id: int,
+    student_data: StudentIDs,  
+    db: Session = Depends(get_db)
+):
+    """
+    Vacate one or more students from a room when a lease expires or upon student departure,
+    updating occupancy details and freeing allocations as necessary.
+    """
+    try:
+        service = RoomService(db)
+        updated_room = service.vacate_room(room_number, residence_hall_id, student_data.student_ids)
+        return updated_room
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

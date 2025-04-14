@@ -8,7 +8,8 @@ from ..crud.crud import (
     get_record_by_id, 
     get_all_records, 
     update_record, 
-    delete_record
+    delete_record,
+    get_count
 )
 
 class ResidenceHallService:
@@ -139,3 +140,16 @@ class ResidenceHallService:
             raise ValueError(f"Residence hall with ID {hall_id} not found")
         
         return True
+    
+    def get_total_residence_halls(self) -> int:
+        """
+        Return the total count of residence halls.
+        """
+        total_count = get_count(db=self.db, model=ResidenceHall)
+        if total_count is None:
+            raise ValueError("Error fetching the total count of residence halls.")
+        return total_count
+
+    
+
+ 

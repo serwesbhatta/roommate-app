@@ -18,6 +18,7 @@ services:
       - db
     volumes:
       - ./backend/alembic/versions:/app/alembic/versions
+      - ./backend/app/static:/app/static  
     restart: unless-stopped
 
   db:

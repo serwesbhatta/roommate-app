@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -16,9 +16,11 @@ import {SearchBar, ProfileMenu} from "../others";
 import NavLinks from "./NavLinks";
 import MobileDrawer from "./MobileDrawer";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Logo from "../../assets/logo.svg";
+import { fetchUserProfile } from "../../redux/slices/userSlice"
 import { getRightSideMenuItems } from "../../utils/menuUtils";
+import { getImageUrl } from "../../utils/imageURL";
 
 const CustomNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -31,8 +33,16 @@ const CustomNavbar = () => {
   const handleMenuClose = () => setAnchorEl(null);
   const toggleDrawer = () => setMobileOpen(!mobileOpen);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
+    const { profile, status, error } = useSelector((state) => state.user);
+    const { id } = useSelector((state) => state.auth);
+  
+    useEffect(() => {
+      dispatch(fetchUserProfile(id));
+    }, [dispatch, id]);
 
   return (
     <>
@@ -82,7 +92,10 @@ const CustomNavbar = () => {
                   }}
                   onClick={handleProfileMenuOpen}
                 >
-                  <Avatar src={user.photoUrl} sx={{ width: 40, height: 40 }} />
+                  <Avatar
+                    src={getImageUrl(profile?.profile_image ||"/default-avatar.png")}
+                    sx={{ width: 40, height: 40, border: '3px solid white' }}
+                  />
                   <ArrowDropDown sx={{ color: "black", fontSize: "10px, " }} />
                 </Box>
 

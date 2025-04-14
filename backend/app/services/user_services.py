@@ -1,37 +1,62 @@
+# app/services/user_service.py
 from sqlalchemy.orm import Session
-from ..schemas.user_schema import AuthUserCreate
-from ..crud.user_crud import create_user as crud_create_user
-from ..crud.user_crud import authenticate_user as crud_authenticate_user
-from ..crud.user_crud import delete_user_by_admin, update_auth
+from datetime import datetime, timezone
+from fastapi import HTTPException
+import os
+from app.models.user_model import UserProfile
+from app.schemas.user_schema import UserProfileUpdate
+from ..crud.crud import (
+    get_record_by_id, 
+    get_all_records, 
+    update_record, 
+    get_count
+)
 
-def create_user_service(user_data: AuthUserCreate, db: Session):
-    """
-    Service layer method for creating a user with additional validation and preprocessing
-    """
-    # Pass the database session to the CRUD layer
-    return crud_create_user(user_data, db)
+def get_user_profile_service(user_id: int, db: Session):
+    profile = db.query(UserProfile).filter(UserProfile.user_id == user_id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    return profile
 
-def authenticate_user_service(email: str, password: str, db: Session):
-    """
-    Service layer method for user authentication
+def update_user_profile_service(user_id: int, profile_update: dict, db: Session):
+    profile = db.query(UserProfile).filter(UserProfile.user_id == user_id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
     
-    This can be left as a pass-through to the CRUD layer authentication method,
-    or you can add additional validation or processing if needed.
-    """
-    return crud_authenticate_user(email, password, db)
+    update_data = profile_update.copy()
+    
+    if "profile_image" in update_data and update_data["profile_image"]:
+        new_image = update_data["profile_image"]
+        if profile.profile_image and profile.profile_image != new_image:
+            if os.path.exists(profile.profile_image):
+                try:
+                    os.remove(profile.profile_image)
+                except Exception as e:
+                    raise HTTPException(
+                        status_code=500, 
+                        detail=f"Error deleting old image: {e}"
+                    )
+                
+    update_data["modified_profile_at"] = datetime.now(timezone.utc)
+    
+    try:
+        updated_profile = update_record(db, UserProfile, profile.id, update_data)
+        if not updated_profile:
+            raise HTTPException(status_code=404, detail="Profile not updated")
+        return updated_profile
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
-def delete_user_service(id: int, db: Session):
-    """
-    Service layer method for deleting user
-    """
-    return delete_user_by_admin(id, db)
 
-def update_auth_user_service(
-    user_id: int,
-    user: AuthUserCreate,
-    db: Session
-):
+
+def get_all_user_profiles_service(db: Session, skip: int = 0, limit: int = 100):
     """
-    Service layer method for updating user authentication details
+    Return all user profiles with pagination.
     """
-    return update_auth(user_id, user, db)
+    return get_all_records(db, UserProfile, skip=skip, limit=limit)
+
+def get_total_user_profiles_service(db: Session):
+    """
+    Return the total count of user profiles.
+    """
+    return get_count(db, UserProfile)

@@ -33,8 +33,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import {AdminWidgets, AdminHeaders} from '../../components/adminComponent'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTotalEventCount, fetchPendingEvents,  fetchEvents } from '../../redux/slices/eventsSlice';
-
-
+import { fetchTotalRooms, fetchAvailableRooms} from '../../redux/slices/roomSlice';
+import { fetchTotalAuthUsers, fetchNewUsers } from '../../redux/slices/authSlice';
 
 
 // Sample data for chart
@@ -58,7 +58,10 @@ const newUsersData = [
 const AdminDashboard = () => {
 
   const dispatch = useDispatch();
-  const { events, pendingEvents, totalCount } = useSelector((state) => state.events);
+  const {events, pendingEvents, totalCount} = useSelector((state) => state.events);
+  const {totalRooms, availableRooms} = useSelector((state) => state.rooms);
+  const {totalUsers, newUsers} = useSelector((state) => state.auth);
+
   const topEvents = events.slice(0, 4);
 
   
@@ -66,23 +69,24 @@ const AdminDashboard = () => {
     dispatch(fetchEvents());
     dispatch(fetchTotalEventCount());
     dispatch(fetchPendingEvents());
+    dispatch(fetchTotalRooms());
+    dispatch(fetchAvailableRooms());
+    dispatch(fetchTotalAuthUsers());
+    dispatch(fetchNewUsers({ skip: 0, limit: 10 }));
   }, [dispatch]);
 
 
-  const [month, setMonth] = useState('October');
+  const newUsersChartData = [
+    { name: 'New Users', value: newUsers ? newUsers.length : 0 }
+  ];
 
-  const handleMonthChange = (event) => {
-    setMonth(event.target.value);
-  };
-
-
-const statsData = [
-  { label: "Total User", value: 782, icon: <PersonIcon sx={{ color: "#2196f3" }} />, bgcolor: "#e3f2fd" },
-  { label: "Total Rooms", value: 234, icon: <RoomIcon sx={{ color: "#ffc107" }} />, bgcolor: "#fff8e1" },
-  { label: "Available Rooms", value: 54, icon: <RoomIcon sx={{ color: "#4caf50" }} />, bgcolor: "#e8f5e9" },
-  { label: "Total Events", value: totalCount, icon: <EventIcon sx={{ color: "#3f51b5" }} />, bgcolor: "#e8eaf6" },
-  { label: "Pending Events", value: pendingEvents.length, icon: <EventIcon sx={{ color: "#ff5252" }} />, bgcolor: "#ffebee" },
-];
+  const statsData = [
+    { label: "Total User", value: totalUsers, icon: <PersonIcon sx={{ color: "#2196f3" }} />, bgcolor: "#e3f2fd" },
+    { label: "Total Rooms", value: totalRooms, icon: <RoomIcon sx={{ color: "#ffc107" }} />, bgcolor: "#fff8e1" },
+    { label: "Available Rooms", value: availableRooms, icon: <RoomIcon sx={{ color: "#4caf50" }} />, bgcolor: "#e8f5e9" },
+    { label: "Total Events", value: totalCount, icon: <EventIcon sx={{ color: "#3f51b5" }} />, bgcolor: "#e8eaf6" },
+    { label: "Pending Events", value: pendingEvents.length, icon: <EventIcon sx={{ color: "#ff5252" }} />, bgcolor: "#ffebee" },
+  ];
 
 
   return (
@@ -101,44 +105,36 @@ const statsData = [
             
             {/* Chart section */}
             <Paper sx={{ p: 3, mb: 3, borderRadius: 3 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                    <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
-                    New Users
-                    </Typography>
-                    <FormControl size="small" sx={{ width: 120 }}>
-                    <Select value={month} onChange={handleMonthChange}>
-                        <MenuItem value="October">October</MenuItem>
-                        <MenuItem value="November">November</MenuItem>
-                        <MenuItem value="December">December</MenuItem>
-                    </Select>
-                    </FormControl>
-                </Box>
-                
-                <Box sx={{ height: 300 }}>
-                    <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={newUsersData}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                        <YAxis 
-                            axisLine={false} 
-                            tickLine={false} 
-                            tickFormatter={(value) => `${value}%`} 
-                            domain={[0, 100]} 
-                        />
-                        <Tooltip />
-                        <Line 
-                            type="monotone" 
-                            dataKey="value" 
-                            stroke="#2196f3" 
-                            strokeWidth={2} 
-                            dot={{ strokeWidth: 2, r: 4 }}
-                            activeDot={{ strokeWidth: 0, r: 6 }}
-                            isAnimationActive={true}
-                        />
-                    </LineChart>
-                    </ResponsiveContainer>
-                </Box>
-            </Paper>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold' }}>
+              New Users
+            </Typography>
+            {/* Optional: add month selection etc. */}
+          </Box>
+          <Box sx={{ height: 300 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={newUsersChartData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(value) => `${value}`}
+                  domain={[0, Math.max(...newUsersChartData.map((d) => d.value)) + 10]}
+                />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#2196f3"
+                  strokeWidth={2}
+                  dot={{ strokeWidth: 2, r: 4 }}
+                  activeDot={{ strokeWidth: 0, r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Box>
+        </Paper>
             
             
           {/* Events table */}

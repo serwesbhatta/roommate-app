@@ -2,19 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, useParams, useNavigate } from "react-router-dom";
 import AdminDashboard from "./AdminDashboard";
 import { Box } from "@mui/system";
-import { Navbar,MobileDrawer } from "../../components/navigations";
+import { Navbar, MobileDrawer } from "../../components/navigations";
 import { useSelector } from "react-redux";
 import Users from "./users/Users";
 import Rooms from "./Rooms";
 import Events from "./Events";
 import Inbox from "./Inbox";
 import Notifications from "./Notifications";
+import ResidenceHall from "./ResidenceHall";
 import AddNewUsers from "./users/AddNewUsers";
 
 const Admin = () => {
   const userRole = useSelector((state) => state.auth.role);
   const [mobileOpen, setMobileOpen] = useState(false);
-
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -48,6 +48,7 @@ const Admin = () => {
             <Route path="/admin_users" element={<Users />} />
             <Route path="/admin_users/add_user" element={<AddNewUsers />} />
             <Route path="/admin_rooms" element={<Rooms />} />
+            <Route path="/admin_residence_halls" element={<ResidenceHall />} />
             <Route path="/admin_events" element={<Events />} />
             <Route path="/admin_inbox" element={<Inbox />} />
             <Route path="/admin_notifications" element={<Notifications />} />

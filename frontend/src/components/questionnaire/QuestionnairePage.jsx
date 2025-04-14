@@ -17,7 +17,6 @@ const QuestionnairePage = ({
     onSubmit 
   }) => {
     const currentQuestion = questions[currentStep];
-    
     return (
       <>
         <Box sx={{ mb: 4, textAlign: 'left' }}>
@@ -34,7 +33,7 @@ const QuestionnairePage = ({
           <CardContent>
             <QuestionForm 
               question={currentQuestion}
-              answer={answers[currentQuestion.id]}
+              answer={answers[currentQuestion?.id]}
               onAnswerChange={onAnswerChange}
               onSelectChange={onSelectChange}
               selectedMajor={selectedMajor}
@@ -60,7 +59,6 @@ const QuestionnairePage = ({
                 <ActionButton 
                   variant="contained" 
                   onClick={onSubmit}
-                  color="#2ECC71"
                 >
                   Submit
                 </ActionButton>

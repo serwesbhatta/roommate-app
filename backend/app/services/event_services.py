@@ -163,4 +163,10 @@ class EventService:
             filter_condition=filter_condition
         )
 
-        return approved_events
+        events_with_user_name = []
+
+        for event in approved_events:
+            event_with_users = self.get_event_with_user_name(event.id)
+            events_with_user_name.append(event_with_users)
+        
+        return events_with_user_name

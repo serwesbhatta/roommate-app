@@ -23,12 +23,13 @@ import {
   updateEvent,
   deleteEvent,
   createEvent,
+  fetchTotalEventCount,
 } from "../../redux/slices/eventsSlice";
 import { EventForm } from "../../components/events";
 
 const Events = () => {
   const dispatch = useDispatch();
-  const { events, loading } = useSelector((state) => state.events);
+  const { events, totalCount, loading } = useSelector((state) => state.events);
   const { id: currentAdminId } = useSelector((state) => state.auth);
 
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -45,15 +46,32 @@ const Events = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const menuActionsList = ["Add", "Edit", "Approve", "Reject", "Delete"];
+  // Pagination states
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const menuActionsList = ["Edit", "Approve", "Reject", "Delete"];
+
+  // Fetch events and total count on mount and whenever pagination changes.
   useEffect(() => {
-    dispatch(fetchEvents());
-  }, [dispatch]);
+    const skip = page * rowsPerPage;
+    dispatch(fetchEvents({ skip, limit: rowsPerPage }));
+    dispatch(fetchTotalEventCount());
+  }, [dispatch, page, rowsPerPage]);
 
+  // Filter events based on search term and status filter.
   useEffect(() => {
     filterEvents();
   }, [events, searchTerm, statusFilter]);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const filterEvents = () => {
     let result = [...events];
@@ -90,18 +108,30 @@ const Events = () => {
     return date.toISOString().slice(0, 16);
   };
 
+  // Helper function to refresh both events and total event count.
+  const refreshEventsData = () => {
+    dispatch(fetchTotalEventCount());
+    const skip = page * rowsPerPage;
+    dispatch(fetchEvents({ skip, limit: rowsPerPage }));
+  };
+
   const handleRowAction = (action, id) => {
     const event = filteredEvents.find((e) => e.id === id);
-    switch (action) {
+    switch (action.toLowerCase()) {
       case "delete":
-        dispatch(deleteEvent(id));
+        dispatch(deleteEvent(id))
+          .unwrap()
+          .then(() => {
+            refreshEventsData();
+          })
+          .catch((error) => {
+            console.error("Failed to delete event:", error);
+          });
         break;
 
       case "approve":
         if (event?.status === "pending" || event?.status === "rejected") {
-          const { title, description, event_start, event_end, location } =
-            event;
-
+          const { title, description, event_start, event_end, location } = event;
           const payload = {
             title,
             description,
@@ -112,16 +142,20 @@ const Events = () => {
             approved_by: currentAdminId,
             updated_at: new Date().toISOString(),
           };
-
-          dispatch(updateEvent({ id: event.id, data: payload }));
+          dispatch(updateEvent({ id: event.id, data: payload }))
+            .unwrap()
+            .then(() => {
+              refreshEventsData();
+            })
+            .catch((error) => {
+              console.error("Failed to approve event:", error);
+            });
         }
         break;
 
       case "reject":
         if (event?.status === "pending" || event?.status === "approved") {
-          const { title, description, event_start, event_end, location } =
-            event;
-
+          const { title, description, event_start, event_end, location } = event;
           const payload = {
             title,
             description,
@@ -132,8 +166,14 @@ const Events = () => {
             approved_by: currentAdminId,
             updated_at: new Date().toISOString(),
           };
-
-          dispatch(updateEvent({ id: event.id, data: payload }));
+          dispatch(updateEvent({ id: event.id, data: payload }))
+            .unwrap()
+            .then(() => {
+              refreshEventsData();
+            })
+            .catch((error) => {
+              console.error("Failed to reject event:", error);
+            });
         }
         break;
 
@@ -151,7 +191,6 @@ const Events = () => {
         break;
 
       case "edit":
-
         setIsEditMode(true);
         setEventForm({
           ...event,
@@ -175,7 +214,6 @@ const Events = () => {
   };
 
   const handleFormSubmit = () => {
-
     const { title, description, location } = eventForm;
     const payload = {
       title,
@@ -188,18 +226,32 @@ const Events = () => {
     if (isEditMode) {
       const data = {
         ...payload,
-        status: "rejected",   
-        approved_by: currentAdminId, 
-        updated_at: new Date().toISOString(),  
+        status: statusFilter, // you can change this if needed
+        approved_by: currentAdminId,
+        updated_at: new Date().toISOString(),
       };
-      dispatch(updateEvent({ id: eventForm.id, data }));
-
+      dispatch(updateEvent({ id: eventForm.id, data }))
+        .unwrap()
+        .then(() => {
+          refreshEventsData();
+        })
+        .catch((error) => {
+          console.error("Failed to update event:", error);
+        });
     } else {
       const data = {
         ...payload,
-        requested_by: currentAdminId
-      }
-      dispatch(createEvent(data));
+        requested_by: currentAdminId,
+      };
+
+      dispatch(createEvent(data))
+        .unwrap()
+        .then(() => {
+          refreshEventsData();
+        })
+        .catch((error) => {
+          console.error("Creation failed:", error);
+        });
     }
 
     setDialogOpen(false);
@@ -214,15 +266,12 @@ const Events = () => {
     });
   };
 
-
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f5f5f5" }}>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <AdminHeaders
           title="Events"
           subtitle="Manage all user-submitted events"
-          addButtonText="Add Event"
-          onAddClick={() => handleRowAction("add")}
         />
 
         <AdminTableController
@@ -238,6 +287,7 @@ const Events = () => {
             { value: "pending", label: "Pending" },
             { value: "rejected", label: "Rejected" },
           ]}
+          onAddClick={() => handleRowAction("add")}
         />
 
         <AdminTable
@@ -270,7 +320,7 @@ const Events = () => {
               field: "description",
               headerName: "Description",
               render: (value) => {
-                const maxLength = 60;
+                const maxLength = 6;
                 const shortText =
                   value?.length > maxLength
                     ? value.slice(0, maxLength) + "..."
@@ -316,6 +366,11 @@ const Events = () => {
           onRowAction={handleRowAction}
           menuActions={menuActionsList}
           showImage={false}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          count={totalCount}
         />
       </Box>
 

@@ -24,24 +24,19 @@ const AdminTable = ({
   menuActions,
   showStatus = false,
   showImage = false,
+  page,
+  rowsPerPage,
+  onPageChange,
+  onRowsPerPageChange,
+  count,
 }) => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [actionRowId, setActionRowId] = React.useState(null);
 
-  const currentPageData = data.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
+  // If using server-side pagination, the data is already limited.
+  const currentPageData = data; // No slicing here
 
-  const handleChangePage = (event, newPage) => setPage(newPage);
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  const getRowKey = (row) => row.id || row.room_number;
 
   const handleMenuOpen = (event, id) => {
     setAnchorEl(event.currentTarget);
@@ -74,68 +69,64 @@ const AdminTable = ({
               <TableCell sx={{ backgroundColor: "white" }}>Action</TableCell>
             </TableRow>
           </TableHead>
-
           <TableBody>
-            {currentPageData.map((row) => (
-              <TableRow key={row.id}>
-                {showImage && (
+            {currentPageData.map((row) => {
+              const rowKey = getRowKey(row);
+              return (
+                <TableRow key={rowKey}>
+                  {showImage && (
+                    <TableCell>
+                      <Avatar src={row.image} alt={row.title || row.name} />
+                    </TableCell>
+                  )}
+                  {columns.map((column) => (
+                    <TableCell key={`${rowKey}-${column.field}`}>
+                      {column.render
+                        ? column.render(row[column.field], row)
+                        : row[column.field] ?? "—"}
+                    </TableCell>
+                  ))}
+                  {showStatus && (
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color={getStatusColor(row.status)}
+                        size="small"
+                      >
+                        {row.status}
+                      </Button>
+                    </TableCell>
+                  )}
                   <TableCell>
-                    <Avatar src={row.image} alt={row.title || row.name} />
-                  </TableCell>
-                )}
-                {columns.map((column) => (
-                  <TableCell key={`${row.id}-${column.field}`}>
-                    {column.render
-                      ? column.render(row[column.field], row)
-                      : row[column.field] ?? "—"}
-                  </TableCell>
-                ))}
-                {showStatus && (
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color={getStatusColor(row.status)}
-                      size="small"
+                    <IconButton onClick={(event) => handleMenuOpen(event, rowKey)}>
+                      <MoreVertIcon />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl) && actionRowId === rowKey}
+                      onClose={handleMenuClose}
                     >
-                      {row.status}
-                    </Button>
-                  </TableCell>
-                )}
-                <TableCell>
-                  <IconButton onClick={(event) => handleMenuOpen(event, row.id)}>
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl) && actionRowId === row.id}
-                    onClose={handleMenuClose}
-                  >
-                    {menuActions.map((action) => {
-                      // Only show Approve/Reject if pending
-
-
-                      return (
-                        <MenuItem key={action} onClick={() => handleActionClick(action, row.id)}>
+                      {menuActions.map((action) => (
+                        <MenuItem key={action} onClick={() => handleActionClick(action, rowKey)}>
                           {action}
                         </MenuItem>
-                      );
-                    })}
-                  </Menu>
-                </TableCell>
-              </TableRow>
-            ))}
+                      ))}
+                    </Menu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
-
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={data.length}
+        count={count}
         rowsPerPage={rowsPerPage}
         page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        onPageChange={onPageChange}
+        onRowsPerPageChange={onRowsPerPageChange}
       />
     </Paper>
   );

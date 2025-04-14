@@ -1,7 +1,9 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
+from datetime import date
 
 from ..models.room_model import Room
+from ..models.user_model import UserProfile
 from ..schemas.room_schema import RoomCreate, RoomUpdate
 from ..crud.room_crud import (
     create_room,
@@ -99,3 +101,71 @@ class RoomService:
             raise ValueError(f"Couldn't get available rooms.")
         
         return available_rooms
+    
+
+
+    def allocate_students_to_room(self, room_number: int, residence_hall_id: int, student_ids: List[int]) -> Room:
+        room = self.get_room(room_number=room_number, residence_hall_id=residence_hall_id)
+        if room.current_occupants + len(student_ids) > room.capacity:
+            raise ValueError("Insufficient capacity in this room for the requested number of students.")
+        
+        # Fetch user objects for the given IDs
+        allocated_users = self.db.query(UserProfile).filter(UserProfile.id.in_(student_ids)).all()
+        if len(allocated_users) != len(student_ids):
+            raise ValueError("One or more user IDs were not found in the database.")
+        
+        # Create a set of existing occupant IDs from the current relationship
+        existing_ids = {user.id for user in room.user_profiles}
+
+        # Filter out any user whose id is already in the room
+        new_users = [user for user in allocated_users if user.id not in existing_ids]
+
+        if not new_users:
+            # If there are no new users to add, you may choose to simply return the room 
+            # or raise an error informing that the students are already allocated.
+            raise ValueError("All provided student IDs are already allocated to this room.")
+
+        # Allocate the new students by extending the occupants list
+        room.user_profiles.extend(new_users)
+        room.current_occupants += len(new_users)
+        
+        remaining_capacity = room.capacity - room.current_occupants
+        room.is_available = remaining_capacity > 0
+        room.room_status = "full" if remaining_capacity == 0 else "partially_occupied"
+        
+        # Commit the changes and refresh the room from the DB
+        self.db.commit()
+        self.db.refresh(room)
+        return room
+
+    
+    def vacate_room(self, room_number: int, residence_hall_id: int, student_ids: List[int]) -> Room:
+        room = self.get_room(room_number, residence_hall_id)
+
+        # Gather the IDs of the current occupants
+        current_ids = {user.id for user in room.user_profiles}
+        
+        # Determine which provided student_ids are not in the room
+        missing_ids = [sid for sid in student_ids if sid not in current_ids]
+        if missing_ids:
+            raise ValueError(f"Student IDs {missing_ids} are not allocated to this room.")
+
+        # If all IDs are present, remove the students from the room occupants
+        room.user_profiles = [user for user in room.user_profiles if user.id not in student_ids]
+
+        # Update the current occupants count
+        room.current_occupants = len(room.user_profiles)
+            
+        # Update room availability and status based on the new occupant count
+        room.is_available = room.current_occupants < room.capacity
+        room.room_status = "available" if room.is_available else "full"
+
+        # Commit the changes to the database
+        try:
+            self.db.commit()
+            self.db.refresh(room)
+        except Exception as e:
+            self.db.rollback()
+            raise ValueError(f"Error during vacating process: {str(e)}")
+        
+        return room

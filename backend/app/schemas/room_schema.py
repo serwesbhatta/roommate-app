@@ -1,7 +1,7 @@
 from typing import List, Optional
 from datetime import date
 from pydantic import BaseModel, Field
-from .user_schema import AuthUserResponse
+from .user_schema import UserProfileResponse
 
 
 # Base Room Schema (shared properties)
@@ -44,11 +44,16 @@ class RoomResponse(RoomBase):
     room_status: str
     lease_end: Optional[date] = None
     
-    # Occupants information
-    auth_users: List[AuthUserResponse] = []
+    # Use alias to map ORM's "user_profiles" to "auth_users" in the schema output.
+    auth_users: List[UserProfileResponse] = Field(default_factory=list, alias="user_profiles")
     
+    @property
+    def remaining_capacity(self) -> int:
+        return self.capacity - self.current_occupants
     class Config:
         orm_mode = True
         # This allows the schema to work with ORM models
         # It will read the data from the model objects
 
+class StudentIDs(BaseModel):
+    student_ids: List[int]
