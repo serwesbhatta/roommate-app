@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime, timezone
+from pydantic import validator
 
 class EventBase(BaseModel):
     title: str
@@ -33,5 +34,9 @@ class EventResponse(EventBase):
     created_at: datetime
     updated_at: datetime
 
+    @validator("status", pre=True, always=True)
+    def set_default_status(cls, value):
+        return value or "pending"
+    
     class Config:
         orm_mode = True

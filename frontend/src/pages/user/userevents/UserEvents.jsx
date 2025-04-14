@@ -22,7 +22,6 @@ import {
 } from "../../../redux/slices/eventsSlice";
 
 const UserEvents = () => {
-  const currentUserId = 1;
   const dispatch = useDispatch();
 
   const {
@@ -31,6 +30,8 @@ const UserEvents = () => {
     loading,
     error,
   } = useSelector((state) => state.events);
+  const {id} = useSelector((state) => state.auth);
+  const currentUserId = id
 
   const [tabValue, setTabValue] = useState(0);
   const [openRequestDialog, setOpenRequestDialog] = useState(false);
@@ -42,7 +43,7 @@ const UserEvents = () => {
     event_start: "",
     event_end: "",
     location: "",
-    requested_by: currentUserId,
+    requested_by: "",
   };
 
   const [eventForm, setEventForm] = useState(initialFormState);
@@ -106,7 +107,8 @@ const UserEvents = () => {
   const getEvents = () => {
     const base = tabValue === 0 ? approvedEvents : events;
     return tabValue === 1
-      ? base.filter((e) => e.requested_by === currentUserId)
+      ? base.filter(e =>
+        Number(e.requested_by) === Number(currentUserId))
       : base;
   };
 

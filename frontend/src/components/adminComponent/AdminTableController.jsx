@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, TextField, MenuItem, Typography } from "@mui/material";
+import { Box, TextField, MenuItem, Typography, Button } from "@mui/material";
 import SearchBar from "../others/SearchBar";
 
 const AdminTableController = ({
@@ -11,6 +11,7 @@ const AdminTableController = ({
   statusOptions,
   searchPlaceholder,
   searchTerm,
+  onAddClick,
 })=> {
     
   return (
@@ -28,9 +29,7 @@ const AdminTableController = ({
       {/* Filters Section */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         {/* Question */}
-        <Typography variant="body1" sx={{ fontWeight: "500" }}>
-          What are you looking for?
-        </Typography>
+
 
         <Box
           sx={{
@@ -86,6 +85,10 @@ const AdminTableController = ({
               ))}
             </TextField>
           )}
+
+          <Button variant="contained" color="primary" onClick={onAddClick}>
+            Add New Record
+          </Button>
         </Box>
       </Box>
     </Box>

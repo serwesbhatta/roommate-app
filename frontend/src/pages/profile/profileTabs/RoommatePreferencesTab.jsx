@@ -1,157 +1,115 @@
-import React, { useState } from 'react';
-import { Box, Typography, Button, Grid, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Box, Typography, Button, Grid, Dialog, DialogTitle,
+  DialogContent, DialogActions, TextField
+} from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
-import {PreferenceCard} from  '../../../components/profile';
-
-// Preference data organized by category
-const preferencesData = {
-  livingArrangement: [
-    { label: "Preferred living arrangement", value: "Pierce Hall" },
-    { label: "Typical sleeping hours", value: "11 PM to 7 AM" },
-    { label: "Temperature preference", value: "Cool (69-70°F)" }
-  ],
-  studyAcademic: [
-    { label: "Academic major", value: "Computer Science" },
-    { label: "Study habits", value: "In complete silence" },
-    { label: "Handles stress during finals/midterms", value: "I study well in advance" }
-  ],
-  lifestyleHabits: [
-    { label: "Cleanliness habits", value: "Extremely neat (clean daily)" },
-    { label: "Food preferences/habits", value: "I cook most meals" },
-    { label: "Weekend activities", value: "Studying most of the time" }
-  ],
-  socialPreferences: [
-    { label: "Guest preferences", value: "Rarely or never" },
-    { label: "Noise level preference", value: "Complete silence most of the time" },
-    { label: "Item sharing preferences", value: "Prefer not to share personal items" }
-  ],
-  campusLife: [
-    { label: "Campus activities involvement", value: "Academic Clubs" },
-    { label: "Transportation", value: "I have my own car" }
-  ]
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { getQuestionOptionsList, getUserResponses, putUserResponses } from '../../../redux/slices/questionnaireSlice';
+import { PreferenceCard } from '../../../components/profile';
 
 const RoommatePreferencesTab = () => {
-  const [preferencesEditMode, setPreferencesEditMode] = useState(false);
+  const dispatch = useDispatch();
+  const { questions, userResponses } = useSelector(state => state.questionnaire);
+  const { id } = useSelector(state => state.auth);
+  const userProfileId = id; 
+
+
+  const [editMode, setEditMode] = useState(false);
+  const [editedResponses, setEditedResponses] = useState({});
+
+  // Group questions by category
+  const groupedQuestions = questions.reduce((acc, q) => {
+    if (!acc[q.category]) acc[q.category] = [];
+    acc[q.category].push(q);
+    return acc;
+  }, {});
+
+  useEffect(() => {
+    dispatch(getQuestionOptionsList({ skip: 0, limit: 100 }));
+    dispatch(getUserResponses(userProfileId));
+  }, [dispatch, userProfileId]);
+
+  useEffect(() => {
+    setEditedResponses(userResponses); // preload with current answers
+  }, [userResponses]);
+
+  const handleResponseChange = (questionId, selectedOption) => {
+    setEditedResponses(prev => ({
+      ...prev,
+      [questionId]: selectedOption,
+    }));
+  };
+
+  const handleSubmit = () => {
+    const editedResponsesArray = Object.entries(editedResponses).map(([questionId, selectedOption]) => ({
+      question_id: parseInt(questionId),
+      selected_option: selectedOption,
+    }));
+    dispatch(putUserResponses({ userProfileId, responses: { responses: editedResponsesArray } }))
+    .unwrap()
+    .then(() => {
+      dispatch(getUserResponses(userProfileId));
+      setEditMode(false);
+    });
+  
+  };
 
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h5" component="h2">
-          Roommate Preferences
-        </Typography>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          startIcon={<EditIcon />}
-          onClick={() => setPreferencesEditMode(true)}
-        >
+        <Typography variant="h5">Roommate Preferences</Typography>
+        <Button variant="contained" startIcon={<EditIcon />} onClick={() => setEditMode(true)}>
           Edit Preferences
         </Button>
       </Box>
-      
+
       <Grid container spacing={3}>
-        {/* Living Arrangement Card */}
-        <Grid item xs={12} md={6}>
-          <PreferenceCard 
-            title="Living Arrangement" 
-            preferences={preferencesData.livingArrangement} 
-          />
-        </Grid>
-        
-        {/* Study & Academic Card */}
-        <Grid item xs={12} md={6}>
-          <PreferenceCard 
-            title="Study & Academic" 
-            preferences={preferencesData.studyAcademic} 
-          />
-        </Grid>
-        
-        {/* Lifestyle & Habits Card */}
-        <Grid item xs={12} md={6}>
-          <PreferenceCard 
-            title="Lifestyle & Habits" 
-            preferences={preferencesData.lifestyleHabits} 
-          />
-        </Grid>
-        
-        {/* Social Preferences Card */}
-        <Grid item xs={12} md={6}>
-          <PreferenceCard 
-            title="Social Preferences" 
-            preferences={preferencesData.socialPreferences} 
-          />
-        </Grid>
-        
-        {/* Campus Life Card */}
-        <Grid item xs={12} md={6}>
-          <PreferenceCard 
-            title="Campus Life" 
-            preferences={preferencesData.campusLife} 
-          />
-        </Grid>
+        {Object.entries(groupedQuestions).map(([category, prefs]) => (
+          <Grid item xs={12} md={6} key={category}>
+            <PreferenceCard
+              title={category}
+              preferences={prefs.map(q => ({
+                label: q.question_text,
+                value: userResponses[q.id] || 'Not answered',
+              }))}
+            />
+          </Grid>
+        ))}
       </Grid>
-      
-      {/* Preference Edit Dialog */}
-      <Dialog 
-        open={preferencesEditMode} 
-        onClose={() => setPreferencesEditMode(false)}
-        fullWidth
-        maxWidth="md"
-      >
+
+      {/* Edit Dialog */}
+      <Dialog open={editMode} onClose={() => setEditMode(false)} fullWidth maxWidth="md">
         <DialogTitle>Edit Roommate Preferences</DialogTitle>
         <DialogContent dividers>
-          <Typography variant="subtitle2" color="primary" gutterBottom>
-            Living Arrangement
-          </Typography>
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                select
-                label="Preferred living arrangement"
-                defaultValue="Pierce Hall"
-                fullWidth
-                SelectProps={{
-                  native: true,
-                }}
-              >
-                <option value="Pierce Hall">Pierce Hall</option>
-                <option value="Killingsworth Hall">Killingsworth Hall</option>
-                <option value="Legacy Hall">Legacy Hall</option>
-                <option value="Sundance Court">Sundance Court</option>
-                <option value="Off-campus apartment">Off-campus apartment</option>
-              </TextField>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                select
-                label="Typical sleeping hours"
-                defaultValue="11 PM to 7 AM"
-                fullWidth
-                SelectProps={{
-                  native: true,
-                }}
-              >
-                <option value="10 PM to 6 AM">10 PM to 6 AM</option>
-                <option value="11 PM to 7 AM">11 PM to 7 AM</option>
-                <option value="Midnight to 8 AM">Midnight to 8 AM</option>
-                <option value="1 AM to 9 AM">1 AM to 9 AM</option>
-                <option value="Variable">Variable - I'm a night owl</option>
-              </TextField>
-            </Grid>
-            {/* Add more fields as needed */}
-          </Grid>
-          
-          {/* More preference sections would go here */}
+          {Object.entries(groupedQuestions).map(([category, prefs]) => (
+            <Box key={category} sx={{ mb: 3 }}>
+              <Typography variant="subtitle2" color="primary" gutterBottom>{category}</Typography>
+              <Grid container spacing={2}>
+                {prefs.map((q) => (
+                  <Grid item xs={12} sm={6} key={q.id}>
+                    <TextField
+                      select
+                      label={q.question_text}
+                      value={editedResponses[q.id] || ''}
+                      onChange={(e) => handleResponseChange(q.id, e.target.value)}
+                      fullWidth
+                      SelectProps={{ native: true }}
+                    >
+                      <option value="" disabled></option>
+                      {q.options.map((opt, i) => (
+                        <option key={i} value={opt}>{opt}</option>
+                      ))}
+                    </TextField>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          ))}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setPreferencesEditMode(false)}>Cancel</Button>
-          <Button 
-            variant="contained"
-            onClick={() => setPreferencesEditMode(false)}
-          >
-            Save Preferences
-          </Button>
+          <Button onClick={() => setEditMode(false)}>Cancel</Button>
+          <Button variant="contained" onClick={handleSubmit}>Save Preferences</Button>
         </DialogActions>
       </Dialog>
     </>

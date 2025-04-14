@@ -32,6 +32,12 @@ class UserProfile(Base):
     modified_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
     created_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
 
+    age = Column(Integer, nullable=True)
+    gender = Column(String(20), nullable=True)
+    move_in_date = Column(DateTime(timezone=True), nullable=True)
+    bio = Column(String(800), nullable=True)
+    majors = Column(String(255), nullable=True)
+
     # Relationship with AuthUser
     auth_user = relationship("AuthUser", back_populates="profile")
 

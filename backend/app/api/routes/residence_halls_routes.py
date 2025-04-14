@@ -27,6 +27,21 @@ def create_residence_hall_route(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@router.get("/residence-halls/count")
+def get_total_residence_halls_route(
+    db: Session = Depends(get_db)
+):
+    """
+    Admin endpoint to get the total number of residence halls.
+    """
+    try:
+        service = ResidenceHallService(db)
+        total = service.get_total_residence_halls()
+        return total
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+
 @router.get("/residence-halls/{hall_id}", response_model=ResidenceHallResponse)
 def get_residence_hall_route(
     hall_id: int, 
@@ -102,3 +117,8 @@ def delete_residence_hall_route(
         return {"message": "Residence hall deleted successfully"}
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    
+
+
+
+    

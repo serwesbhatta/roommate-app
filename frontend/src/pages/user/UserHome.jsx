@@ -1,38 +1,38 @@
-import React, { useState } from 'react';
-import { Container } from '@mui/material';
-import { MatchesPage} from '../../components/matchProfile';
-import { QuestionnairePage } from '../../components/questionnaire';
+// UserHome.js
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Container } from "@mui/material";
+import { MatchesPage } from "../../components/matchProfile";
+import { QuestionnairePage } from "../../components/questionnaire";
+import {
+  getQuestionOptionsList,
+  getUserResponses,
+  postUserResponses,
+} from "../../redux/slices/questionnaireSlice";
 
-
-
-// Separate data module
-const questionsData = [
-  { id: 1, text: 'What is your major?', options: ['Computer Science', 'Business Administration', 'Nursing', 'Radiology', 'Other'] },
-  { id: 2, text: 'What is your preferred study time?', options: ['Morning', 'Afternoon', 'Evening', 'Night'] },
-  { id: 3, text: 'Do you smoke?', options: ['Yes', 'No'] },
-  { id: 4, text: 'Do you prefer a quiet environment?', options: ['Yes', 'No', 'Sometimes'] },
-  { id: 5, text: 'How often do you clean your room?', options: ['Daily', 'Weekly', 'Monthly', 'Rarely'] },
-  { id: 6, text: 'What are your sleeping habits?', options: ['Early sleeper', 'Night owl', 'Flexible'] },
-  { id: 7, text: 'Do you like pets?', options: ['Yes', 'No', 'Depends on the pet'] },
-  { id: 8, text: 'Are you comfortable with guests?', options: ['Yes', 'No', 'Occasionally'] },
-  { id: 9, text: 'What is your favorite leisure activity?', options: ['Gaming', 'Reading', 'Sports', 'Watching Movies'] },
-];
-
-const studentProfilesData = [
-  { id: 1, name: 'John Doe', match: 80 },
-  { id: 2, name: 'Jane Smith', match: 75 },
-  { id: 3, name: 'Michael Lee', match: 85 },
-  { id: 4, name: 'Emily Davis', match: 78 },
-  { id: 6, name: 'Sarah Wilson', match: 76 },
-  { id: 5, name: 'Robert Johnson', match: 82 },
-];
-
-// Main app container
 const UserHome = () => {
+  const dispatch = useDispatch();
+  const { questions, fetchStatus, userResponses } = useSelector(
+    (state) => state.questionnaire
+  );
+  const { id } = useSelector((state) => state.auth);
+
   const [answers, setAnswers] = useState({});
   const [step, setStep] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-  const [selectedMajor, setSelectedMajor] = useState('');
+  const submitted = Object.keys(userResponses).length > 0;
+  const [selectedMajor, setSelectedMajor] = useState("");
+
+  useEffect(() => {
+    if (fetchStatus === "idle") {
+      dispatch(getQuestionOptionsList({ skip: 0, limit: 100 }));
+    }
+  }, [dispatch, fetchStatus]);
+
+
+  useEffect(() => {
+    dispatch(getUserResponses(id));
+  }, [dispatch, id]);
+  
 
   const handleCheckboxChange = (questionId, option) => {
     setAnswers({ ...answers, [questionId]: option });
@@ -44,8 +44,30 @@ const UserHome = () => {
   };
 
   const handleSubmit = () => {
-    setSubmitted(true);
+    const userProfileId = id;
+    const formattedResponses = Object.entries(answers).map(
+      ([questionId, selectedOption]) => ({
+        question_id: parseInt(questionId),
+        selected_option: selectedOption,
+      })
+    );
+  
+    dispatch(
+      postUserResponses({
+        userProfileId,
+        responses: { responses: formattedResponses },
+      })
+    )
+      .unwrap()
+      .then(() => {
+        // ✅ Immediately fetch updated responses from backend
+        dispatch(getUserResponses(userProfileId));
+      })
+      .catch((err) => {
+        console.error("Submit failed", err);
+      });
   };
+  
 
   const handleNext = () => {
     setStep(step + 1);
@@ -55,28 +77,30 @@ const UserHome = () => {
     setStep(Math.max(0, step - 1));
   };
 
+  const isLoading = fetchStatus !== "succeeded";
+  const currentQuestion = questions[step];
+
   return (
     <Container maxWidth="lg" sx={{ mt: 5 }}>
       {!submitted ? (
-        <QuestionnairePage 
-          questions={questionsData}
-          currentStep={step}
-          answers={answers}
-          selectedMajor={selectedMajor}
-          onAnswerChange={handleCheckboxChange}
-          onSelectChange={handleSelectChange}
-          onNext={handleNext}
-          onPrevious={handlePrevious}
-          onSubmit={handleSubmit}
-        />
+        !isLoading && (
+          <QuestionnairePage
+            questions={questions}
+            currentStep={step}
+            answers={answers}
+            selectedMajor={selectedMajor}
+            onAnswerChange={handleCheckboxChange}
+            onSelectChange={handleSelectChange}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            onSubmit={handleSubmit}
+          />
+        )
       ) : (
-        <MatchesPage profiles={studentProfilesData} />
+        <MatchesPage profiles={[]} /> // Replace with matched profiles logic if available
       )}
     </Container>
   );
 };
-
-
-
 
 export default UserHome;

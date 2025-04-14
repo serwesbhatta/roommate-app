@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from .database import engine, Base
 from .api.routes.users_routes import router as users_router
@@ -38,6 +39,9 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan
 )
+
+# Mount the static folder to serve static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Add CORS middleware
 app.add_middleware(

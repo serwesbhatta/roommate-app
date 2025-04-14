@@ -6,6 +6,7 @@ import {
     Event as EventIcon,
     Notifications as NotificationsIcon
   } from '@mui/icons-material';
+  import DomainIcon from '@mui/icons-material/Domain';
 
 
 export const getMenuItems = (userRole) => {
@@ -24,6 +25,7 @@ export const getMenuItems = (userRole) => {
             { label: "Dashboard", path: "/admin/admin_dashboard", icon: DashboardIcon  },
             { label: "Users", path: "/admin/admin_users", icon: PersonIcon  },
             { label: "Rooms", path: "/admin/admin_rooms", icon: RoomIcon  },
+            { label: "Residence Hall", path: "/admin/admin_residence_halls", icon: DomainIcon  },
             { label: "Inbox", path: "/admin/admin_inbox", icon: InboxIcon  },
             { label: "Events", path: "/admin/admin_events", icon: EventIcon  },
             { label: "Notifications", path: "/admin/admin_notifications", icon: NotificationsIcon },
