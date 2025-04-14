@@ -283,14 +283,15 @@ const Events = () => {
           searchTerm={searchTerm}
           categoryOptions={[]} // placeholder
           statusOptions={[
-            { value: "approved", label: "Approved" },
+            { value: "active", label: "Active" },
             { value: "pending", label: "Pending" },
-            { value: "rejected", label: "Rejected" },
+            { value: "cancelled", label: "Cancelled" }
           ]}
           onAddClick={() => handleRowAction("add")}
         />
-
-        <AdminTable
+        
+        {/* Table component displaying filtered data */}
+        <AdminTable 
           data={filteredEvents}
           columns={[
             { field: "id", headerName: "ID" },

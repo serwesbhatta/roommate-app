@@ -52,7 +52,6 @@ const AdminTable = ({
     if (onRowAction) onRowAction(action.toLowerCase(), id);
     handleMenuClose();
   };
-
   return (
     <Paper sx={{ marginTop: 2, borderRadius: "8px", boxShadow: "0px 2px 5px rgba(0,0,0,0.1)" }}>
       <TableContainer>
@@ -60,11 +59,13 @@ const AdminTable = ({
           <TableHead>
             <TableRow>
               {showImage && <TableCell sx={{ backgroundColor: "white" }}>Image</TableCell>}
+
+              {/* Render column headers dynamically */}
               {columns.map((column) => (
-                <TableCell key={column.field} sx={{ backgroundColor: "white" }}>
-                  {column.headerName}
-                </TableCell>
+                <TableCell key={column.field} sx={{ backgroundColor: "white" }}>{column.headerName}</TableCell>
               ))}
+
+              {/* Show Status column if enabled */}
               {showStatus && <TableCell sx={{ backgroundColor: "white" }}>Status</TableCell>}
               <TableCell sx={{ backgroundColor: "white" }}>Action</TableCell>
             </TableRow>
@@ -133,3 +134,4 @@ const AdminTable = ({
 };
 
 export default AdminTable;
+

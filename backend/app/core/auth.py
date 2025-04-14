@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from .config import Settings 
 from ..database import get_db
 from ..models.user_model import AuthUser
+from ..schemas.auth_schema import CurrentUser
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -43,7 +44,7 @@ def get_user_by_email(db: Session, email: str):
 def get_current_user(
     token: str = Depends(oauth2_scheme), 
     db: Session = Depends(get_db)
-) -> Dict:
+) -> Optional[CurrentUser]:
     """
     Decode the JWT and return the current user's information.
     Raises an HTTPException if the token is invalid.
@@ -87,7 +88,7 @@ def require_role(required_role: str):
         return current_user
     return role_checker
 
-def get_current_active_user(current_user: dict = Depends(get_current_user)):
+def get_current_active_user(current_user: dict = Depends(get_current_user)) -> Optional[CurrentUser]:
     """
     Additional dependency to check if the user is active.
     Can be extended to include more checks like account status.
