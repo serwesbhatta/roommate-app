@@ -11,7 +11,10 @@ const AdminTableController = ({
   statusOptions,
   searchPlaceholder,
   searchTerm,
+<<<<<<< HEAD
   onAddClick,
+=======
+>>>>>>> d315eb7 (Event integration.)
 })=> {
     
   return (
@@ -85,10 +88,13 @@ const AdminTableController = ({
               ))}
             </TextField>
           )}
+<<<<<<< HEAD
 
           <Button variant="contained" color="primary" onClick={onAddClick}>
             Add New Record
           </Button>
+=======
+>>>>>>> d315eb7 (Event integration.)
         </Box>
       </Box>
     </Box>

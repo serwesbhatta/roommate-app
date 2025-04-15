@@ -11,10 +11,15 @@ import {
 import EventIcon from '@mui/icons-material/Event';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+<<<<<<< HEAD
 import { useSelector } from 'react-redux';
 
 const EventCard = ({ event, onEditClick, onCancelClick }) => {
   const {id} = useSelector((state) => state.auth);
+=======
+
+const EventCard = ({ event, onEditClick, onCancelClick }) => {
+>>>>>>> d315eb7 (Event integration.)
   // Format date string to more readable format
   const formatDate = (dateString) => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -38,12 +43,18 @@ const EventCard = ({ event, onEditClick, onCancelClick }) => {
       default: return 'default';
     }
   };
+<<<<<<< HEAD
   const currentUserId = id;
   const nameLabel =
     event.requested_by === currentUserId
       ? 'You'
       : (event.requested_user_name);
 
+=======
+
+  // Assuming currentUserId is 1 for demo purposes
+  const currentUserId = 1;
+>>>>>>> d315eb7 (Event integration.)
   const isCurrentUser = event.requested_by === currentUserId || event.organizer === 'Current User';
 
   return (
@@ -86,11 +97,33 @@ const EventCard = ({ event, onEditClick, onCancelClick }) => {
         </Box>
         
         <Box sx={{ mt: 2 }}>
+<<<<<<< HEAD
           <Chip label={`By: ${nameLabel}`} size="small" variant="outlined" />
+=======
+          <Chip 
+            label={`By: ${event.requested_by === currentUserId ? 'You' : (event.requested_by || event.organizer)}`} 
+            size="small" 
+            variant="outlined" 
+          />
+>>>>>>> d315eb7 (Event integration.)
         </Box>
       </CardContent>
       
       <CardActions>
+<<<<<<< HEAD
+=======
+        {event.status === 'rejected' && isCurrentUser && (
+          <Button 
+            size="small" 
+            variant="outlined" 
+            color="primary" 
+            fullWidth
+            onClick={() => onEditClick(event)}
+          >
+            Edit & Resubmit
+          </Button>
+        )}
+>>>>>>> d315eb7 (Event integration.)
         {event.status === 'pending' && isCurrentUser && (
           <Button 
             size="small" 

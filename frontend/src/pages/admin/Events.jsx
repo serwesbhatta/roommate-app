@@ -23,13 +23,20 @@ import {
   updateEvent,
   deleteEvent,
   createEvent,
+<<<<<<< HEAD
   fetchTotalEventCount,
+=======
+>>>>>>> d315eb7 (Event integration.)
 } from "../../redux/slices/eventsSlice";
 import { EventForm } from "../../components/events";
 
 const Events = () => {
   const dispatch = useDispatch();
+<<<<<<< HEAD
   const { events, totalCount, loading } = useSelector((state) => state.events);
+=======
+  const { events, loading } = useSelector((state) => state.events);
+>>>>>>> d315eb7 (Event integration.)
   const { id: currentAdminId } = useSelector((state) => state.auth);
 
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -46,6 +53,7 @@ const Events = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+<<<<<<< HEAD
   // Pagination states
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -72,6 +80,17 @@ const Events = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+=======
+  const menuActionsList = ["Add", "Edit", "Approve", "Reject", "Delete"];
+
+  useEffect(() => {
+    dispatch(fetchEvents());
+  }, [dispatch]);
+
+  useEffect(() => {
+    filterEvents();
+  }, [events, searchTerm, statusFilter]);
+>>>>>>> d315eb7 (Event integration.)
 
   const filterEvents = () => {
     let result = [...events];
@@ -108,6 +127,7 @@ const Events = () => {
     return date.toISOString().slice(0, 16);
   };
 
+<<<<<<< HEAD
   // Helper function to refresh both events and total event count.
   const refreshEventsData = () => {
     dispatch(fetchTotalEventCount());
@@ -127,11 +147,24 @@ const Events = () => {
           .catch((error) => {
             console.error("Failed to delete event:", error);
           });
+=======
+  const handleRowAction = (action, id) => {
+    const event = filteredEvents.find((e) => e.id === id);
+    switch (action) {
+      case "delete":
+        dispatch(deleteEvent(id));
+>>>>>>> d315eb7 (Event integration.)
         break;
 
       case "approve":
         if (event?.status === "pending" || event?.status === "rejected") {
+<<<<<<< HEAD
           const { title, description, event_start, event_end, location } = event;
+=======
+          const { title, description, event_start, event_end, location } =
+            event;
+
+>>>>>>> d315eb7 (Event integration.)
           const payload = {
             title,
             description,
@@ -142,6 +175,7 @@ const Events = () => {
             approved_by: currentAdminId,
             updated_at: new Date().toISOString(),
           };
+<<<<<<< HEAD
           dispatch(updateEvent({ id: event.id, data: payload }))
             .unwrap()
             .then(() => {
@@ -150,12 +184,22 @@ const Events = () => {
             .catch((error) => {
               console.error("Failed to approve event:", error);
             });
+=======
+
+          dispatch(updateEvent({ id: event.id, data: payload }));
+>>>>>>> d315eb7 (Event integration.)
         }
         break;
 
       case "reject":
         if (event?.status === "pending" || event?.status === "approved") {
+<<<<<<< HEAD
           const { title, description, event_start, event_end, location } = event;
+=======
+          const { title, description, event_start, event_end, location } =
+            event;
+
+>>>>>>> d315eb7 (Event integration.)
           const payload = {
             title,
             description,
@@ -166,6 +210,7 @@ const Events = () => {
             approved_by: currentAdminId,
             updated_at: new Date().toISOString(),
           };
+<<<<<<< HEAD
           dispatch(updateEvent({ id: event.id, data: payload }))
             .unwrap()
             .then(() => {
@@ -174,6 +219,10 @@ const Events = () => {
             .catch((error) => {
               console.error("Failed to reject event:", error);
             });
+=======
+
+          dispatch(updateEvent({ id: event.id, data: payload }));
+>>>>>>> d315eb7 (Event integration.)
         }
         break;
 
@@ -191,6 +240,10 @@ const Events = () => {
         break;
 
       case "edit":
+<<<<<<< HEAD
+=======
+
+>>>>>>> d315eb7 (Event integration.)
         setIsEditMode(true);
         setEventForm({
           ...event,
@@ -203,6 +256,7 @@ const Events = () => {
       default:
         break;
     }
+<<<<<<< HEAD
   };
 
   const handleFormChange = (e) => {
@@ -264,7 +318,58 @@ const Events = () => {
       location: "",
       requested_by: currentAdminId,
     });
+=======
+>>>>>>> d315eb7 (Event integration.)
   };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setEventForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleFormSubmit = () => {
+
+    const { title, description, location } = eventForm;
+    const payload = {
+      title,
+      description,
+      location,
+      event_start: new Date(eventForm.event_start).toISOString(),
+      event_end: new Date(eventForm.event_end).toISOString(),
+    };
+
+    if (isEditMode) {
+      const data = {
+        ...payload,
+        status: "rejected",   
+        approved_by: currentAdminId, 
+        updated_at: new Date().toISOString(),  
+      };
+      dispatch(updateEvent({ id: eventForm.id, data }));
+
+    } else {
+      const data = {
+        ...payload,
+        requested_by: currentAdminId
+      }
+      dispatch(createEvent(data));
+    }
+
+    setDialogOpen(false);
+    setIsEditMode(false);
+    setEventForm({
+      title: "",
+      description: "",
+      event_start: "",
+      event_end: "",
+      location: "",
+      requested_by: currentAdminId,
+    });
+  };
+
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f5f5f5" }}>
@@ -272,6 +377,11 @@ const Events = () => {
         <AdminHeaders
           title="Events"
           subtitle="Manage all user-submitted events"
+<<<<<<< HEAD
+=======
+          addButtonText="Add Event"
+          onAddClick={() => handleRowAction("add")}
+>>>>>>> d315eb7 (Event integration.)
         />
 
         <AdminTableController
@@ -320,7 +430,11 @@ const Events = () => {
               field: "description",
               headerName: "Description",
               render: (value) => {
+<<<<<<< HEAD
                 const maxLength = 6;
+=======
+                const maxLength = 60;
+>>>>>>> d315eb7 (Event integration.)
                 const shortText =
                   value?.length > maxLength
                     ? value.slice(0, maxLength) + "..."
@@ -366,11 +480,14 @@ const Events = () => {
           onRowAction={handleRowAction}
           menuActions={menuActionsList}
           showImage={false}
+<<<<<<< HEAD
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
           count={totalCount}
+=======
+>>>>>>> d315eb7 (Event integration.)
         />
       </Box>
 

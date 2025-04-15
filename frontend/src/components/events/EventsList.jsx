@@ -3,7 +3,10 @@ import { Grid, Typography, Paper, Button, Box } from '@mui/material';
 import EventCard from './EventCard';
 
 const EventsList = ({ events, onEditClick, onCancelClick, onRequestClick, tabValue }) => {
+<<<<<<< HEAD
 
+=======
+>>>>>>> d315eb7 (Event integration.)
   if (events.length === 0) {
     return (
       <Paper sx={{ p: 3, textAlign: 'center' }}>

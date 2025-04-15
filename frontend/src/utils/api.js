@@ -2,6 +2,7 @@
 const BASE_URL = "http://localhost:8000/api";
 
 export const API_ENDPOINTS = {
+<<<<<<< HEAD
   BASE_URL,
 
   // ─── Authentication ─────────────────────────────
@@ -21,6 +22,12 @@ export const API_ENDPOINTS = {
   GET_TOTAL_PROFILES: `${BASE_URL}/profiles/total`,
 
   // ─── Events ─────────────────────────────────────
+=======
+  // Authentication endpoint
+  LOGIN: `${BASE_URL}/login`,
+
+  // Events endpoints
+>>>>>>> d315eb7 (Event integration.)
   CREATE_EVENT: `${BASE_URL}/events`,
   GET_EVENT: (id) => `${BASE_URL}/events/${id}`,
   LIST_EVENTS: `${BASE_URL}/events`,
@@ -29,6 +36,7 @@ export const API_ENDPOINTS = {
   EVENTS_TOTAL_COUNT: `${BASE_URL}/events_total_count`,
   PENDING_EVENTS: `${BASE_URL}/events_pending`,
   APPROVED_EVENTS: `${BASE_URL}/events_approved`,
+<<<<<<< HEAD
 
   // ─── Questionnaire: Questions + Options ─────────
   GET_QUESTION_WITH_OPTIONS: (questionId) => `${BASE_URL}/question_options?question_id=${questionId}`,
@@ -56,4 +64,6 @@ export const API_ENDPOINTS = {
   ALLOCATE_STUDENTS: (residence_hall_id,room_number) =>`${BASE_URL}/rooms/${residence_hall_id}/${room_number}/allocate`,
   VACATE_ROOM: (residence_hall_id, room_number) =>`${BASE_URL}/rooms/${residence_hall_id}/${room_number}/vacate`,
 
+=======
+>>>>>>> d315eb7 (Event integration.)
 };

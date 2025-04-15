@@ -33,8 +33,13 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import {AdminWidgets, AdminHeaders} from '../../components/adminComponent'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTotalEventCount, fetchPendingEvents,  fetchEvents } from '../../redux/slices/eventsSlice';
+<<<<<<< HEAD
 import { fetchTotalRooms, fetchAvailableRooms} from '../../redux/slices/roomSlice';
 import { fetchTotalAuthUsers, fetchNewUsers } from '../../redux/slices/authSlice';
+=======
+
+
+>>>>>>> d315eb7 (Event integration.)
 
 
 // Sample data for chart
@@ -56,12 +61,30 @@ const newUsersData = [
 
 
 const AdminDashboard = () => {
+<<<<<<< HEAD
+=======
+
+  const dispatch = useDispatch();
+  const { events, pendingEvents, totalCount } = useSelector((state) => state.events);
+  const topEvents = events.slice(0, 4);
+
+  
+  useEffect(() => {
+    dispatch(fetchEvents());
+    dispatch(fetchTotalEventCount());
+    dispatch(fetchPendingEvents());
+  }, [dispatch]);
+
+
+  const [month, setMonth] = useState('October');
+>>>>>>> d315eb7 (Event integration.)
 
   const dispatch = useDispatch();
   const {events, pendingEvents, totalCount} = useSelector((state) => state.events);
   const {totalRooms, availableRooms} = useSelector((state) => state.rooms);
   const {totalUsers, newUsers} = useSelector((state) => state.auth);
 
+<<<<<<< HEAD
   const topEvents = events.slice(0, 4);
 
   
@@ -87,6 +110,17 @@ const AdminDashboard = () => {
     { label: "Total Events", value: totalCount, icon: <EventIcon sx={{ color: "#3f51b5" }} />, bgcolor: "#e8eaf6" },
     { label: "Pending Events", value: pendingEvents.length, icon: <EventIcon sx={{ color: "#ff5252" }} />, bgcolor: "#ffebee" },
   ];
+=======
+
+const statsData = [
+  { label: "Total User", value: 782, icon: <PersonIcon sx={{ color: "#2196f3" }} />, bgcolor: "#e3f2fd" },
+  { label: "Total Rooms", value: 234, icon: <RoomIcon sx={{ color: "#ffc107" }} />, bgcolor: "#fff8e1" },
+  { label: "Available Rooms", value: 54, icon: <RoomIcon sx={{ color: "#4caf50" }} />, bgcolor: "#e8f5e9" },
+  { label: "Total Events", value: totalCount, icon: <EventIcon sx={{ color: "#3f51b5" }} />, bgcolor: "#e8eaf6" },
+  { label: "Pending Events", value: pendingEvents.length, icon: <EventIcon sx={{ color: "#ff5252" }} />, bgcolor: "#ffebee" },
+];
+
+>>>>>>> d315eb7 (Event integration.)
 
 
   return (

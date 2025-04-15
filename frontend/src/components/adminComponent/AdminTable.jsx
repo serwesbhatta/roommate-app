@@ -24,6 +24,7 @@ const AdminTable = ({
   menuActions,
   showStatus = false,
   showImage = false,
+<<<<<<< HEAD
   page,
   rowsPerPage,
   onPageChange,
@@ -38,6 +39,27 @@ const AdminTable = ({
 
   const getRowKey = (row) => row.id || row.room_number;
 
+=======
+}) => {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [actionRowId, setActionRowId] = React.useState(null);
+
+  const currentPageData = data.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const handleChangePage = (event, newPage) => setPage(newPage);
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+>>>>>>> d315eb7 (Event integration.)
   const handleMenuOpen = (event, id) => {
     setAnchorEl(event.currentTarget);
     setActionRowId(id);
@@ -69,6 +91,7 @@ const AdminTable = ({
               <TableCell sx={{ backgroundColor: "white" }}>Action</TableCell>
             </TableRow>
           </TableHead>
+<<<<<<< HEAD
           <TableBody>
             {currentPageData.map((row) => {
               const rowKey = getRowKey(row);
@@ -119,6 +142,62 @@ const AdminTable = ({
           </TableBody>
         </Table>
       </TableContainer>
+=======
+
+          <TableBody>
+            {currentPageData.map((row) => (
+              <TableRow key={row.id}>
+                {showImage && (
+                  <TableCell>
+                    <Avatar src={row.image} alt={row.title || row.name} />
+                  </TableCell>
+                )}
+                {columns.map((column) => (
+                  <TableCell key={`${row.id}-${column.field}`}>
+                    {column.render
+                      ? column.render(row[column.field], row)
+                      : row[column.field] ?? "—"}
+                  </TableCell>
+                ))}
+                {showStatus && (
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color={getStatusColor(row.status)}
+                      size="small"
+                    >
+                      {row.status}
+                    </Button>
+                  </TableCell>
+                )}
+                <TableCell>
+                  <IconButton onClick={(event) => handleMenuOpen(event, row.id)}>
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl) && actionRowId === row.id}
+                    onClose={handleMenuClose}
+                  >
+                    {menuActions.map((action) => {
+                      // Only show Approve/Reject if pending
+
+
+                      return (
+                        <MenuItem key={action} onClick={() => handleActionClick(action, row.id)}>
+                          {action}
+                        </MenuItem>
+                      );
+                    })}
+                  </Menu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+>>>>>>> d315eb7 (Event integration.)
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
