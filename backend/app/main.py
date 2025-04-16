@@ -14,6 +14,7 @@ from .api.routes.question_option_routes import router as question_option_router
 from .api.routes.user_response_route import router as user_response_router
 from .api.routes.feedbacks_routes import router as feedback_router
 from .api.routes.message_routes import router as message_router
+from app.api.routes.message_routes import websocket_endpoint
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -74,3 +75,4 @@ app.include_router(question_option_router, prefix="/api")
 app.include_router(user_response_router, prefix="/api")
 app.include_router(feedback_router, prefix="/api")
 app.include_router(message_router, prefix="/api")
+app.add_api_websocket_route("/ws/{user_id}", websocket_endpoint)
