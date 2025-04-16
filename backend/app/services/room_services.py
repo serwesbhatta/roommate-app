@@ -169,3 +169,19 @@ class RoomService:
             raise ValueError(f"Error during vacating process: {str(e)}")
         
         return room
+    
+    def get_room_for_user(self, user_id: int) -> Room:
+        """
+        Return the RoomModel instance where this user_id is one of the occupants.
+        Raises ValueError if none found.
+        """
+        room = (
+            self.db
+            .query(Room)
+            # assuming RoomModel.user_profiles is a relationship to UserProfileModel
+            .filter(Room.user_profiles.any(id=user_id))
+            .first()
+        )
+        if not room:
+            raise ValueError(f"No room allocated for user with id {user_id}")
+        return room

@@ -69,3 +69,8 @@ export const vacateRoom = async (residence_hall_id, room_number, student_ids ) =
   );
   return response.data;
 };
+
+export const userRoom = async (user_id) => {
+  const response = await axios.get(API_ENDPOINTS.USER_ROOM(user_id));
+  return response.data;
+};

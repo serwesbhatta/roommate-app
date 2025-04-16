@@ -16,7 +16,7 @@ export const getMenuItems = (userRole) => {
         { label: "Roommate", path: "user/roommate" },
         { label: "Events", path: "user/events" },
         { label: "Notifications", path: "user/notifications" },
-        { label: "Messages", path: "user/message" },
+        { label: "Messages", path: "user/chat" },
       ];
     }
 
@@ -26,7 +26,6 @@ export const getMenuItems = (userRole) => {
             { label: "Users", path: "/admin/admin_users", icon: PersonIcon  },
             { label: "Rooms", path: "/admin/admin_rooms", icon: RoomIcon  },
             { label: "Residence Hall", path: "/admin/admin_residence_halls", icon: DomainIcon  },
-            { label: "Inbox", path: "/admin/admin_inbox", icon: InboxIcon  },
             { label: "Events", path: "/admin/admin_events", icon: EventIcon  },
             { label: "Notifications", path: "/admin/admin_notifications", icon: NotificationsIcon },
         ];

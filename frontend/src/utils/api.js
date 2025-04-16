@@ -55,5 +55,5 @@ export const API_ENDPOINTS = {
   AVAILABLE_ROOMS: `${BASE_URL}/rooms_available_count`,
   ALLOCATE_STUDENTS: (residence_hall_id,room_number) =>`${BASE_URL}/rooms/${residence_hall_id}/${room_number}/allocate`,
   VACATE_ROOM: (residence_hall_id, room_number) =>`${BASE_URL}/rooms/${residence_hall_id}/${room_number}/vacate`,
-
+  USER_ROOM: (user_id) => `${BASE_URL}/users/${user_id}/room`
 };
