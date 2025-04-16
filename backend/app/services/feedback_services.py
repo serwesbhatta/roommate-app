@@ -23,10 +23,12 @@ class FeedbackService:
         if feedback_given:
             raise ValueError("Feedback already given to this user.")
 
+        feedback_data = feedback.model_dump()
+
         created_feedback = create_record(
             db=self.db,
             model=Feedback,
-            data=feedback
+            data=feedback_data
         )
 
         return created_feedback
