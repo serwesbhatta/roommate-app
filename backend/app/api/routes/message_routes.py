@@ -10,7 +10,7 @@ import json
 router = APIRouter()
 
 @router.get(
-    "/messages/{other_user_id}",
+    "/messages/{current_user_id}/{other_user_id}",
     response_model=List[MessageResponse]
 )
 async def get_chat_history(
