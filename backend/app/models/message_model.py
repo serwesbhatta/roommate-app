@@ -12,5 +12,5 @@ class Message(Base):
     content = Column(Text, nullable=False)
     timestamp = Column(DateTime, default=datetime.now(timezone.utc))
 
-    sender = relationship("UserProfile", foreign_keys=[sender_id], backref="sent_messages")
-    receiver = relationship("UserProfile", foreign_keys=[receiver_id], backref="received_messages")
+    # sender = relationship("UserProfile", foreign_keys="Message.sender_id", backref="sent_messages")
+    # receiver = relationship("UserProfile", foreign_keys="Message.receiver_id", backref="received_messages")
