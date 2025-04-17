@@ -4,6 +4,7 @@ from app.database import Base
 from app.models.event_model import Event
 from app.models.user_response_model import UserResponse
 from app.models.room_model import Room
+from app.models.message_model import Message
 
 class AuthUser(Base):
     __tablename__ = "auth_users"
@@ -70,5 +71,5 @@ class UserProfile(Base):
     received_feedbacks = relationship("Feedback", foreign_keys="[Feedback.receiver_user_id]", back_populates="receiver")
     
     # Messaging relationships
-    # sent_messages = relationship("Message", foreign_keys="Message.sender_id", back_populates="sender", cascade="all, delete-orphan")
-    # received_messages = relationship("Message", foreign_keys="Message.receiver_id", back_populates="receiver", cascade="all, delete-orphan")
+    sent_messages = relationship("Message", foreign_keys="[Message.sender_id]", back_populates="sender", cascade="all, delete-orphan")
+    received_messages = relationship("Message", foreign_keys="[Message.receiver_id]", back_populates="receiver", cascade="all, delete-orphan")
