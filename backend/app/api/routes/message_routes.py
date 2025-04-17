@@ -98,7 +98,7 @@ async def websocket_endpoint(
         manager.disconnect(user_id)
 
 @router.get(
-    "/messages/contacts/{current_user_id}",
+    "/messages-contacts/{current_user_id}",
 )
 async def get_chat_contacts(
     current_user_id: int,
