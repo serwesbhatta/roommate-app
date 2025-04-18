@@ -44,7 +44,7 @@ def delete_feedback_route(
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-@router.get("/feedbacks/user_received/{receiver_id}", response_model=List[FeedbackResponse])
+@router.get("/feedbacks/user_received/{receiver_user_id}", response_model=List[FeedbackResponse])
 def list_feedback_user_received_route(
     receiver_user_id: int,
     skip: int = 0,

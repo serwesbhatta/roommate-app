@@ -35,7 +35,7 @@ class FeedbackService:
 
 
     def update_feedback(self, feedback: FeedbackUpdate):
-        given_feedback = self.get_current_feedback(feedback.receiver_user_id)
+        given_feedback = self.get_current_feedback(feedback.giver_user_id,feedback.receiver_user_id)
         
         feedback_data = feedback.model_dump()
 
