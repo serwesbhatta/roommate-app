@@ -55,5 +55,19 @@ export const API_ENDPOINTS = {
   AVAILABLE_ROOMS: `${BASE_URL}/rooms_available_count`,
   ALLOCATE_STUDENTS: (residence_hall_id,room_number) =>`${BASE_URL}/rooms/${residence_hall_id}/${room_number}/allocate`,
   VACATE_ROOM: (residence_hall_id, room_number) =>`${BASE_URL}/rooms/${residence_hall_id}/${room_number}/vacate`,
-  USER_ROOM: (user_id) => `${BASE_URL}/users/${user_id}/room`
+  USER_ROOM: (user_id) => `${BASE_URL}/users/${user_id}/room`,
+
+    // ─── Feedback ───────────────────────────────────
+    CREATE_FEEDBACK: `${BASE_URL}/feedbacks`,
+    UPDATE_FEEDBACK: (receiverUserId) => `${BASE_URL}/feedbacks/${receiverUserId}`,
+    DELETE_FEEDBACK: (receiverUserId, giverUserId) =>
+      `${BASE_URL}/feedbacks/${receiverUserId}?giver_user_id=${giverUserId}`,
+    LIST_FEEDBACK_RECEIVED: (receiverUserId) =>
+      `${BASE_URL}/feedbacks/user_received/${receiverUserId}`,
+    LIST_FEEDBACK_GAVE: (giverUserId) =>
+      `${BASE_URL}/feedbacks/user_gave/${giverUserId}`,
+    AVERAGE_RATING: (userId) =>
+      `${BASE_URL}/feedbacks/average_rating/${userId}`,
+    HAS_GIVEN_FEEDBACK: (receiverUserId, giverUserId) =>
+      `${BASE_URL}/feedbacks/already_given/${receiverUserId}?giver_user_id=${giverUserId}`,
 };

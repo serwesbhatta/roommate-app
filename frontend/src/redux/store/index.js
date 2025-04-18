@@ -7,6 +7,7 @@ import eventsReducer from '../slices/eventsSlice';
 import questionnaireReducer from '../slices/questionnaireSlice';
 import residenceHallReducer from '../slices/residenceHallSlice';
 import roomReducer from '../slices/roomSlice';
+import feedbackReducer from '../slices/feedbackSlice'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     questionnaire: questionnaireReducer,
     residenceHall: residenceHallReducer,
     rooms: roomReducer,
+    feedback: feedbackReducer,
   },
 });
 
