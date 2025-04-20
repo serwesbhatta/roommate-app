@@ -1,0 +1,1601 @@
+user_profile_id,question_id,selected_option
+1,1,10–12 PM
+1,2,Messy
+1,3,Some noise
+1,4,Depends
+1,5,Occasionally
+1,6,Prefer not to
+1,7,Never
+1,8,Mild
+2,1,Before 10 PM
+2,2,Messy
+2,3,Quiet
+2,4,Morning
+2,5,Occasionally
+2,6,Depends
+2,7,Never
+2,8,Cold
+3,1,10–12 PM
+3,2,Very clean
+3,3,Some noise
+3,4,Night
+3,5,Frequently
+3,6,Depends
+3,7,Never
+3,8,Warm
+4,1,Before 10 PM
+4,2,Messy
+4,3,Some noise
+4,4,Depends
+4,5,Occasionally
+4,6,Fine with it
+4,7,Never
+4,8,Warm
+5,1,After midnight
+5,2,Moderate
+5,3,Doesn’t matter
+5,4,Depends
+5,5,Rarely
+5,6,Prefer not to
+5,7,Sometimes
+5,8,Mild
+6,1,After midnight
+6,2,Messy
+6,3,Some noise
+6,4,Depends
+6,5,Frequently
+6,6,Fine with it
+6,7,Sometimes
+6,8,Warm
+7,1,After midnight
+7,2,Very clean
+7,3,Doesn’t matter
+7,4,Night
+7,5,Occasionally
+7,6,Fine with it
+7,7,Sometimes
+7,8,Warm
+8,1,Before 10 PM
+8,2,Moderate
+8,3,Quiet
+8,4,Night
+8,5,Frequently
+8,6,Fine with it
+8,7,Sometimes
+8,8,Mild
+9,1,After midnight
+9,2,Messy
+9,3,Doesn’t matter
+9,4,Morning
+9,5,Rarely
+9,6,Prefer not to
+9,7,Sometimes
+9,8,Mild
+10,1,After midnight
+10,2,Very clean
+10,3,Some noise
+10,4,Morning
+10,5,Occasionally
+10,6,Depends
+10,7,Sometimes
+10,8,Mild
+11,1,10–12 PM
+11,2,Messy
+11,3,Quiet
+11,4,Depends
+11,5,Rarely
+11,6,Depends
+11,7,Never
+11,8,Cold
+12,1,After midnight
+12,2,Very clean
+12,3,Some noise
+12,4,Morning
+12,5,Rarely
+12,6,Fine with it
+12,7,Never
+12,8,Cold
+13,1,10–12 PM
+13,2,Messy
+13,3,Quiet
+13,4,Depends
+13,5,Rarely
+13,6,Depends
+13,7,Never
+13,8,Warm
+14,1,After midnight
+14,2,Moderate
+14,3,Doesn’t matter
+14,4,Depends
+14,5,Rarely
+14,6,Prefer not to
+14,7,Never
+14,8,Mild
+15,1,10–12 PM
+15,2,Messy
+15,3,Quiet
+15,4,Depends
+15,5,Rarely
+15,6,Prefer not to
+15,7,Sometimes
+15,8,Warm
+16,1,10–12 PM
+16,2,Very clean
+16,3,Some noise
+16,4,Depends
+16,5,Occasionally
+16,6,Prefer not to
+16,7,Never
+16,8,Cold
+17,1,Before 10 PM
+17,2,Moderate
+17,3,Doesn’t matter
+17,4,Morning
+17,5,Occasionally
+17,6,Fine with it
+17,7,Sometimes
+17,8,Cold
+18,1,10–12 PM
+18,2,Messy
+18,3,Doesn’t matter
+18,4,Night
+18,5,Rarely
+18,6,Prefer not to
+18,7,Sometimes
+18,8,Cold
+19,1,After midnight
+19,2,Very clean
+19,3,Quiet
+19,4,Night
+19,5,Frequently
+19,6,Fine with it
+19,7,Often
+19,8,Cold
+20,1,10–12 PM
+20,2,Messy
+20,3,Some noise
+20,4,Depends
+20,5,Rarely
+20,6,Prefer not to
+20,7,Often
+20,8,Cold
+21,1,Before 10 PM
+21,2,Moderate
+21,3,Doesn’t matter
+21,4,Morning
+21,5,Frequently
+21,6,Depends
+21,7,Never
+21,8,Cold
+22,1,Before 10 PM
+22,2,Very clean
+22,3,Quiet
+22,4,Morning
+22,5,Occasionally
+22,6,Fine with it
+22,7,Often
+22,8,Cold
+23,1,After midnight
+23,2,Moderate
+23,3,Doesn’t matter
+23,4,Depends
+23,5,Occasionally
+23,6,Prefer not to
+23,7,Often
+23,8,Warm
+24,1,Before 10 PM
+24,2,Very clean
+24,3,Some noise
+24,4,Depends
+24,5,Rarely
+24,6,Fine with it
+24,7,Never
+24,8,Cold
+25,1,10–12 PM
+25,2,Moderate
+25,3,Some noise
+25,4,Depends
+25,5,Occasionally
+25,6,Depends
+25,7,Never
+25,8,Warm
+26,1,Before 10 PM
+26,2,Very clean
+26,3,Some noise
+26,4,Morning
+26,5,Frequently
+26,6,Prefer not to
+26,7,Often
+26,8,Warm
+27,1,After midnight
+27,2,Messy
+27,3,Doesn’t matter
+27,4,Depends
+27,5,Rarely
+27,6,Fine with it
+27,7,Often
+27,8,Warm
+28,1,10–12 PM
+28,2,Messy
+28,3,Quiet
+28,4,Night
+28,5,Frequently
+28,6,Prefer not to
+28,7,Often
+28,8,Cold
+29,1,10–12 PM
+29,2,Messy
+29,3,Doesn’t matter
+29,4,Depends
+29,5,Rarely
+29,6,Depends
+29,7,Often
+29,8,Cold
+30,1,Before 10 PM
+30,2,Messy
+30,3,Quiet
+30,4,Depends
+30,5,Occasionally
+30,6,Fine with it
+30,7,Never
+30,8,Warm
+31,1,10–12 PM
+31,2,Very clean
+31,3,Some noise
+31,4,Morning
+31,5,Rarely
+31,6,Prefer not to
+31,7,Never
+31,8,Warm
+32,1,Before 10 PM
+32,2,Messy
+32,3,Doesn’t matter
+32,4,Depends
+32,5,Frequently
+32,6,Fine with it
+32,7,Never
+32,8,Mild
+33,1,Before 10 PM
+33,2,Very clean
+33,3,Doesn’t matter
+33,4,Night
+33,5,Occasionally
+33,6,Prefer not to
+33,7,Never
+33,8,Cold
+34,1,Before 10 PM
+34,2,Messy
+34,3,Doesn’t matter
+34,4,Morning
+34,5,Occasionally
+34,6,Depends
+34,7,Sometimes
+34,8,Cold
+35,1,Before 10 PM
+35,2,Messy
+35,3,Quiet
+35,4,Depends
+35,5,Occasionally
+35,6,Prefer not to
+35,7,Often
+35,8,Cold
+36,1,Before 10 PM
+36,2,Messy
+36,3,Some noise
+36,4,Morning
+36,5,Occasionally
+36,6,Depends
+36,7,Often
+36,8,Cold
+37,1,10–12 PM
+37,2,Moderate
+37,3,Quiet
+37,4,Morning
+37,5,Occasionally
+37,6,Prefer not to
+37,7,Often
+37,8,Warm
+38,1,After midnight
+38,2,Very clean
+38,3,Doesn’t matter
+38,4,Morning
+38,5,Occasionally
+38,6,Fine with it
+38,7,Sometimes
+38,8,Mild
+39,1,After midnight
+39,2,Moderate
+39,3,Quiet
+39,4,Depends
+39,5,Rarely
+39,6,Depends
+39,7,Often
+39,8,Cold
+40,1,Before 10 PM
+40,2,Moderate
+40,3,Doesn’t matter
+40,4,Morning
+40,5,Occasionally
+40,6,Prefer not to
+40,7,Never
+40,8,Cold
+41,1,Before 10 PM
+41,2,Messy
+41,3,Doesn’t matter
+41,4,Night
+41,5,Rarely
+41,6,Fine with it
+41,7,Never
+41,8,Cold
+42,1,Before 10 PM
+42,2,Very clean
+42,3,Quiet
+42,4,Night
+42,5,Frequently
+42,6,Depends
+42,7,Never
+42,8,Warm
+43,1,After midnight
+43,2,Moderate
+43,3,Some noise
+43,4,Depends
+43,5,Rarely
+43,6,Fine with it
+43,7,Sometimes
+43,8,Cold
+44,1,After midnight
+44,2,Very clean
+44,3,Some noise
+44,4,Night
+44,5,Rarely
+44,6,Fine with it
+44,7,Sometimes
+44,8,Warm
+45,1,Before 10 PM
+45,2,Messy
+45,3,Some noise
+45,4,Night
+45,5,Frequently
+45,6,Prefer not to
+45,7,Often
+45,8,Mild
+46,1,10–12 PM
+46,2,Very clean
+46,3,Some noise
+46,4,Depends
+46,5,Rarely
+46,6,Depends
+46,7,Sometimes
+46,8,Warm
+47,1,Before 10 PM
+47,2,Messy
+47,3,Quiet
+47,4,Depends
+47,5,Rarely
+47,6,Fine with it
+47,7,Often
+47,8,Warm
+48,1,Before 10 PM
+48,2,Moderate
+48,3,Some noise
+48,4,Night
+48,5,Occasionally
+48,6,Prefer not to
+48,7,Often
+48,8,Warm
+49,1,After midnight
+49,2,Messy
+49,3,Quiet
+49,4,Night
+49,5,Frequently
+49,6,Fine with it
+49,7,Sometimes
+49,8,Warm
+50,1,After midnight
+50,2,Very clean
+50,3,Some noise
+50,4,Morning
+50,5,Rarely
+50,6,Depends
+50,7,Often
+50,8,Cold
+51,1,Before 10 PM
+51,2,Messy
+51,3,Some noise
+51,4,Night
+51,5,Rarely
+51,6,Prefer not to
+51,7,Sometimes
+51,8,Mild
+52,1,After midnight
+52,2,Moderate
+52,3,Some noise
+52,4,Depends
+52,5,Frequently
+52,6,Depends
+52,7,Never
+52,8,Warm
+53,1,Before 10 PM
+53,2,Very clean
+53,3,Doesn’t matter
+53,4,Depends
+53,5,Rarely
+53,6,Prefer not to
+53,7,Often
+53,8,Mild
+54,1,After midnight
+54,2,Very clean
+54,3,Quiet
+54,4,Morning
+54,5,Rarely
+54,6,Depends
+54,7,Sometimes
+54,8,Cold
+55,1,10–12 PM
+55,2,Moderate
+55,3,Doesn’t matter
+55,4,Night
+55,5,Frequently
+55,6,Fine with it
+55,7,Sometimes
+55,8,Warm
+56,1,10–12 PM
+56,2,Very clean
+56,3,Doesn’t matter
+56,4,Morning
+56,5,Occasionally
+56,6,Depends
+56,7,Never
+56,8,Warm
+57,1,Before 10 PM
+57,2,Very clean
+57,3,Some noise
+57,4,Night
+57,5,Occasionally
+57,6,Prefer not to
+57,7,Often
+57,8,Mild
+58,1,Before 10 PM
+58,2,Very clean
+58,3,Some noise
+58,4,Depends
+58,5,Rarely
+58,6,Depends
+58,7,Often
+58,8,Warm
+59,1,After midnight
+59,2,Moderate
+59,3,Quiet
+59,4,Depends
+59,5,Frequently
+59,6,Prefer not to
+59,7,Never
+59,8,Warm
+60,1,After midnight
+60,2,Moderate
+60,3,Some noise
+60,4,Morning
+60,5,Occasionally
+60,6,Prefer not to
+60,7,Sometimes
+60,8,Cold
+61,1,After midnight
+61,2,Moderate
+61,3,Some noise
+61,4,Night
+61,5,Frequently
+61,6,Depends
+61,7,Sometimes
+61,8,Mild
+62,1,After midnight
+62,2,Moderate
+62,3,Some noise
+62,4,Depends
+62,5,Rarely
+62,6,Prefer not to
+62,7,Often
+62,8,Warm
+63,1,After midnight
+63,2,Very clean
+63,3,Some noise
+63,4,Morning
+63,5,Frequently
+63,6,Fine with it
+63,7,Never
+63,8,Warm
+64,1,Before 10 PM
+64,2,Messy
+64,3,Some noise
+64,4,Night
+64,5,Occasionally
+64,6,Prefer not to
+64,7,Never
+64,8,Warm
+65,1,10–12 PM
+65,2,Very clean
+65,3,Doesn’t matter
+65,4,Night
+65,5,Frequently
+65,6,Prefer not to
+65,7,Sometimes
+65,8,Cold
+66,1,10–12 PM
+66,2,Moderate
+66,3,Some noise
+66,4,Morning
+66,5,Frequently
+66,6,Prefer not to
+66,7,Sometimes
+66,8,Cold
+67,1,After midnight
+67,2,Very clean
+67,3,Doesn’t matter
+67,4,Morning
+67,5,Rarely
+67,6,Depends
+67,7,Never
+67,8,Cold
+68,1,After midnight
+68,2,Messy
+68,3,Some noise
+68,4,Night
+68,5,Occasionally
+68,6,Prefer not to
+68,7,Never
+68,8,Mild
+69,1,After midnight
+69,2,Moderate
+69,3,Some noise
+69,4,Depends
+69,5,Rarely
+69,6,Depends
+69,7,Often
+69,8,Cold
+70,1,Before 10 PM
+70,2,Messy
+70,3,Some noise
+70,4,Morning
+70,5,Rarely
+70,6,Depends
+70,7,Never
+70,8,Warm
+71,1,10–12 PM
+71,2,Very clean
+71,3,Some noise
+71,4,Night
+71,5,Frequently
+71,6,Fine with it
+71,7,Often
+71,8,Warm
+72,1,After midnight
+72,2,Messy
+72,3,Quiet
+72,4,Depends
+72,5,Rarely
+72,6,Prefer not to
+72,7,Often
+72,8,Warm
+73,1,10–12 PM
+73,2,Messy
+73,3,Quiet
+73,4,Morning
+73,5,Occasionally
+73,6,Prefer not to
+73,7,Sometimes
+73,8,Warm
+74,1,Before 10 PM
+74,2,Messy
+74,3,Some noise
+74,4,Night
+74,5,Frequently
+74,6,Depends
+74,7,Often
+74,8,Mild
+75,1,10–12 PM
+75,2,Moderate
+75,3,Some noise
+75,4,Morning
+75,5,Rarely
+75,6,Depends
+75,7,Never
+75,8,Mild
+76,1,10–12 PM
+76,2,Messy
+76,3,Quiet
+76,4,Night
+76,5,Frequently
+76,6,Prefer not to
+76,7,Often
+76,8,Mild
+77,1,10–12 PM
+77,2,Moderate
+77,3,Quiet
+77,4,Night
+77,5,Occasionally
+77,6,Depends
+77,7,Sometimes
+77,8,Warm
+78,1,Before 10 PM
+78,2,Moderate
+78,3,Some noise
+78,4,Depends
+78,5,Frequently
+78,6,Fine with it
+78,7,Sometimes
+78,8,Warm
+79,1,10–12 PM
+79,2,Very clean
+79,3,Quiet
+79,4,Depends
+79,5,Rarely
+79,6,Depends
+79,7,Often
+79,8,Cold
+80,1,After midnight
+80,2,Very clean
+80,3,Quiet
+80,4,Depends
+80,5,Occasionally
+80,6,Fine with it
+80,7,Never
+80,8,Cold
+81,1,10–12 PM
+81,2,Very clean
+81,3,Some noise
+81,4,Morning
+81,5,Occasionally
+81,6,Depends
+81,7,Never
+81,8,Mild
+82,1,10–12 PM
+82,2,Messy
+82,3,Doesn’t matter
+82,4,Morning
+82,5,Occasionally
+82,6,Depends
+82,7,Never
+82,8,Mild
+83,1,10–12 PM
+83,2,Moderate
+83,3,Doesn’t matter
+83,4,Morning
+83,5,Occasionally
+83,6,Fine with it
+83,7,Sometimes
+83,8,Mild
+84,1,After midnight
+84,2,Very clean
+84,3,Quiet
+84,4,Morning
+84,5,Frequently
+84,6,Fine with it
+84,7,Sometimes
+84,8,Warm
+85,1,10–12 PM
+85,2,Moderate
+85,3,Some noise
+85,4,Night
+85,5,Frequently
+85,6,Prefer not to
+85,7,Sometimes
+85,8,Cold
+86,1,After midnight
+86,2,Moderate
+86,3,Some noise
+86,4,Night
+86,5,Rarely
+86,6,Fine with it
+86,7,Never
+86,8,Warm
+87,1,10–12 PM
+87,2,Moderate
+87,3,Quiet
+87,4,Morning
+87,5,Rarely
+87,6,Fine with it
+87,7,Never
+87,8,Mild
+88,1,10–12 PM
+88,2,Moderate
+88,3,Quiet
+88,4,Depends
+88,5,Frequently
+88,6,Fine with it
+88,7,Never
+88,8,Warm
+89,1,After midnight
+89,2,Very clean
+89,3,Quiet
+89,4,Depends
+89,5,Frequently
+89,6,Prefer not to
+89,7,Sometimes
+89,8,Cold
+90,1,After midnight
+90,2,Very clean
+90,3,Some noise
+90,4,Morning
+90,5,Frequently
+90,6,Fine with it
+90,7,Often
+90,8,Mild
+91,1,After midnight
+91,2,Moderate
+91,3,Doesn’t matter
+91,4,Depends
+91,5,Occasionally
+91,6,Fine with it
+91,7,Sometimes
+91,8,Mild
+92,1,After midnight
+92,2,Messy
+92,3,Some noise
+92,4,Morning
+92,5,Frequently
+92,6,Fine with it
+92,7,Never
+92,8,Cold
+93,1,10–12 PM
+93,2,Moderate
+93,3,Some noise
+93,4,Night
+93,5,Frequently
+93,6,Prefer not to
+93,7,Sometimes
+93,8,Mild
+94,1,After midnight
+94,2,Very clean
+94,3,Doesn’t matter
+94,4,Depends
+94,5,Rarely
+94,6,Fine with it
+94,7,Never
+94,8,Cold
+95,1,10–12 PM
+95,2,Very clean
+95,3,Doesn’t matter
+95,4,Depends
+95,5,Frequently
+95,6,Fine with it
+95,7,Sometimes
+95,8,Mild
+96,1,After midnight
+96,2,Very clean
+96,3,Some noise
+96,4,Depends
+96,5,Occasionally
+96,6,Depends
+96,7,Often
+96,8,Cold
+97,1,Before 10 PM
+97,2,Very clean
+97,3,Doesn’t matter
+97,4,Night
+97,5,Frequently
+97,6,Prefer not to
+97,7,Never
+97,8,Warm
+98,1,10–12 PM
+98,2,Very clean
+98,3,Some noise
+98,4,Morning
+98,5,Rarely
+98,6,Prefer not to
+98,7,Often
+98,8,Cold
+99,1,Before 10 PM
+99,2,Moderate
+99,3,Quiet
+99,4,Depends
+99,5,Rarely
+99,6,Fine with it
+99,7,Never
+99,8,Mild
+100,1,10–12 PM
+100,2,Very clean
+100,3,Some noise
+100,4,Morning
+100,5,Frequently
+100,6,Prefer not to
+100,7,Never
+100,8,Warm
+101,1,10–12 PM
+101,2,Messy
+101,3,Quiet
+101,4,Morning
+101,5,Occasionally
+101,6,Depends
+101,7,Often
+101,8,Mild
+102,1,Before 10 PM
+102,2,Moderate
+102,3,Doesn’t matter
+102,4,Depends
+102,5,Frequently
+102,6,Fine with it
+102,7,Often
+102,8,Warm
+103,1,Before 10 PM
+103,2,Moderate
+103,3,Quiet
+103,4,Night
+103,5,Frequently
+103,6,Fine with it
+103,7,Never
+103,8,Warm
+104,1,Before 10 PM
+104,2,Messy
+104,3,Quiet
+104,4,Morning
+104,5,Occasionally
+104,6,Prefer not to
+104,7,Often
+104,8,Warm
+105,1,10–12 PM
+105,2,Messy
+105,3,Some noise
+105,4,Depends
+105,5,Occasionally
+105,6,Prefer not to
+105,7,Often
+105,8,Mild
+106,1,Before 10 PM
+106,2,Messy
+106,3,Some noise
+106,4,Depends
+106,5,Rarely
+106,6,Prefer not to
+106,7,Often
+106,8,Cold
+107,1,10–12 PM
+107,2,Moderate
+107,3,Some noise
+107,4,Depends
+107,5,Rarely
+107,6,Prefer not to
+107,7,Often
+107,8,Cold
+108,1,After midnight
+108,2,Messy
+108,3,Some noise
+108,4,Night
+108,5,Rarely
+108,6,Fine with it
+108,7,Often
+108,8,Warm
+109,1,10–12 PM
+109,2,Very clean
+109,3,Some noise
+109,4,Depends
+109,5,Frequently
+109,6,Prefer not to
+109,7,Sometimes
+109,8,Cold
+110,1,10–12 PM
+110,2,Very clean
+110,3,Doesn’t matter
+110,4,Depends
+110,5,Rarely
+110,6,Prefer not to
+110,7,Never
+110,8,Warm
+111,1,After midnight
+111,2,Moderate
+111,3,Some noise
+111,4,Night
+111,5,Frequently
+111,6,Prefer not to
+111,7,Often
+111,8,Mild
+112,1,Before 10 PM
+112,2,Messy
+112,3,Quiet
+112,4,Depends
+112,5,Occasionally
+112,6,Fine with it
+112,7,Sometimes
+112,8,Cold
+113,1,Before 10 PM
+113,2,Moderate
+113,3,Quiet
+113,4,Depends
+113,5,Rarely
+113,6,Fine with it
+113,7,Never
+113,8,Warm
+114,1,After midnight
+114,2,Messy
+114,3,Quiet
+114,4,Night
+114,5,Rarely
+114,6,Depends
+114,7,Often
+114,8,Warm
+115,1,After midnight
+115,2,Messy
+115,3,Doesn’t matter
+115,4,Depends
+115,5,Rarely
+115,6,Depends
+115,7,Never
+115,8,Cold
+116,1,Before 10 PM
+116,2,Moderate
+116,3,Doesn’t matter
+116,4,Night
+116,5,Occasionally
+116,6,Prefer not to
+116,7,Sometimes
+116,8,Mild
+117,1,Before 10 PM
+117,2,Messy
+117,3,Some noise
+117,4,Night
+117,5,Rarely
+117,6,Prefer not to
+117,7,Often
+117,8,Mild
+118,1,Before 10 PM
+118,2,Very clean
+118,3,Doesn’t matter
+118,4,Depends
+118,5,Occasionally
+118,6,Fine with it
+118,7,Often
+118,8,Mild
+119,1,10–12 PM
+119,2,Moderate
+119,3,Quiet
+119,4,Morning
+119,5,Frequently
+119,6,Fine with it
+119,7,Sometimes
+119,8,Cold
+120,1,10–12 PM
+120,2,Messy
+120,3,Doesn’t matter
+120,4,Night
+120,5,Frequently
+120,6,Fine with it
+120,7,Often
+120,8,Cold
+121,1,Before 10 PM
+121,2,Very clean
+121,3,Some noise
+121,4,Night
+121,5,Rarely
+121,6,Depends
+121,7,Sometimes
+121,8,Warm
+122,1,After midnight
+122,2,Very clean
+122,3,Doesn’t matter
+122,4,Morning
+122,5,Frequently
+122,6,Prefer not to
+122,7,Sometimes
+122,8,Warm
+123,1,Before 10 PM
+123,2,Messy
+123,3,Some noise
+123,4,Depends
+123,5,Frequently
+123,6,Prefer not to
+123,7,Sometimes
+123,8,Warm
+124,1,10–12 PM
+124,2,Moderate
+124,3,Doesn’t matter
+124,4,Depends
+124,5,Frequently
+124,6,Prefer not to
+124,7,Sometimes
+124,8,Cold
+125,1,10–12 PM
+125,2,Messy
+125,3,Quiet
+125,4,Morning
+125,5,Occasionally
+125,6,Prefer not to
+125,7,Sometimes
+125,8,Mild
+126,1,After midnight
+126,2,Moderate
+126,3,Quiet
+126,4,Night
+126,5,Rarely
+126,6,Depends
+126,7,Sometimes
+126,8,Cold
+127,1,Before 10 PM
+127,2,Very clean
+127,3,Doesn’t matter
+127,4,Night
+127,5,Occasionally
+127,6,Depends
+127,7,Never
+127,8,Mild
+128,1,10–12 PM
+128,2,Moderate
+128,3,Some noise
+128,4,Depends
+128,5,Rarely
+128,6,Fine with it
+128,7,Never
+128,8,Mild
+129,1,After midnight
+129,2,Very clean
+129,3,Quiet
+129,4,Night
+129,5,Frequently
+129,6,Depends
+129,7,Sometimes
+129,8,Warm
+130,1,After midnight
+130,2,Messy
+130,3,Some noise
+130,4,Night
+130,5,Rarely
+130,6,Fine with it
+130,7,Sometimes
+130,8,Mild
+131,1,10–12 PM
+131,2,Very clean
+131,3,Doesn’t matter
+131,4,Night
+131,5,Rarely
+131,6,Prefer not to
+131,7,Sometimes
+131,8,Warm
+132,1,Before 10 PM
+132,2,Messy
+132,3,Some noise
+132,4,Morning
+132,5,Frequently
+132,6,Prefer not to
+132,7,Sometimes
+132,8,Warm
+133,1,After midnight
+133,2,Moderate
+133,3,Quiet
+133,4,Night
+133,5,Rarely
+133,6,Prefer not to
+133,7,Often
+133,8,Cold
+134,1,Before 10 PM
+134,2,Moderate
+134,3,Doesn’t matter
+134,4,Morning
+134,5,Frequently
+134,6,Depends
+134,7,Often
+134,8,Cold
+135,1,Before 10 PM
+135,2,Very clean
+135,3,Some noise
+135,4,Morning
+135,5,Rarely
+135,6,Prefer not to
+135,7,Never
+135,8,Mild
+136,1,Before 10 PM
+136,2,Messy
+136,3,Doesn’t matter
+136,4,Night
+136,5,Frequently
+136,6,Depends
+136,7,Never
+136,8,Warm
+137,1,10–12 PM
+137,2,Moderate
+137,3,Some noise
+137,4,Night
+137,5,Occasionally
+137,6,Prefer not to
+137,7,Sometimes
+137,8,Cold
+138,1,After midnight
+138,2,Messy
+138,3,Doesn’t matter
+138,4,Night
+138,5,Occasionally
+138,6,Prefer not to
+138,7,Often
+138,8,Warm
+139,1,After midnight
+139,2,Messy
+139,3,Quiet
+139,4,Depends
+139,5,Rarely
+139,6,Depends
+139,7,Sometimes
+139,8,Warm
+140,1,10–12 PM
+140,2,Messy
+140,3,Some noise
+140,4,Morning
+140,5,Rarely
+140,6,Prefer not to
+140,7,Never
+140,8,Cold
+141,1,10–12 PM
+141,2,Very clean
+141,3,Doesn’t matter
+141,4,Depends
+141,5,Occasionally
+141,6,Depends
+141,7,Sometimes
+141,8,Warm
+142,1,10–12 PM
+142,2,Messy
+142,3,Doesn’t matter
+142,4,Night
+142,5,Frequently
+142,6,Prefer not to
+142,7,Often
+142,8,Cold
+143,1,After midnight
+143,2,Very clean
+143,3,Doesn’t matter
+143,4,Night
+143,5,Occasionally
+143,6,Depends
+143,7,Often
+143,8,Cold
+144,1,Before 10 PM
+144,2,Messy
+144,3,Some noise
+144,4,Morning
+144,5,Frequently
+144,6,Prefer not to
+144,7,Never
+144,8,Cold
+145,1,After midnight
+145,2,Very clean
+145,3,Some noise
+145,4,Depends
+145,5,Occasionally
+145,6,Fine with it
+145,7,Sometimes
+145,8,Cold
+146,1,After midnight
+146,2,Very clean
+146,3,Doesn’t matter
+146,4,Morning
+146,5,Occasionally
+146,6,Fine with it
+146,7,Often
+146,8,Mild
+147,1,10–12 PM
+147,2,Messy
+147,3,Some noise
+147,4,Morning
+147,5,Rarely
+147,6,Depends
+147,7,Sometimes
+147,8,Mild
+148,1,After midnight
+148,2,Messy
+148,3,Some noise
+148,4,Depends
+148,5,Frequently
+148,6,Depends
+148,7,Sometimes
+148,8,Cold
+149,1,After midnight
+149,2,Very clean
+149,3,Doesn’t matter
+149,4,Depends
+149,5,Rarely
+149,6,Depends
+149,7,Sometimes
+149,8,Mild
+150,1,After midnight
+150,2,Moderate
+150,3,Quiet
+150,4,Night
+150,5,Frequently
+150,6,Prefer not to
+150,7,Often
+150,8,Warm
+151,1,Before 10 PM
+151,2,Moderate
+151,3,Doesn’t matter
+151,4,Depends
+151,5,Rarely
+151,6,Prefer not to
+151,7,Sometimes
+151,8,Warm
+152,1,After midnight
+152,2,Very clean
+152,3,Doesn’t matter
+152,4,Night
+152,5,Rarely
+152,6,Prefer not to
+152,7,Never
+152,8,Mild
+153,1,Before 10 PM
+153,2,Messy
+153,3,Doesn’t matter
+153,4,Night
+153,5,Occasionally
+153,6,Prefer not to
+153,7,Often
+153,8,Cold
+154,1,10–12 PM
+154,2,Very clean
+154,3,Some noise
+154,4,Depends
+154,5,Occasionally
+154,6,Depends
+154,7,Never
+154,8,Mild
+155,1,10–12 PM
+155,2,Messy
+155,3,Some noise
+155,4,Morning
+155,5,Occasionally
+155,6,Fine with it
+155,7,Often
+155,8,Mild
+156,1,After midnight
+156,2,Very clean
+156,3,Quiet
+156,4,Morning
+156,5,Occasionally
+156,6,Fine with it
+156,7,Often
+156,8,Mild
+157,1,Before 10 PM
+157,2,Very clean
+157,3,Some noise
+157,4,Depends
+157,5,Frequently
+157,6,Prefer not to
+157,7,Never
+157,8,Cold
+158,1,After midnight
+158,2,Messy
+158,3,Doesn’t matter
+158,4,Night
+158,5,Occasionally
+158,6,Prefer not to
+158,7,Never
+158,8,Cold
+159,1,Before 10 PM
+159,2,Messy
+159,3,Doesn’t matter
+159,4,Depends
+159,5,Frequently
+159,6,Fine with it
+159,7,Sometimes
+159,8,Mild
+160,1,After midnight
+160,2,Very clean
+160,3,Quiet
+160,4,Night
+160,5,Rarely
+160,6,Prefer not to
+160,7,Sometimes
+160,8,Cold
+161,1,10–12 PM
+161,2,Messy
+161,3,Doesn’t matter
+161,4,Morning
+161,5,Rarely
+161,6,Prefer not to
+161,7,Sometimes
+161,8,Warm
+162,1,10–12 PM
+162,2,Moderate
+162,3,Doesn’t matter
+162,4,Depends
+162,5,Occasionally
+162,6,Depends
+162,7,Never
+162,8,Mild
+163,1,Before 10 PM
+163,2,Moderate
+163,3,Doesn’t matter
+163,4,Morning
+163,5,Rarely
+163,6,Fine with it
+163,7,Never
+163,8,Cold
+164,1,Before 10 PM
+164,2,Moderate
+164,3,Doesn’t matter
+164,4,Morning
+164,5,Rarely
+164,6,Depends
+164,7,Never
+164,8,Mild
+165,1,After midnight
+165,2,Moderate
+165,3,Quiet
+165,4,Night
+165,5,Rarely
+165,6,Depends
+165,7,Often
+165,8,Cold
+166,1,After midnight
+166,2,Moderate
+166,3,Some noise
+166,4,Morning
+166,5,Rarely
+166,6,Fine with it
+166,7,Never
+166,8,Cold
+167,1,Before 10 PM
+167,2,Moderate
+167,3,Doesn’t matter
+167,4,Morning
+167,5,Rarely
+167,6,Depends
+167,7,Never
+167,8,Mild
+168,1,Before 10 PM
+168,2,Very clean
+168,3,Some noise
+168,4,Depends
+168,5,Frequently
+168,6,Fine with it
+168,7,Sometimes
+168,8,Warm
+169,1,10–12 PM
+169,2,Moderate
+169,3,Doesn’t matter
+169,4,Depends
+169,5,Frequently
+169,6,Depends
+169,7,Never
+169,8,Cold
+170,1,After midnight
+170,2,Very clean
+170,3,Doesn’t matter
+170,4,Night
+170,5,Occasionally
+170,6,Depends
+170,7,Never
+170,8,Warm
+171,1,After midnight
+171,2,Messy
+171,3,Doesn’t matter
+171,4,Night
+171,5,Occasionally
+171,6,Fine with it
+171,7,Often
+171,8,Cold
+172,1,Before 10 PM
+172,2,Messy
+172,3,Quiet
+172,4,Morning
+172,5,Occasionally
+172,6,Prefer not to
+172,7,Sometimes
+172,8,Mild
+173,1,After midnight
+173,2,Messy
+173,3,Quiet
+173,4,Depends
+173,5,Frequently
+173,6,Fine with it
+173,7,Often
+173,8,Cold
+174,1,After midnight
+174,2,Very clean
+174,3,Some noise
+174,4,Morning
+174,5,Rarely
+174,6,Depends
+174,7,Never
+174,8,Mild
+175,1,10–12 PM
+175,2,Moderate
+175,3,Doesn’t matter
+175,4,Morning
+175,5,Rarely
+175,6,Fine with it
+175,7,Sometimes
+175,8,Mild
+176,1,Before 10 PM
+176,2,Messy
+176,3,Doesn’t matter
+176,4,Depends
+176,5,Frequently
+176,6,Prefer not to
+176,7,Sometimes
+176,8,Cold
+177,1,10–12 PM
+177,2,Moderate
+177,3,Quiet
+177,4,Morning
+177,5,Rarely
+177,6,Prefer not to
+177,7,Often
+177,8,Warm
+178,1,After midnight
+178,2,Messy
+178,3,Some noise
+178,4,Depends
+178,5,Frequently
+178,6,Fine with it
+178,7,Never
+178,8,Warm
+179,1,Before 10 PM
+179,2,Very clean
+179,3,Some noise
+179,4,Night
+179,5,Occasionally
+179,6,Depends
+179,7,Sometimes
+179,8,Cold
+180,1,After midnight
+180,2,Messy
+180,3,Quiet
+180,4,Depends
+180,5,Frequently
+180,6,Fine with it
+180,7,Sometimes
+180,8,Cold
+181,1,Before 10 PM
+181,2,Very clean
+181,3,Doesn’t matter
+181,4,Night
+181,5,Frequently
+181,6,Prefer not to
+181,7,Sometimes
+181,8,Cold
+182,1,After midnight
+182,2,Moderate
+182,3,Doesn’t matter
+182,4,Depends
+182,5,Frequently
+182,6,Prefer not to
+182,7,Never
+182,8,Cold
+183,1,10–12 PM
+183,2,Messy
+183,3,Some noise
+183,4,Night
+183,5,Frequently
+183,6,Prefer not to
+183,7,Sometimes
+183,8,Mild
+184,1,Before 10 PM
+184,2,Very clean
+184,3,Quiet
+184,4,Depends
+184,5,Frequently
+184,6,Depends
+184,7,Sometimes
+184,8,Cold
+185,1,10–12 PM
+185,2,Messy
+185,3,Doesn’t matter
+185,4,Night
+185,5,Occasionally
+185,6,Prefer not to
+185,7,Often
+185,8,Cold
+186,1,Before 10 PM
+186,2,Moderate
+186,3,Some noise
+186,4,Morning
+186,5,Frequently
+186,6,Fine with it
+186,7,Often
+186,8,Warm
+187,1,Before 10 PM
+187,2,Very clean
+187,3,Quiet
+187,4,Night
+187,5,Frequently
+187,6,Prefer not to
+187,7,Sometimes
+187,8,Cold
+188,1,10–12 PM
+188,2,Moderate
+188,3,Some noise
+188,4,Morning
+188,5,Rarely
+188,6,Depends
+188,7,Often
+188,8,Cold
+189,1,After midnight
+189,2,Messy
+189,3,Doesn’t matter
+189,4,Night
+189,5,Rarely
+189,6,Fine with it
+189,7,Sometimes
+189,8,Mild
+190,1,10–12 PM
+190,2,Messy
+190,3,Some noise
+190,4,Night
+190,5,Occasionally
+190,6,Fine with it
+190,7,Never
+190,8,Warm
+191,1,Before 10 PM
+191,2,Messy
+191,3,Some noise
+191,4,Morning
+191,5,Rarely
+191,6,Fine with it
+191,7,Never
+191,8,Cold
+192,1,After midnight
+192,2,Very clean
+192,3,Quiet
+192,4,Depends
+192,5,Rarely
+192,6,Depends
+192,7,Sometimes
+192,8,Warm
+193,1,Before 10 PM
+193,2,Moderate
+193,3,Doesn’t matter
+193,4,Depends
+193,5,Occasionally
+193,6,Fine with it
+193,7,Often
+193,8,Cold
+194,1,After midnight
+194,2,Messy
+194,3,Doesn’t matter
+194,4,Night
+194,5,Rarely
+194,6,Fine with it
+194,7,Never
+194,8,Cold
+195,1,After midnight
+195,2,Moderate
+195,3,Quiet
+195,4,Depends
+195,5,Frequently
+195,6,Fine with it
+195,7,Never
+195,8,Warm
+196,1,10–12 PM
+196,2,Moderate
+196,3,Some noise
+196,4,Depends
+196,5,Rarely
+196,6,Depends
+196,7,Sometimes
+196,8,Mild
+197,1,Before 10 PM
+197,2,Messy
+197,3,Some noise
+197,4,Night
+197,5,Frequently
+197,6,Depends
+197,7,Never
+197,8,Warm
+198,1,Before 10 PM
+198,2,Very clean
+198,3,Doesn’t matter
+198,4,Morning
+198,5,Frequently
+198,6,Fine with it
+198,7,Often
+198,8,Cold
+199,1,After midnight
+199,2,Messy
+199,3,Doesn’t matter
+199,4,Morning
+199,5,Frequently
+199,6,Depends
+199,7,Often
+199,8,Mild
+200,1,After midnight
+200,2,Moderate
+200,3,Doesn’t matter
+200,4,Depends
+200,5,Occasionally
+200,6,Fine with it
+200,7,Often
+200,8,Mild

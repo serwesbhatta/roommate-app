@@ -7,3 +7,7 @@
 from .user_model import AuthUser, UserProfile
 from .residence_hall_model import ResidenceHall
 from .room_model import Room
+from .feedback_model import Feedback
+from .option_model import Option
+from .question_model import Question
+from .user_response_model import UserResponse

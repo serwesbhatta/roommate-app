@@ -1,0 +1,25 @@
+id,question_id,option_text
+1,1,Before 10 PM
+2,1,10–12 PM
+3,1,After midnight
+4,2,Very clean
+5,2,Moderate
+6,2,Messy
+7,3,Quiet
+8,3,Some noise
+9,3,Doesn’t matter
+10,4,Morning
+11,4,Night
+12,4,Depends
+13,5,Rarely
+14,5,Occasionally
+15,5,Frequently
+16,6,Fine with it
+17,6,Depends
+18,6,Prefer not to
+19,7,Often
+20,7,Sometimes
+21,7,Never
+22,8,Cold
+23,8,Mild
+24,8,Warm
