@@ -35,7 +35,6 @@ def extract_user_features(
     
     # Major 
     # We'll use a simple hash technique to convert string to number
-    # In a production system, you might want to use a more sophisticated encoding
     major = user_profile.get('majors', '')
     if major:
         # Use hash to create a number between 0-99
@@ -52,7 +51,6 @@ def extract_user_features(
         features.append(-1.0)  # Default value for no hall
     
     # --- Bio Features (optional) ---
-    # If you want to include bio, you could use NLP techniques
     # For simplicity, we'll just use the length of bio as a feature
     bio = user_profile.get('bio', '')
     features.append(min(len(bio) / 500.0, 1.0))  # Normalize by max expected length

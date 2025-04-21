@@ -59,7 +59,7 @@ def calculate_compatibility_score(
     # Calculate cosine similarity
     similarity = cosine_similarity([user1_features], [user2_features])[0][0]
     
-    # Convert from [-1,1] to [0,5] scale
+    # Convert from [-1,1] to [0,100] scale
     compatibility_score = (similarity + 1) / 2 * 100
     
     return compatibility_score
@@ -94,5 +94,5 @@ def get_top_matches(
         reverse=True
     )
     
-    # Convert similarity (0-1) to compatibility score (0-5)
+    # Convert similarity (0-1) to compatibility score (0-100)
     return [(uid, score * 100) for uid, score in sorted_matches[:n]]

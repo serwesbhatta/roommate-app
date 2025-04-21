@@ -3,14 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List, Dict, Any
 
 from ...schemas.compatibility_schema import CompatibilityScore, TopMatches
-# Import database connection
 from ...database import get_db
 
-# Import services
 from app.services.compatibility_services import MatchingService
 
 
-# Create router
 router = APIRouter()
 
 

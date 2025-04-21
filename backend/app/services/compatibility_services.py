@@ -85,7 +85,7 @@ class MatchingService:
         - user2_id: ID of second user
         
         Returns:
-        - Compatibility score (0-5)
+        - Compatibility score (0-100)
         """
         # Get user feature vectors
         user_features = self.get_user_feature_vectors()
