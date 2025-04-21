@@ -1,6 +1,11 @@
+faker
 fastapi
+joblib
+numpy
 uvicorn[standard]
+scikit-learn
 sqlalchemy
+pandas
 psycopg2-binary
 python-dotenv
 pydantic
