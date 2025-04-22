@@ -1,7 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query, Body, BackgroundTasks
 from typing import List
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from datetime import datetime
+from ...core.auth import get_current_active_user, refresh_access_token
+from fastapi.security import OAuth2PasswordRequestForm
+
 
 from ...schemas.user_schema import (
     UserProfileCreate, 
@@ -11,8 +15,12 @@ from ...schemas.user_schema import (
     AuthUserResponse, 
     LoginUser,
     AuthUserUpdatePwd,  # schema for student password update
-    AuthUserUpdate
+    AuthUserUpdate,
+    RefreshTokenRequest,
+    TokenResponse,
+    TokenPair,
 )
+
 from ...services import (
     create_user_service,
     authenticate_user_service,
@@ -25,12 +33,25 @@ from ...services import (
     get_total_auth_users_service,
     get_all_user_profiles_service,
     get_total_user_profiles_service,
-    get_new_users_service
+    get_new_users_service,
+    search_user_profiles_by_query_service,
+    filter_user_profiles_by_demographics_service,
+    logout_user_service,
+    get_auth_user_by_id_service
 )
-from ...core.auth import require_role
+from ...core.auth import (
+    get_current_active_user,
+    require_role,
+    hash_password,
+    verify_password,
+    create_tokens,
+    oauth2_scheme,
+)
 from ...database import get_db
+from app.websockets.chat_ws import manager
 
-router = APIRouter()
+router = APIRouter(
+)
 
 # ---------------------------
 # Admin Endpoints for AuthUser CRUD
@@ -52,21 +73,38 @@ def register_user(
         raise HTTPException(status_code=500, detail=f"Error in register_user: {e}")
 
 
-@router.post("/login")
+@router.post("/login",  tags=["Auth"])
 def login_for_access_token(
-    form_data: LoginUser, 
-    db: Session = Depends(get_db)
+    background_tasks: BackgroundTasks,
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db),
 ):
-    """
-    OAuth2 compatible token login endpoint.
-    """
-    try:
-        return authenticate_user_service(form_data.msu_email, form_data.password, db)
-    except HTTPException as he:
-        raise he
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error in login: {e}")
+    result = authenticate_user_service(form_data.username, form_data.password, db)
+    background_tasks.add_task(manager.broadcast_presence, result["user"].id, True)
+    return result
 
+@router.post(
+    "/token/refresh",
+    response_model=TokenResponse,
+    summary="Refresh an expired access token",
+    status_code=200,
+)
+def refresh_token(
+    body: RefreshTokenRequest,
+    db: Session = Depends(get_db),
+):
+    try:
+        print("refresh token request",body.refresh_token)
+        new_access = refresh_access_token(body.refresh_token, db)
+        return TokenResponse(access_token=new_access)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error refreshing token: {e}"
+        )
+    
 
 @router.delete("/admin_users/{user_id}")
 def delete_user(
@@ -138,6 +176,37 @@ def get_total_auth_users(
 @router.get("/admin_users/new", response_model=List[AuthUserResponse])
 def get_new_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return get_new_users_service(db, skip=skip, limit=limit)
+
+
+@router.post("/logout")
+async def logout(
+    background_tasks: BackgroundTasks, 
+    db: Session=Depends(get_db),
+    current_user=Depends(get_current_active_user)
+   
+):
+    user_id = current_user.get("user_id") 
+    if user_id is None:
+        raise HTTPException(status_code=400, detail="Invalid user")
+    background_tasks.add_task(manager.broadcast_presence, user_id, False)
+    return logout_user_service(user_id, db)
+
+@router.get("/admin_users/{user_id}", response_model=AuthUserResponse)
+def get_auth_user_by_id(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Admin endpoint to retrieve a single auth user by user ID.
+    """
+    try:
+        return get_auth_user_by_id_service(user_id, db)
+    except HTTPException as he:
+        raise he
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error retrieving user: {e}")
+
+
 
 
 # ---------------------------
@@ -268,3 +337,54 @@ def get_total_user_profiles(
         raise he
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error in get_total_user_profiles: {e}")
+
+# ---------------------------
+# Search by name or email
+# ---------------------------
+@router.get(
+    "/profiles/search",
+    response_model=List[UserProfileResponse],
+    summary="Search user profiles by query string",
+)
+def search_user_profiles(
+    query: str = Query(..., min_length=1, description="Search text for first or last name"),
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
+    """
+    Search across first_name and last_name (and optionally email)
+    for any partial, case‐insensitive match.
+    """
+    try:
+        return search_user_profiles_by_query_service(db, query, skip, limit)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in search_user_profiles: {e}")
+
+
+# ---------------------------
+# Filter by age, gender, majors
+# ---------------------------
+@router.get(
+    "/profiles/filter",
+    response_model=List[UserProfileResponse],
+    summary="Filter user profiles by age, gender, and/or majors",
+)
+def filter_user_profiles(
+    age: int = None,
+    gender: str = None,
+    majors: str = None,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
+    try:
+        return filter_user_profiles_by_demographics_service(
+            db, age, gender, majors, skip, limit
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in filter_user_profiles: {e}")

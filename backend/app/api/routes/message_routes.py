@@ -7,6 +7,7 @@ from app.services.message_services import MessageService
 from app.database import get_db
 import json
 
+
 router = APIRouter()
 
 @router.get(
@@ -40,7 +41,6 @@ async def websocket_endpoint(
     try:
         while True:
             data = await websocket.receive_text()
-            # Parse the received JSON data
             try:
                 message_data = json.loads(data)
                 # Validate required fields
@@ -62,10 +62,16 @@ async def websocket_endpoint(
                 message_service = MessageService(db)
                 saved_message = message_service.send_message(message_create)
                 
-                # Format message for sending
+                # Format message for sending with consistent structure
                 message_to_send = {
                     "id": saved_message.id,
-                    "sender_id": saved_message.sender_id,
+                    "sender": {
+                    "id":          saved_message.sender_id,
+                    "first_name":  saved_message.sender.first_name,
+                    "last_name":   saved_message.sender.last_name,
+                    "avatar":      saved_message.sender.profile_image
+                    },
+                    "receiver_id": saved_message.receiver_id,  # Add receiver_id which was missing
                     "content": saved_message.content,
                     "timestamp": saved_message.timestamp.isoformat()
                 }
@@ -76,11 +82,12 @@ async def websocket_endpoint(
                     message=json.dumps(message_to_send)
                 )
                 
-                # Send confirmation back to sender
+                # Send confirmation back to sender with the SAME format as regular messages
+                # This is important for consistent handling
                 await websocket.send_text(json.dumps({
                     "status": "success",
                     "message": "Message sent",
-                    "data": message_to_send
+                    "data": message_to_send  # Same format as what's sent to receiver
                 }))
                 
             except json.JSONDecodeError:
@@ -93,7 +100,6 @@ async def websocket_endpoint(
                     "status": "error",
                     "message": f"Error: {str(e)}"
                 }))
-                
     except WebSocketDisconnect:
         manager.disconnect(user_id)
 
@@ -115,7 +121,9 @@ async def get_chat_contacts(
             "id": contact.id,
             "first_name": contact.first_name,
             "last_name": contact.last_name,
-            "profile_image": contact.profile_image
+            "profile_image": contact.profile_image,
+            "is_logged_in": contact.is_logged_in,
+            "last_login": contact.last_login
         }
         for contact in contacts
     ]

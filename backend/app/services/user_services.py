@@ -1,6 +1,8 @@
 # app/services/user_service.py
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
+from sqlalchemy import or_
+from typing import List
 from fastapi import HTTPException
 import os
 from app.models.user_model import UserProfile
@@ -60,3 +62,61 @@ def get_total_user_profiles_service(db: Session):
     Return the total count of user profiles.
     """
     return get_count(db, UserProfile)
+
+
+def search_user_profiles_by_query_service(
+    db: Session,
+    query: str,
+    skip: int = 0,
+    limit: int = 100,
+) -> List[UserProfile]:
+    """
+    Return profiles where first_name OR last_name OR msu_email
+    contains the query (case-insensitive).
+    """
+    # build a single OR filter
+    or_filter = or_(
+        UserProfile.first_name.ilike(f"%{query}%"),
+        UserProfile.last_name.ilike(f"%{query}%"),
+        UserProfile.msu_email.ilike(f"%{query}%"),
+    )
+
+    results = (
+        db
+        .query(UserProfile)
+        .filter(or_filter)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+    return results
+
+
+def filter_user_profiles_by_demographics_service(
+    db: Session,
+    age: int = None,
+    gender: str = None,
+    majors: str = None,
+    skip: int = 0,
+    limit: int = 100,
+):
+    """
+    Returns profiles filtered by age, gender, and/or majors.
+    All supplied filters are applied with AND. At least one param required.
+    """
+    if age is None and gender is None and majors is None:
+        raise HTTPException(
+            status_code=400,
+            detail="At least one of age, gender or majors must be provided",
+        )
+
+    query = db.query(UserProfile)
+    if age is not None:
+        query = query.filter(UserProfile.age == age)
+    if gender:
+        query = query.filter(UserProfile.gender == gender)
+    if majors:
+        query = query.filter(UserProfile.majors.ilike(f"%{majors}%"))
+
+    return query.offset(skip).limit(limit).all()

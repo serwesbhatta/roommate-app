@@ -4,9 +4,10 @@ from datetime import datetime, timezone, timedelta
 from fastapi import HTTPException
 from app.models.user_model import AuthUser, UserProfile
 from app.schemas.user_schema import AuthUserCreate, AuthUserResponse, AuthUserUpdate, AuthUserUpdatePwd
-from app.core.auth import hash_password, create_access_token, verify_password
+from app.core.auth import hash_password, refresh_access_token, verify_password, create_tokens
 from app.core.config import Settings
 from app.crud.crud import create_record, update_record, delete_record, get_count, get_all_records
+
 
 def create_user_service(user_data: AuthUserCreate, db: Session):
     # Check if user already exists.
@@ -42,7 +43,7 @@ def create_user_service(user_data: AuthUserCreate, db: Session):
 
 def authenticate_user_service(msu_email: str, password: str, db: Session):
     auth_user = db.query(AuthUser).filter(AuthUser.msu_email == msu_email).first()
-    
+    auth_profile = db.query(UserProfile).filter(UserProfile.msu_email == msu_email).first()
     if not auth_user or not verify_password(password, auth_user.password):
         raise HTTPException(
             status_code=401,
@@ -50,26 +51,38 @@ def authenticate_user_service(msu_email: str, password: str, db: Session):
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    # Create access token.
-    access_token_expires = timedelta(minutes=Settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={
-            "sub": auth_user.msu_email, 
-            "role": auth_user.role
-        },
-        expires_delta=access_token_expires
+    # Generate both tokens
+    access_token, refresh_token, refresh_expires = create_tokens(
+        {"sub": auth_user.msu_email, "role": auth_user.role}
     )
+    
+    # Update user with refresh token and login status
+    update_record(db, AuthUser, auth_user.id, {
+        "refresh_token": refresh_token,
+        "refresh_token_expires_at": refresh_expires,
+        "last_login": datetime.now(timezone.utc),
+        "is_logged_in": True
+    })
+
+    update_record(db, UserProfile, auth_profile.user_id, {
+        "last_login": datetime.now(timezone.utc),
+        "is_logged_in": True
+    })
     
     res = AuthUserResponse(
         id=auth_user.id,
         msu_email=auth_user.msu_email,
         role=auth_user.role,
         created_at=auth_user.created_at,
-        modified_at=auth_user.modified_at
+        modified_at=auth_user.modified_at,
+        is_logged_in = auth_user.is_logged_in,
+        refresh_token_expires_at = auth_user.refresh_token_expires_at,
+        last_login = auth_user.last_login,
     )
-    
+
     return {
-        "access_token": access_token, 
+        "access_token": access_token,
+        "refresh_token": refresh_token, 
         "token_type": "bearer",
         "user": res
     }
@@ -158,3 +171,30 @@ def get_new_users_service(db: Session, skip: int = 0, limit: int = 10):
         return new_users
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving new users: {e}")
+
+
+def logout_user_service(user_id: int, db: Session):
+    """Service to logout a user by invalidating their refresh token."""
+    auth_user = db.query(AuthUser).filter(AuthUser.id == user_id).first()
+    auth_profile = db.query(UserProfile).filter(UserProfile.user_id == user_id).first()
+
+    if not auth_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Clear refresh token and update login status
+    update_record(db, AuthUser, user_id, {
+        "refresh_token": None,
+        "refresh_token_expires_at": None,
+        "is_logged_in": False
+    })
+
+    update_record(db, UserProfile, user_id, {
+        "is_logged_in": False
+    })
+    return {"detail": "Successfully logged out"}
+
+def get_auth_user_by_id_service(user_id: int, db: Session) -> AuthUserResponse:
+    auth_user = db.query(AuthUser).filter(AuthUser.id == user_id).first()
+    if not auth_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return auth_user

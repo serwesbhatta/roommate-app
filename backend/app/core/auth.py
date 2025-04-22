@@ -1,5 +1,5 @@
 from datetime import timedelta, datetime, timezone
-from typing import Optional, Dict
+from typing import Optional, Dict, Tuple
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -10,10 +10,11 @@ from sqlalchemy.orm import Session
 from .config import Settings 
 from ..database import get_db
 from ..models.user_model import AuthUser
-from ..schemas.auth_schema import CurrentUser
+from ..schemas.user_schema import CurrentUser
+
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/login")
 
 def hash_password(password: str) -> str:
     """Hash the password using bcrypt."""
@@ -56,24 +57,47 @@ def get_current_user(
     )
     try:
         payload = jwt.decode(token, Settings.SECRET_KEY, algorithms=[Settings.ALGORITHM])
-        username: str = payload.get("sub")
+        msu_email: str = payload.get("sub")
         role: str = payload.get("role")
         
-        if username is None:
+        if msu_email is None:
             raise credentials_exception
         
         # Verify user exists in database
-        user = get_user_by_email(db, username)
+        user = get_user_by_email(db, msu_email)
         if not user:
             raise credentials_exception
         
         return {
-            "username": username, 
+            "msu_email": msu_email, 
             "role": role,
             "user_id": user.id
         }
     except JWTError:
         raise credentials_exception
+    
+def get_current_active_user(current_user: dict = Depends(get_current_user)) -> Optional[CurrentUser]:
+    """
+    Verifies the user account is active and not blocked.
+    """
+    if not current_user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User authentication failed",
+        )
+    
+    # Added check to verify user isn't blocked
+    db = next(get_db())
+    user = get_user_by_email(db, current_user["msu_email"])
+    
+    if user.is_blocked:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Account is blocked",
+        )
+    
+    return current_user
+
 
 def require_role(required_role: str):
     """
@@ -88,10 +112,75 @@ def require_role(required_role: str):
         return current_user
     return role_checker
 
-def get_current_active_user(current_user: dict = Depends(get_current_user)) -> Optional[CurrentUser]:
-    """
-    Additional dependency to check if the user is active.
-    Can be extended to include more checks like account status.
-    """
-    # You can add more checks here, like checking if the user is blocked
-    return current_user
+
+def create_tokens(data: dict) -> Tuple[str, str, datetime]:
+    """Create both access and refresh tokens."""
+    # Access token - short lived (e.g., 30 minutes)
+    access_token_expires = timedelta(minutes=Settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(data, access_token_expires)
+    
+    # Refresh token - longer lived (e.g., 7 days)
+    refresh_token_expires_delta = timedelta(days=Settings.REFRESH_TOKEN_EXPIRE_DAYS)
+    refresh_token_expires = datetime.now(timezone.utc) + refresh_token_expires_delta
+    
+    refresh_data = data.copy()
+    refresh_data.update({"token_type": "refresh"})
+    refresh_token = jwt.encode(
+        {**refresh_data, "exp": refresh_token_expires}, 
+        Settings.SECRET_KEY, 
+        algorithm=Settings.ALGORITHM
+    )
+    
+    return access_token, refresh_token, refresh_token_expires
+
+def refresh_access_token(refresh_token: str, db: Session) -> str:
+    """Create a new access token using the refresh token."""
+    try:
+        # Decode refresh token
+        payload = jwt.decode(
+            refresh_token, 
+            Settings.SECRET_KEY, 
+            algorithms=[Settings.ALGORITHM]
+        )
+        
+        if payload.get("token_type") != "refresh":
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid refresh token",
+            )
+        
+        # Extract user info
+        msu_email = payload.get("sub")
+        if not msu_email:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid token",
+            )
+        
+        # Get user from database
+        user = get_user_by_email(db, msu_email)
+        if not user or user.refresh_token != refresh_token:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid refresh token",
+            )
+        
+        # Check if refresh token is expired in database
+        if user.refresh_token_expires_at < datetime.now(timezone.utc):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Refresh token expired",
+            )
+        
+        # Create new access token
+        new_access_token = create_access_token(
+            {"sub": user.msu_email, "role": user.role}
+        )
+        
+        return new_access_token
+    
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+        )
