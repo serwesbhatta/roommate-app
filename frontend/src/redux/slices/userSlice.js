@@ -1,4 +1,4 @@
-// redux/slices/profileSlice.js
+// redux/slices/userSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as profileService from '../services/userService';
 
@@ -54,11 +54,41 @@ export const fetchTotalUserProfiles = createAsyncThunk(
   }
 );
 
+
+export const fetchSearchProfiles = createAsyncThunk(
+  'profile/fetchSearchProfiles',
+  async ({ query, skip = 0, limit = 100 }, thunkAPI) => {
+    try {
+      console.log("search query:", query);
+      return await profileService.fetchSearchProfilesService({ query, skip, limit });
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.detail 
+      );
+    }
+  }
+);
+
+export const fetchFilterProfiles = createAsyncThunk(
+  'profile/fetchFilterProfiles',
+  async (params, thunkAPI) => {
+    try {
+      return await profileService.fetchFilterProfilesService(params);
+    } catch (err) {
+      return thunkAPI.rejectWithValue(
+        err.response?.data?.detail || 'Filter profiles failed'
+      );
+    }
+  }
+);
+
 const profileSlice = createSlice({
   name: 'profile',
   initialState: {
     profile: null,
     profiles: [],
+    searchResults: [],
+    filterResults: [],
     totalProfiles: 0,
     status: 'idle',
     error: null,
@@ -118,6 +148,34 @@ const profileSlice = createSlice({
         state.totalProfiles = action.payload;
       })
       .addCase(fetchTotalUserProfiles.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      
+      // === Search Profiles ===
+      .addCase(fetchSearchProfiles.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchSearchProfiles.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.searchResults = action.payload;
+      })
+      .addCase(fetchSearchProfiles.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+
+      // === Filter Profiles ===
+      .addCase(fetchFilterProfiles.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchFilterProfiles.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.filterResults = action.payload;
+      })
+      .addCase(fetchFilterProfiles.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

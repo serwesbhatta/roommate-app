@@ -8,6 +8,7 @@ import questionnaireReducer from '../slices/questionnaireSlice';
 import residenceHallReducer from '../slices/residenceHallSlice';
 import roomReducer from '../slices/roomSlice';
 import feedbackReducer from '../slices/feedbackSlice'
+import messageReducer from '../slices/messageSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,11 @@ export const store = configureStore({
     residenceHall: residenceHallReducer,
     rooms: roomReducer,
     feedback: feedbackReducer,
+    messages: messageReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, // Allows non-serializable values like WebSocket
+    }),
 });
 

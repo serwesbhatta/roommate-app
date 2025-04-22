@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, Typography, TextField, Button, Link, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../redux/slices/authSlice";
+import { loginUser } from "../../redux/slices/authSlice"; // Removed resetStatus from import
 import Roomate from "../../assets/roommates.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {error, status } = useSelector((state) => state.auth);
-
+  const { error, status } = useSelector((state) => state.auth);
 
   // State for input values
   const [email, setEmail] = useState("");
@@ -19,12 +18,14 @@ const Login = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
+  // Local state to track submission
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
     let valid = true;
     setEmailError("");
     setPasswordError("");
-
+  
     // Simple validation
     if (!email) {
       setEmailError("Email is required");
@@ -33,7 +34,7 @@ const Login = () => {
       setEmailError("Enter a valid MSU email");
       valid = false;
     }
-
+    
     if (!password) {
       setPasswordError("Password is required");
       valid = false;
@@ -41,18 +42,41 @@ const Login = () => {
       setPasswordError("Password must be at least 6 characters");
       valid = false;
     }
-
+  
     if (!valid) return;
-
-    dispatch(loginUser({ email, password, navigate}));
-    if(email && password){
-      setEmail("");
-      setPassword("");
-      setEmailError("")
-      setPasswordError("")
+  
+    setIsSubmitting(true);
+  
+    try {
+      const res = await dispatch(loginUser({ email, password })).unwrap(); 
+      console.log("login response:", res);
+      
+      // Check if role exists either at top level or in user object
+      const role = res.role || (res.user && res.user.role);
+      
+      console.log("role",role)
+      if (role) {
+        console.log("Navigating to:", role === 'admin' ? '/admin' : '/user');
+        
+        // Reset form fields
+        setEmail("");
+        setPassword("");
+        setEmailError("");
+        setPasswordError("");
+        
+        // Reset submission state and navigate
+        setIsSubmitting(false);
+        navigate(role === 'admin' ? '/admin' : '/user');
+      } else {
+        console.error("No role found in response:", res);
+        setIsSubmitting(false);
+      }
+    } catch (err) {
+      console.error("Login failed:", err);
+      setIsSubmitting(false);
     }
   };
-
+  
   return (
     <Box
       sx={{
@@ -143,15 +167,20 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               error={!!passwordError}
               helperText={passwordError}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSubmit();
+                }
+              }}
             />
             <Button
               fullWidth
               variant="contained"
               sx={{ backgroundColor: "#1976D2", color: "#FFF", mb: 2 }}
               onClick={handleSubmit}
-              disabled={status === "loading"}
+              disabled={isSubmitting || status === "loading"}
             >
-              {status === "loading" ? "Signing In..." : "Login"}
+              {isSubmitting || status === "loading" ? "Signing In..." : "Login"}
             </Button>
 
             <Typography

@@ -41,7 +41,9 @@ const CustomNavbar = () => {
     const { id } = useSelector((state) => state.auth);
   
     useEffect(() => {
+      if (id) {
       dispatch(fetchUserProfile(id));
+      }
     }, [dispatch, id]);
 
   return (
