@@ -37,26 +37,42 @@ const RoomForm = ({
   };
 
   // For allocate/vacate, we now expect formData.student_ids to be an array.
-  const isFormValid = () => {
-    if (actionType === "add" || actionType === "edit") {
-      return (
-        formData.room_number &&
-        formData.room_type &&
-        formData.capacity &&
-        formData.price &&
-        formData.lease_end &&
-        formData.residence_hall_id &&
-        formData.room_status
-      );
-    } else if (actionType === "allocate" || actionType === "vacate") {
-      // Validate that student_ids is a non-empty string
-      return (
-        (typeof formData.student_ids === "string" && formData.student_ids.trim().length > 0) ||
-        (Array.isArray(formData.student_ids) && formData.student_ids.length > 0)
-      );
-    }
-    return false;
-  };
+const isFormValid = () => {
+  if (actionType === "add" || actionType === "edit") {
+    const requiredFields = [
+      "room_number",
+      "room_type",
+      "capacity",
+      "price",
+      "lease_end",
+      "residence_hall_id",
+      "room_status",
+    ];
+
+    // Return false if any required field is undefined, null, or an empty string (after trimming).
+    return requiredFields.every(field => {
+      const value = formData[field];
+      // For numbers, you might want to allow a valid 0, so consider your business logic:
+      if (typeof value === "number") {
+        // If 0 is invalid, change this to: return value > 0;
+        return true; // if 0 is acceptable, always true as long as it is defined.
+      }
+      // For strings ensure they're trimmed and not empty:
+      if (typeof value === "string") {
+        return value.trim() !== "";
+      }
+      // For other types, ensure they are not null or undefined:
+      return value !== undefined && value !== null;
+    });
+  } else if (actionType === "allocate" || actionType === "vacate") {
+    return (
+      (typeof formData.student_ids === "string" && formData.student_ids.trim().length > 0) ||
+      (Array.isArray(formData.student_ids) && formData.student_ids.length > 0)
+    );
+  }
+  return false;
+};
+
   
 
   return (

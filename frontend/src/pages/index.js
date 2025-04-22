@@ -8,6 +8,8 @@ export {default as User} from './user/User.jsx';
 export {default as RoommateFinder} from './user/roommateFinder/RoommateFinder.jsx';
 export {default as UserEvents} from './user/userevents/UserEvents.jsx';
 
+export {default as Chat} from './chat/Chat.jsx';
+
 // common
 export {default as LandingPage} from './LandingPage';
 export {default as Login} from './auth/Login.jsx';

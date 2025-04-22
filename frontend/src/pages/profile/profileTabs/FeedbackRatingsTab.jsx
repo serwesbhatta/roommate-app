@@ -1,84 +1,95 @@
-import React from 'react';
-import { Box, Grid, Typography, Paper, Divider } from '@mui/material';
-import {RatingDisplay, FeedbackItem} from '../../../components/profile';
-
-
-
-
-// Mock data for ratings and feedback
-const ratingsData = [
-  { label: "Cleanliness", value: 4.5, count: 8 },
-  { label: "Communication", value: 4.0, count: 8 },
-  { label: "Respectfulness", value: 4.8, count: 8 },
-  { label: "Reliability", value: 4.2, count: 8 },
-  { label: "Quietness", value: 3.9, count: 8 },
-  { label: "Overall Roommate Rating", value: 4.3, count: 8 }
-];
-
-const feedbackData = [
-  {
-    name: "Sarah Johnson",
-    date: "January 15, 2025",
-    rating: 4.5,
-    comment: "John was a great roommate! He's very clean and respectful of shared spaces. He's quiet during study hours and always communicates if he's having guests over. I would definitely recommend him as a roommate."
-  },
-  {
-    name: "Michael Chen",
-    date: "December 5, 2024",
-    rating: 4.0,
-    comment: "Living with John was a pleasant experience. He's very organized and keeps to himself mostly. We had different schedules but he was always considerate about noise levels. The only issue was sometimes he would cook late at night."
-  },
-  {
-    name: "Jessica Garcia",
-    date: "August 30, 2024",
-    rating: 5.0,
-    comment: "John is the perfect roommate! Super clean, quiet, and respectful. He's also really good about paying bills on time and contributing to household supplies. We became good friends and I would room with him again in a heartbeat."
-  }
-];
+// src/pages/profile/profileTabs/FeedbackRatingsTab.jsx
+import React, { useEffect, useMemo } from "react";
+import {
+  Box,
+  Grid,
+  Typography,
+  Paper,
+  Divider,
+  CircularProgress,
+} from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { FeedbackItem } from "../../../components/profile";
+import { fetchFeedbackReceived } from "../../../redux/slices/feedbackSlice";
+import { fetchAllUserProfiles } from "../../../redux/slices/userSlice";   // ← make sure this is the correct slice
+import { getImageUrl } from "../../../utils/imageURL";
 
 const FeedbackRatingsTab = () => {
+  const dispatch = useDispatch();
+
+  // ─────────────────────── Redux state ────────────────────────
+  const { id: currentUserId } = useSelector((state) => state.auth);
+  const { profiles } = useSelector((state) => state.user);
+  const { received, loading } = useSelector((state) => state.feedback);
+
+  /* ─────────────── Fetch data ONCE when the tab mounts ─────────────── */
+  useEffect(() => {
+    if (currentUserId) {
+      dispatch(fetchFeedbackReceived({ userId: currentUserId, skip: 0, limit: 100 }));
+      if (!profiles.length) {
+        dispatch(fetchAllUserProfiles({ skip: 0, limit: 100 }));
+      }
+    }
+  }, [dispatch, currentUserId]);         
+
+  /* ───────────── Filter to only the feedback meant for *me* ──────────── */
+  const myFeedbackReceived = useMemo(
+    () =>
+      received?.filter(
+        (f) => Number(f.receiver_user_id) === Number(currentUserId)
+      ) || [],
+    [received, currentUserId]
+  );
+
+  /* ───────────── Map giver → profile (name + avatar) helper ──────────── */
+  const enrich = (fb) => {
+    const giver = profiles.find(
+      (p) => Number(p.id) === Number(fb.giver_user_id)
+    );
+    return {
+      name: giver ? `${giver.first_name} ${giver.last_name}` : `User ${fb.giver_user_id}`,
+      avatar: getImageUrl(giver?.profile_image ||"/default-avatar.png"),
+      date: new Date(fb.created_at).toLocaleDateString(),
+      rating: fb.rating ?? 0,
+      comment: fb.feedback_text ?? "",
+    };
+  };
+
+  /* ───────────────────────────── UI ───────────────────────────── */
   return (
-    <Grid container spacing={3}>
-      {/* Ratings Summary */}
-      <Grid item xs={12} md={4}>
-        <Paper elevation={1} sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Roommate Ratings
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          
-          <Box>
-            {ratingsData.map(rating => (
-              <RatingDisplay 
-                key={rating.label}
-                label={rating.label}
-                value={rating.value}
-                count={rating.count}
-              />
-            ))}
-          </Box>
-        </Paper>
-      </Grid>
-      
-      {/* Feedback Comments */}
-      <Grid item xs={12} md={8}>
+    <Grid container>
+      <Grid item xs={12}>
         <Paper elevation={1} sx={{ p: 3 }}>
           <Typography variant="h6" gutterBottom>
             Roommate Feedback
           </Typography>
           <Divider sx={{ mb: 2 }} />
-          
-          <Box>
-            {feedbackData.map((feedback, index) => (
-              <FeedbackItem 
-                key={index}
-                name={feedback.name}
-                date={feedback.date}
-                rating={feedback.rating}
-                comment={feedback.comment}
-              />
-            ))}
-          </Box>
+
+          {loading ? (
+            <Box display="flex" justifyContent="center" p={3}>
+              <CircularProgress />
+            </Box>
+          ) : myFeedbackReceived.length ? (
+            myFeedbackReceived.map((fb, idx) => {
+              const info = enrich(fb);
+              return (
+                <Box key={fb.id ?? idx} mb={idx < myFeedbackReceived.length - 1 ? 2 : 0}>
+                  <FeedbackItem
+                    name={info.name}
+                    avatar={info.avatar}     
+                    date={info.date}
+                    rating={info.rating}
+                    comment={info.comment}
+                  />
+                  {idx < myFeedbackReceived.length - 1 && <Divider sx={{ my: 2 }} />}
+                </Box>
+              );
+            })
+          ) : (
+            <Typography align="center" color="text.secondary" py={3}>
+              No feedback received yet.
+            </Typography>
+          )}
         </Paper>
       </Grid>
     </Grid>

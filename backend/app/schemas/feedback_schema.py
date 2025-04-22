@@ -13,7 +13,7 @@ class FeedbackCreate(FeedbackBase):
 
 class FeedbackUpdate(FeedbackBase):
     rating: Optional[int] = None
-    feedback: Optional[str] = None
+    feedback_text: Optional[str] = None
     receiver_user_id: int
     giver_user_id: int
     updated_at: Optional[datetime] = datetime.now(timezone.utc)

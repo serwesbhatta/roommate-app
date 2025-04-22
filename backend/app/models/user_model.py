@@ -19,6 +19,10 @@ class AuthUser(Base):
     created_at = Column(DateTime(timezone=True),default=None, nullable=True)
     modified_at = Column(DateTime(timezone=True),default=None, nullable=True)
 
+    refresh_token_expires_at = Column(DateTime(timezone=True), nullable=True)
+    last_login = Column(DateTime(timezone=True), nullable=True)
+    is_logged_in = Column(Boolean, default=False, nullable=False)
+
     # One-to-One Relationship with UserProfile
     profile = relationship("UserProfile", back_populates="auth_user", uselist=False, cascade="all, delete")
 
@@ -35,6 +39,9 @@ class UserProfile(Base):
     profile_image = Column(String(255),nullable=True)  # Image path
     modified_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
     created_profile_at = Column(DateTime(timezone=True),default=None, nullable=True)
+
+    last_login = Column(DateTime(timezone=True), nullable=True)
+    is_logged_in = Column(Boolean, default=False, nullable=True)
 
     age = Column(Integer, nullable=True)
     gender = Column(String(20), nullable=True)
@@ -73,3 +80,9 @@ class UserProfile(Base):
     # Messaging relationships
     sent_messages = relationship("Message", foreign_keys="[Message.sender_id]", back_populates="sender", cascade="all, delete-orphan")
     received_messages = relationship("Message", foreign_keys="[Message.receiver_id]", back_populates="receiver", cascade="all, delete-orphan")
+
+
+    # Group Message Relationships
+    sent_group_messages = relationship("GroupMessage", foreign_keys="[GroupMessage.sender_id]", back_populates="sender")
+    created_groups = relationship("ChatGroup", foreign_keys="[ChatGroup.creator_id]", back_populates="creator")
+    chat_groups = relationship("ChatGroup", secondary="group_members", back_populates="members")

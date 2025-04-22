@@ -13,12 +13,16 @@ from .auth_services import (
     update_student_password_service,
     get_all_auth_users_service,
     get_total_auth_users_service,
-    get_new_users_service
+    get_new_users_service,
+    logout_user_service,
+    get_auth_user_by_id_service
 )
 from .user_services import (
     get_user_profile_service,
     update_user_profile_service,
     get_all_user_profiles_service,
-    get_total_user_profiles_service
+    get_total_user_profiles_service,
+    search_user_profiles_by_query_service,
+    filter_user_profiles_by_demographics_service
 )
 

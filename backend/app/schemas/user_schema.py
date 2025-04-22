@@ -31,6 +31,11 @@ class AuthUserResponse(BaseModel):
     role: str
     created_at: datetime
     modified_at: Optional[datetime] = None
+    refresh_token_expires_at: Optional[datetime] = None
+    last_login: Optional[datetime] = None
+    is_logged_in: Optional[bool] = None
+
+
 
     class Config:
         from_attributes = True
@@ -52,6 +57,9 @@ class UserProfileResponse(BaseModel):
     bio: Optional[str] = None
     majors: Optional[str] = None
 
+    last_login: Optional[datetime] = None
+    is_logged_in: Optional[bool] = None
+
     class Config:
         from_attributes = True
 
@@ -67,7 +75,7 @@ class UserProfileUpdate(BaseModel):
     majors: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class AuthUserUpdatePwd(BaseModel):
     current_password: str = Field(..., min_length=6)
@@ -77,3 +85,32 @@ class AuthUserUpdate(BaseModel):
     msu_email: str
     password: str = None
     role: str = "user"
+
+class TokenPair(BaseModel):
+    access_token:  str
+    refresh_token: str
+    token_type:    str = "bearer"
+
+class LogoutResponse(BaseModel):
+    detail: str
+
+
+class CurrentUser(BaseModel):
+    user_id: int
+    role: str
+    msu_email: str
+
+class Token(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    msu_email: Optional[str] = None
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"

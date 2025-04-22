@@ -119,11 +119,24 @@ export const vacateRoom = createAsyncThunk(
   }
 );
 
+export const userRoom = createAsyncThunk(        
+  'user/usersRoom',
+  async ({ user_id }, { rejectWithValue }) => {
+    try {
+      const data = await roomService.userRoom(user_id);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
 const roomSlice = createSlice({
   name: 'rooms',
   initialState: {
     roomList: [],
     currentRoom: null,
+    currentUserRoom:null,
     totalRooms: 0,
     availableRooms: 0,
     loading: false,
@@ -278,6 +291,21 @@ const roomSlice = createSlice({
         // Optionally update the room list if needed
       })
       .addCase(vacateRoom.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // user's room
+      .addCase(userRoom.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userRoom.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentUserRoom = action.payload;
+
+      })
+      .addCase(userRoom.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

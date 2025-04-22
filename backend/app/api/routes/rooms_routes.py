@@ -119,3 +119,19 @@ def vacate_room_route(
         return updated_room
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/users/{user_id}/room", response_model=RoomResponse)
+def get_user_room_route(
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Fetch the room that the given user is allocated to.
+    If the user has no room, returns 404.
+    """
+    try:
+        service = RoomService(db)
+        room = service.get_room_for_user(user_id)
+        return room
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))

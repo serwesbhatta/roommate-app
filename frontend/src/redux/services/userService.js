@@ -27,3 +27,25 @@ export const fetchTotalUserProfilesService = async () => {
   const response = await axios.get(API_ENDPOINTS.GET_TOTAL_PROFILES);
   return response.data;
 };
+
+
+export const fetchSearchProfilesService = async ({
+  query,     
+  skip = 0,
+  limit = 100
+}) => {
+  const response = await axios.get(API_ENDPOINTS.SEARCH_PROFILES, {
+    params: { query, skip, limit }
+  });
+  return response.data;
+};
+
+
+export const fetchFilterProfilesService = async ({
+  age, gender, majors, skip = 0, limit = 100
+}) => {
+  const response = await axios.get(API_ENDPOINTS.FILTER_PROFILES, {
+    params: { age, gender, majors, skip, limit }
+  });
+  return response.data;
+};

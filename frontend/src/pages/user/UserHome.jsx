@@ -60,7 +60,6 @@ const UserHome = () => {
     )
       .unwrap()
       .then(() => {
-        // ✅ Immediately fetch updated responses from backend
         dispatch(getUserResponses(userProfileId));
       })
       .catch((err) => {

@@ -3,7 +3,8 @@ import { Avatar, Box, Menu, MenuItem, Divider } from "@mui/material";
 import { Person, Settings, Logout } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/slices/authSlice";
+import { logoutUser } from "../../redux/slices/authSlice";
+// import messageService from "../../redux/services/messageService";
 
 const ProfileMenu = ({ user, anchorEl, handleMenuClose }) => {
   const navigate = useNavigate();
@@ -13,9 +14,10 @@ const ProfileMenu = ({ user, anchorEl, handleMenuClose }) => {
 
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
+    // messageService.disconnectWebSocket();
+    dispatch(logoutUser());
     handleMenuClose();
+    navigate("/login");
   };
 
   return (
@@ -23,10 +25,6 @@ const ProfileMenu = ({ user, anchorEl, handleMenuClose }) => {
       <MenuItem onClick={() => navigate(`/${role}/profile/${userId}`)}>
         <Person sx={{ mr: 1 }} />
         View Profile
-      </MenuItem>
-      <MenuItem onClick={() => navigate("/settings")}>
-        <Settings sx={{ mr: 1 }} />
-        Settings
       </MenuItem>
       <Divider />
       <MenuItem onClick={handleLogout}>
