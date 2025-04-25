@@ -16,8 +16,8 @@ const ProfileMenu = ({ user, anchorEl, handleMenuClose }) => {
   const handleLogout = () => {
     // messageService.disconnectWebSocket();
     dispatch(logoutUser());
-    handleMenuClose();
-    navigate("/login");
+    // handleMenuClose();
+    // navigate("/login");
   };
 
   return (

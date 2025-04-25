@@ -166,7 +166,23 @@ def refresh_access_token(refresh_token: str, db: Session) -> str:
             )
         
         # Check if refresh token is expired in database
-        if user.refresh_token_expires_at < datetime.now(timezone.utc):
+        # if user.refresh_token_expires_at < datetime.now(timezone.utc):
+        #     raise HTTPException(
+        #         status_code=status.HTTP_401_UNAUTHORIZED,
+        #         detail="Refresh token expired",
+        #     )
+
+        expires_at = user.refresh_token_expires_at
+        if not expires_at:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Refresh token expired",
+            )
+        # SQLite often returns a naïve datetime; normalise it
+        if expires_at.tzinfo is None:
+            expires_at = expires_at.replace(tzinfo=timezone.utc)
+
+        if expires_at < datetime.now(timezone.utc):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Refresh token expired",

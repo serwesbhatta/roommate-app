@@ -99,6 +99,7 @@ class MatchingService:
     def get_top_compatible_users(
         self,
         user_id: int,
+        skip: int = 0,
         n: int = 10
     ) -> List[Dict[str, Any]]:
         """
@@ -135,4 +136,4 @@ class MatchingService:
             for match_id, score in top_matches
         ]
         
-        return results
+        return results[skip:skip+n]

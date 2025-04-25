@@ -14,6 +14,7 @@ const initialState = {
 export const fetchFeedbackReceived = createAsyncThunk(
   'feedback/fetchReceived',
   async ({ userId, skip, limit }, thunkAPI) => {
+    console.log("feedback recieved id---->", userId)
     try {
       const { data } = await feedbackService.listFeedbackReceived(userId, { skip, limit });
       return data;

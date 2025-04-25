@@ -22,17 +22,25 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings:
-    # Database Configuration
-    DATABASE_URL: str = os.getenv('DATABASE_URL')
-    
-    # Authentication Configuration
-    SECRET_KEY: str = os.getenv('SECRET_KEY')
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7 
+    # ── Database ─────────────────────────────
+    DATABASE_URL: str = os.getenv("DATABASE_URL")
 
-    # Additional configurable settings
-    DEBUG: bool = os.getenv('DEBUG', 'False').lower() == 'true'
+    # ── Auth / JWT ───────────────────────────
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "change-me")
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
+    # ── SMTP / E-mail ────────────────────────
+    MAIL_SERVER: str   = os.getenv("MAIL_SERVER")
+    MAIL_PORT: int     = int(os.getenv("MAIL_PORT", 465))
+    MAIL_USERNAME: str = os.getenv("MAIL_USERNAME")
+    MAIL_PASSWORD: str = os.getenv("MAIL_PASSWORD")
+    MAIL_FROM: str     = os.getenv("MAIL_FROM", "no-reply@example.com")
+    MAIL_USE_TLS: bool = os.getenv("MAIL_USE_TLS", "false").lower() == "true"  # for port 587
+
+    # ── Misc ─────────────────────────────────
+    DEBUG: bool = os.getenv("DEBUG", "false").lower() == "true"
 
 # Create a singleton instance
 settings = Settings()

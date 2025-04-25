@@ -9,6 +9,7 @@ import residenceHallReducer from '../slices/residenceHallSlice';
 import roomReducer from '../slices/roomSlice';
 import feedbackReducer from '../slices/feedbackSlice'
 import messageReducer from '../slices/messageSlice';
+import compatibilityReducer from '../slices/compatibilitySlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     rooms: roomReducer,
     feedback: feedbackReducer,
     messages: messageReducer,
+    compatibility: compatibilityReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

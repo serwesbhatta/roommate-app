@@ -84,5 +84,11 @@ export const API_ENDPOINTS = {
   GET_CHAT_CONTACTS: (userId) => 
     `${BASE_URL}/messages-contacts/${userId}`,
   WEBSOCKET_CHAT: (userId) => 
-    `ws://localhost:8000/api/ws/${userId}`
+    `ws://localhost:8000/api/ws/${userId}`,
+
+  // ─── Compatibility ─────────────────────────────
+  COMPATIBILITY_SCORE: (user1Id, user2Id) =>
+    `${BASE_URL}/compatibility-score/${user1Id}/${user2Id}`,
+  TOP_MATCHES: (userId,skip, limit) =>
+    `${BASE_URL}/top-matches/${userId}?skip=${skip}&limit=${limit}`,
 };

@@ -1,11 +1,4 @@
-// RoommateListView.jsx
-// -----------------------------------------------------------------------------
-// Shows the list of roommates in either grid or list layout. The component now
-// guarantees that the *logged‑in* user never appears in that list by explicitly
-// filtering them out.
-// -----------------------------------------------------------------------------
-
-import React from "react";
+import React, { useMemo } from "react";
 import { Box, Grid, IconButton, Pagination, Typography } from "@mui/material";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
@@ -24,32 +17,28 @@ const RoommateListView = ({
   onMessage,
   onFeedback,
 }) => {
+  const { id } = useSelector((s) => s.auth);
 
-  const { id } = useSelector((state) => state.auth); 
+  // filter + paginate only recalculated when deps change --------------
+  const { filteredRoommates, currentSlice, totalPages } = useMemo(() => {
+    const filtered = roommates.filter((u) => Number(u.user_id) !== Number(id));
+    const pages = Math.ceil(filtered.length / roommatesPerPage) || 1;
+    const last = currentPage * roommatesPerPage;
+    const first = last - roommatesPerPage;
+    return {
+      filteredRoommates: filtered,
+      currentSlice: filtered.slice(first, last),
+      totalPages: pages,
+    };
+  }, [roommates, id, currentPage, roommatesPerPage]);
 
-  const filteredRoommates = roommates.filter(
-    (u) => Number(u.user_id) !== Number(id)
-  );
-
-  // 2. Pagination math -------------------------------------------------------
-  const totalPages =
-    Math.ceil(filteredRoommates.length / roommatesPerPage) || 1;
-  const indexOfLast = currentPage * roommatesPerPage;
-  const indexOfFirst = indexOfLast - roommatesPerPage;
-  const currentSlice = filteredRoommates.slice(indexOfFirst, indexOfLast);
-
-  // -------------------------------------------------------------------------
+  // -------------------------------------------------------------------
   return (
     <Box>
       {filteredRoommates.length > 0 ? (
         <>
           {/* Header */}
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
-          >
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h6" fontWeight={600}>
               Current Roommates ({filteredRoommates.length})
             </Typography>
@@ -58,7 +47,7 @@ const RoommateListView = ({
             </IconButton>
           </Box>
 
-          {/* List / Grid */}
+          {/* Grid / List switch */}
           {gridView ? (
             <Grid container spacing={3}>
               {currentSlice.map((rm) => (
@@ -99,10 +88,7 @@ const RoommateListView = ({
           )}
         </>
       ) : (
-        <NoDataPlaceholder
-          message="No roommate records found."
-          submessage="You currently have no roommates."
-        />
+        <NoDataPlaceholder submessage="You currently have no roommates." />
       )}
     </Box>
   );

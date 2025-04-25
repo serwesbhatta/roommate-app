@@ -41,6 +41,58 @@ def create_user_service(user_data: AuthUserCreate, db: Session):
     
     return {"detail": "User created successfully", "status_code": "200"}
 
+
+
+# def create_user_service(user_data: AuthUserCreate, db: Session):
+#     """
+#     Atomically create AuthUser + UserProfile AND send a welcome e-mail.
+#     If the e-mail cannot be sent, NOTHING is committed to the database.
+#     """
+
+#     # ── 1. Guard: already exists? ──────────────────────────────────────────
+#     if (db.query(AuthUser).filter(AuthUser.msu_email == user_data.msu_email).first()
+#             or db.query(UserProfile).filter(UserProfile.msu_email == user_data.msu_email).first()):
+#         raise HTTPException(status_code=400, detail="User already exists")
+
+#     try:
+#         # ── 2. Start a transaction ────────────────────────────────────────
+#         with db.begin():              # ⇐ guarantees rollback on exception
+#             auth_user = AuthUser(
+#                 msu_email   = user_data.msu_email,
+#                 password    = hash_password(user_data.password),
+#                 role        = user_data.role or "user",
+#                 created_at  = datetime.now(timezone.utc),
+#                 is_blocked  = False,
+#             )
+#             db.add(auth_user)
+#             db.flush()                # ⇐ assigns auth_user.id but still un-committed
+
+#             profile = UserProfile(
+#                 user_id             = auth_user.id,
+#                 msu_email           = user_data.msu_email,
+#                 created_profile_at  = datetime.now(timezone.utc),
+#             )
+#             db.add(profile)
+
+#             # ── 3. E-mail must succeed before COMMIT ────────────────────
+#             try:
+#                 send_welcome_email(user_data.msu_email, user_data.password)
+#             except RuntimeError as mail_err:
+#                 raise HTTPException(status_code=502, detail=str(mail_err))
+
+#             # on exiting the with-block the TX commits automatically
+
+#         return {"detail": "User created successfully", "status_code": 200}
+
+#     except HTTPException:             # propagated cleanly to the router
+#         raise
+#     except (SQLAlchemyError, Exception) as exc:
+#         db.rollback()                 # belt-and-suspenders
+#         raise HTTPException(status_code=500, detail=f"DB error: {exc}")
+
+
+
+
 def authenticate_user_service(msu_email: str, password: str, db: Session):
     auth_user = db.query(AuthUser).filter(AuthUser.msu_email == msu_email).first()
     auth_profile = db.query(UserProfile).filter(UserProfile.msu_email == msu_email).first()

@@ -7,16 +7,17 @@ import {
     Notifications as NotificationsIcon
   } from '@mui/icons-material';
   import DomainIcon from '@mui/icons-material/Domain';
+  import ChatIcon from "@mui/icons-material/Chat";   
 
 
 export const getMenuItems = (userRole) => {
     if (userRole === "user") {
       return [
-        { label: "Home", path: "user/user_home" },
-        { label: "Roommate", path: "user/roommate" },
-        { label: "Events", path: "user/events" },
-        { label: "Notifications", path: "user/notifications" },
-        { label: "Messages", path: "user/chat" },
+        { label: "Home", path: "/user/user_home" },
+        { label: "Roommate", path: "/user/roommate" },
+        { label: "Events", path: "/user/events" },
+        // { label: "Notifications", path: "/user/notifications" },
+        { label: "Messages", path: "/user/chat" },
       ];
     }
 
@@ -27,15 +28,14 @@ export const getMenuItems = (userRole) => {
             { label: "Rooms", path: "/admin/admin_rooms", icon: RoomIcon  },
             { label: "Residence Hall", path: "/admin/admin_residence_halls", icon: DomainIcon  },
             { label: "Events", path: "/admin/admin_events", icon: EventIcon  },
-            { label: "Notifications", path: "/admin/admin_notifications", icon: NotificationsIcon },
+            { label: "Message", path: "/admin/admin_chat", icon: ChatIcon  },
+            // { label: "Notifications", path: "/admin/admin_notifications", icon: NotificationsIcon },
         ];
       }
   
     if (!userRole) {
       return [
         { label: "Home", path: "/" },
-        { label: "About Us", path: "/about-us" },
-        { label: "Contact", path: "/contact" },
       ];
     }
   

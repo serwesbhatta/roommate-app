@@ -6,6 +6,7 @@ from ...schemas.compatibility_schema import CompatibilityScore, TopMatches
 from ...database import get_db
 
 from app.services.compatibility_services import MatchingService
+from app.models.user_model import UserProfile
 
 
 router = APIRouter()
@@ -33,6 +34,7 @@ async def get_compatibility_score(
 @router.get("/top-matches/{user_id}", response_model=TopMatches)
 async def get_top_matches_for_user(
     user_id: int,
+    skip: int = 0,
     limit: int = 10,
     db: Session = Depends(get_db)
 ):
@@ -40,6 +42,23 @@ async def get_top_matches_for_user(
     Get top compatible users for a given user
     """
     service = MatchingService(db)
-    matches = service.get_top_compatible_users(user_id, limit)
-    
-    return {"matches": matches}
+    matches = service.get_top_compatible_users(user_id, skip, n = limit)
+
+    user_ids = [m["user_id"] for m in matches]
+    profiles = (
+        db.query(UserProfile)
+          .filter(UserProfile.user_id.in_(user_ids))
+          .all()
+    )
+    profile_map = { p.user_id: p for p in profiles }
+
+    enriched = [
+        {
+            "user_id": m["user_id"],
+            "compatibility_score": m["compatibility_score"],
+            "profile": profile_map.get(m["user_id"])
+        }
+        for m in matches
+    ]
+
+    return {"matches": enriched}

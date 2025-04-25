@@ -56,15 +56,7 @@ export const refreshTokenService = async (refreshToken) => {
 
 export const logoutUserService = async () => {
   try {
-    const accessToken = localStorage.getItem('accessToken');
-    
-    if (accessToken) {
-      await axios.post(API_ENDPOINTS.LOGOUT, {}, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
-      });
-    }
+    await api.post(API_ENDPOINTS.LOGOUT); 
     return { success: true };
   } catch (error) {
     console.warn('Server logout failed:', error.message);

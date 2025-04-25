@@ -14,8 +14,7 @@ export {default as Chat} from './chat/Chat.jsx';
 export {default as LandingPage} from './LandingPage';
 export {default as Login} from './auth/Login.jsx';
 export {default as NotFound} from './NotFound.jsx';
-export {default as AboutUs} from './AboutUs.jsx';
-export {default as Contact} from './Contact.jsx';
+
 
 
 

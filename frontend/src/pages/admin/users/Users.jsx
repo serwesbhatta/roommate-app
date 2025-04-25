@@ -276,6 +276,9 @@ const Users = () => {
       fd.append(key, profileForm[key] || "")
     );
 
+   const cleanDate = profileForm.move_in_date? profileForm.move_in_date.split("T")[0] : "";
+   fd.append("move_in_date", cleanDate);
+
     if (profileImageFile) fd.append("profile_image", profileImageFile);
     dispatch(
       updateUserProfile({ userId: profileForm.user_id, profileData: fd })

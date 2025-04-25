@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box, Typography, Button, Grid, Dialog, DialogTitle,
   DialogContent, DialogActions, TextField
 } from '@mui/material';
 import { Edit as EditIcon } from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
-import { getQuestionOptionsList, getUserResponses, putUserResponses } from '../../../redux/slices/questionnaireSlice';
 import { PreferenceCard } from '../../../components/profile';
 
-const RoommatePreferencesTab = () => {
-  const dispatch = useDispatch();
-  const { questions, userResponses } = useSelector(state => state.questionnaire);
-  const { id } = useSelector(state => state.auth);
-  const userProfileId = id; 
-
-
+const RoommatePreferencesTab = ({ questions, userResponses, onUpdatePreferences }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedResponses, setEditedResponses] = useState({});
 
@@ -24,11 +16,6 @@ const RoommatePreferencesTab = () => {
     acc[q.category].push(q);
     return acc;
   }, {});
-
-  useEffect(() => {
-    dispatch(getQuestionOptionsList({ skip: 0, limit: 100 }));
-    dispatch(getUserResponses(userProfileId));
-  }, [dispatch, userProfileId]);
 
   useEffect(() => {
     setEditedResponses(userResponses); // preload with current answers
@@ -41,18 +28,17 @@ const RoommatePreferencesTab = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const editedResponsesArray = Object.entries(editedResponses).map(([questionId, selectedOption]) => ({
       question_id: parseInt(questionId),
       selected_option: selectedOption,
     }));
-    dispatch(putUserResponses({ userProfileId, responses: { responses: editedResponsesArray } }))
-    .unwrap()
-    .then(() => {
-      dispatch(getUserResponses(userProfileId));
+    
+    const result = await onUpdatePreferences(editedResponsesArray);
+    
+    if (result.success) {
       setEditMode(false);
-    });
-  
+    }
   };
 
   return (

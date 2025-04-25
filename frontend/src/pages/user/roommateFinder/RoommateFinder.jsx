@@ -1,11 +1,14 @@
-// Update RoommateFinder.jsx to pass the onFeedback prop
-import React from 'react';
-import { Box, Container } from '@mui/material';
-import { useRoommates } from './useRoommates';
-import {CurrentRoommateView, RoommateFinderView} from '../../../components/roommate';
-
+import React from "react";
+import { Box, Container } from "@mui/material";
+import { useRoommates } from "./useRoommates";
+import {
+  CurrentRoommateView,
+  RoommateFinderView,
+} from "../../../components/roommate";
 
 const RoommateFinder = () => {
+  const api = useRoommates();
+
   const {
     currentView,
     currentUserRoom,
@@ -17,23 +20,21 @@ const RoommateFinder = () => {
     gridView,
     showMatches,
     searchParams,
-    matchedRoommates,
     handleSearch,
-    handleLoadMore,
     goToFindRoommate,
     goBackToCurrent,
     handleViewProfile,
     handleMessage,
     handleFeedback,
     handlePageChange,
-    handleViewModeChange
-  } = useRoommates();
-  
+    handleViewModeChange,
+  } = api;
+
   return (
     <Container maxWidth="lg">
       <Box my={6}>
-        {currentView === 'current' ? (
-          <CurrentRoommateView 
+        {currentView === "current" ? (
+          <CurrentRoommateView
             currentUserRoom={currentUserRoom}
             residenceHall={residenceHall}
             roommates={roommates}
@@ -49,13 +50,12 @@ const RoommateFinder = () => {
             onFindRoommate={goToFindRoommate}
           />
         ) : (
-          <RoommateFinderView 
+          <RoommateFinderView
             onBackClick={goBackToCurrent}
             onSearch={handleSearch}
             searchParams={searchParams}
             showMatches={showMatches}
-            matchedRoommates={matchedRoommates}
-            onLoadMore={handleLoadMore}
+            onViewProfile={handleViewProfile}
           />
         )}
       </Box>

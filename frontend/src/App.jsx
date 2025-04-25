@@ -1,6 +1,6 @@
 
 import { Navbar } from "./components/navigations";
-import { LandingPage, Login, Admin, User, NotFound, AboutUs, Contact } from "./pages";
+import { LandingPage, Login, Admin, User, NotFound } from "./pages";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -15,9 +15,9 @@ function App() {
     // If user is logged in and tries to access public routes, redirect to dashboard
     if (access_token && ["/", "/login"].includes(location.pathname)) {
       if (role === "admin") {
-        navigate("/admin");
+        navigate("/admin/admin_dashboard");
       } else {
-        navigate("/user");
+        navigate("/user/user_home");
       }
     }
     // Handle unauthenticated access to protected routes
@@ -27,9 +27,9 @@ function App() {
     // Handle role-based redirects
     else if (access_token) {
       if (location.pathname.startsWith("/admin") && role !== "admin") {
-        navigate("/user");
+        navigate("/user/user_home");
       } else if (location.pathname.startsWith("/user") && role === "admin") {
-        navigate("/admin");
+        navigate("/admin/admin_dashboard");
       }
     }
   }, [access_token, role, location.pathname, navigate]);
@@ -40,8 +40,6 @@ function App() {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<LandingPage />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
 
 

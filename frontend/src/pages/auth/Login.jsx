@@ -49,16 +49,10 @@ const Login = () => {
   
     try {
       const res = await dispatch(loginUser({ email, password })).unwrap(); 
-      console.log("login response:", res);
-      
-      // Check if role exists either at top level or in user object
       const role = res.role || (res.user && res.user.role);
       
-      console.log("role",role)
       if (role) {
-        console.log("Navigating to:", role === 'admin' ? '/admin' : '/user');
         
-        // Reset form fields
         setEmail("");
         setPassword("");
         setEmailError("");
@@ -66,7 +60,7 @@ const Login = () => {
         
         // Reset submission state and navigate
         setIsSubmitting(false);
-        navigate(role === 'admin' ? '/admin' : '/user');
+        navigate(role === 'admin' ? '/admin/admin_dashboard' : '/user/user_home');
       } else {
         console.error("No role found in response:", res);
         setIsSubmitting(false);

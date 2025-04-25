@@ -76,7 +76,7 @@ const CustomNavbar = () => {
           {/* Search Bar  for admin and users*/}
           {userRole && <SearchBar placeHolder="Search.." />}
 
-          {/* Right Section: Profile & Menu for admins and user, login and signup for not login/signup users */}
+          {/* Right Section: Profile & Menu for admins and user*/}
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {userRole && (
               <>

@@ -101,16 +101,11 @@ export const refreshToken = createAsyncThunk('auth/refreshToken', async (_, thun
 });
 
 export const logoutUser = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
-  try {
-    // First attempt server-side logout
-    await authService.logoutUserService();
-  } catch (error) {
-    console.warn('Server-side logout failed:', error.message);
-  } finally {
-    clearAuthStorage();
-  }
+  try { await thunkAPI.dispatch(refreshToken()).unwrap(); } catch(_) {}
+  await authService.logoutUserService();     // old implementation is fine now
+  clearAuthStorage();
   return { success: true };
-})
+});
 
 export const fetchAuthUserById = createAsyncThunk('auth/fetchAuthUserById', async (userId, thunkAPI) => {
   try {

@@ -5,6 +5,7 @@ import React from 'react';
 import { Box, Paper, Typography, Avatar, Rating, Divider } from '@mui/material';
 
 const FeedbackItem = ({ name, date, rating, comment, avatar }) => {
+  console.log("feedbackname",name)
   return (
     <Paper elevation={1} sx={{ p: 2, mb: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>

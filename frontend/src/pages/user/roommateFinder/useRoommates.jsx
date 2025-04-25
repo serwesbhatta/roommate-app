@@ -1,100 +1,105 @@
-// Update useRoommates.js hook to incorporate feedback functionality
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { userRoom } from "../../../redux/slices/roomSlice";
 import { fetchResidenceHalls } from "../../../redux/slices/residenceHallSlice";
-import { fetchFeedbackGave } from "../../../redux/slices/feedbackSlice";
+import {
+  fetchFeedbackGave,
+} from "../../../redux/slices/feedbackSlice";
+import { useNavigate } from "react-router-dom";
 
+/**
+ * Custom hook that centralises *all* state / behaviour shared by the
+ * roommate‑management screens (Current‑Room view & Roommate‑Finder).
+ *
+ * @returns {object} public API consumed by containers + presentational comps
+ */
 export const useRoommates = () => {
   const dispatch = useDispatch();
-  const [currentView, setCurrentView] = useState('current');
-  const [showMatches, setShowMatches] = useState(false);
+  const navigate = useNavigate();
+
+  // ─────────────── Local UI state ────────────────
+  const [currentView, setCurrentView] = useState("current"); // "current" | "finder"
   const [searchParams, setSearchParams] = useState({
-    major: '',
-    gender: '',
-    graduationYear: '',
+    major: "",
+    gender: "",
+    graduationYear: "",
   });
   const [gridView, setGridView] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [matchedRoommates, setMatchedRoommates] = useState([]);
+  const [showMatches, setShowMatches] = useState(false);
   const roommatesPerPage = 6;
-  
-  const { id } = useSelector((state) => state.auth);
-  const { currentUserRoom } = useSelector((state) => state.rooms);
-  const { residenceHalls } = useSelector((state) => state.residenceHall);
-  
-  useEffect(() => {
-    if (id) {
-      dispatch(userRoom({ user_id: id }));
-      dispatch(fetchResidenceHalls({skip:0, limit: 100}));
-      
-      // Fetch feedback data that the current user has given
-      dispatch(fetchFeedbackGave({ 
-        userId: id,
-        skip: 0, 
-        limit: 100 
-      }));
-    }
-  }, [dispatch, id]);
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [gridView]);
-  
-  // Get roommates (other residents in the same room)
-  const roommates = currentUserRoom?.user_profiles?.filter(profile => profile.user_id !== id) || [];
-  
-  // Calculate total pages for pagination
-  const totalRoommatePages = Math.ceil(roommates.length / roommatesPerPage);
+  // ─────────────── Redux selectors ───────────────
+  const { id: authId } = useSelector((s) => s.auth);
+  const { currentUserRoom } = useSelector((s) => s.rooms);
+  const { residenceHalls } = useSelector((s) => s.residenceHall);
 
-  // Get residence hall information
-  const residenceHall = residenceHalls?.find(hall => 
-    hall.id === currentUserRoom?.residence_hall_id
+  // ─────────────── Side‑effects ──────────────────
+  useEffect(() => {
+    if (!authId) return;
+    // Fetch once on mount / authId change
+    dispatch(userRoom({ user_id: authId }));
+    dispatch(fetchResidenceHalls({ skip: 0, limit: 100 }));
+    dispatch(fetchFeedbackGave({ userId: authId, skip: 0, limit: 100 }));
+  }, [dispatch, authId]);
+
+  // Reset pagination whenever the layout toggles
+  useEffect(() => setCurrentPage(1), [gridView]);
+
+  // ─────────────── Derived data (memoised) ───────
+  /** list of *other* occupants in the same room */
+  const roommates = useMemo(() => {
+    return (
+      currentUserRoom?.user_profiles?.filter((p) => p.user_id !== authId) || []
+    );
+  }, [currentUserRoom?.user_profiles, authId]);
+
+  /** total page count for paginated RoommateListView */
+  const totalRoommatePages = useMemo(
+    () => Math.ceil(roommates.length / roommatesPerPage) || 1,
+    [roommates.length]
   );
 
-  // Handler functions
-  const handleSearch = (params) => {
+  /** convenience lookup for the current hall */
+  const residenceHall = useMemo(
+    () =>
+      residenceHalls?.find(
+        (hall) => hall.id === currentUserRoom?.residence_hall_id
+      ),
+    [residenceHalls, currentUserRoom?.residence_hall_id]
+  );
+
+  // ─────────────── Handlers (stable refs) ────────
+  const handleSearch = useCallback((params) => {
     setSearchParams(params);
     setShowMatches(true);
-    setMatchedRoommates([]); // Mock data - in production this would be populated by API call
-  };
-  
-  const handleLoadMore = () => {
-    console.log('Loading more matches...');
-  };
-  
-  const goToFindRoommate = () => {
-    setCurrentView('finder');
-  };
-  
-  const goBackToCurrent = () => {
-    setCurrentView('current');
-    setShowMatches(false);
-  };
+    // Roommate‑Finder takes care of dispatching query → API
+  }, []);
 
-  const handleViewProfile = (roommateId) => {
-    console.log(`View profile of roommate ${roommateId}`);
-  };
+  const handleViewModeChange = useCallback(() => setGridView((v) => !v), []);
 
-  const handleMessage = (roommateId) => {
-    console.log(`Message roommate ${roommateId}`);
-  };
-
-  const handleFeedback = (roommate) => {
-    console.log(`Give feedback for roommate ${roommate.user_id}`);
-    // Note: The actual feedback handling is now in CurrentRoommateView component
-  };
-
-  const handlePageChange = (event, value) => {
+  const handlePageChange = useCallback((_, value) => {
     setCurrentPage(value);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
-  const handleViewModeChange = () => {
-    setGridView(!gridView);
-  };
-  
+  const goToFindRoommate = useCallback(() => setCurrentView("finder"), []);
+  const goBackToCurrent = useCallback(() => {
+    setCurrentView("current");
+    setShowMatches(false);
+  }, []);
+
+  // Stub actions (UI only for now) ----------------
+  const handleViewProfile = useCallback((uid) => navigate(`/user/view-profile/${uid}`), []);
+  const handleMessage = useCallback((uid) => console.log("msg", uid), []);
+  const handleFeedback = useCallback(
+    (rm) => console.log("give feedback", rm.user_id),
+    []
+  );
+
+  // ─────────────── Exposed API ───────────────────
   return {
+    // state
     currentView,
     currentUserRoom,
     residenceHall,
@@ -105,15 +110,15 @@ export const useRoommates = () => {
     gridView,
     showMatches,
     searchParams,
-    matchedRoommates,
+    // actions / handlers
+    setSearchParams,
     handleSearch,
-    handleLoadMore,
     goToFindRoommate,
     goBackToCurrent,
     handleViewProfile,
     handleMessage,
     handleFeedback,
     handlePageChange,
-    handleViewModeChange
+    handleViewModeChange,
   };
 };

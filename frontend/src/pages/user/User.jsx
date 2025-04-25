@@ -19,6 +19,7 @@ const User = () => {
       <Route path="events" element={<UserEvents/>} /> 
       <Route path="chat" element={<Chat/>} /> 
       <Route path="profile/:userId" element={<Profile />} />
+      <Route path="view-profile/:userId" element={<Profile />} />
     </Routes>
   );
 };

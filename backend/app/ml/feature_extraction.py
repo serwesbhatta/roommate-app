@@ -2,6 +2,79 @@ import numpy as np
 from typing import Dict, List, Any, Tuple
 
 
+# def extract_user_features(
+#     user_profile: Dict[str, Any],
+#     user_responses: List[Dict[str, Any]],
+#     all_questions: List[Dict[str, Any]]
+# ) -> np.ndarray:
+#     """
+#     Extract features for a single user based on profile and question responses
+    
+#     Parameters:
+#     - user_profile: Dictionary containing user profile data
+#     - user_responses: List of dictionaries containing user's question responses
+#     - all_questions: List of all questions in the system
+    
+#     Returns:
+#     - numpy array of numerical features
+#     """
+#     features = []
+    
+#     # --- Profile Features ---
+#     # Age (normalized later)
+#     features.append(float(user_profile.get('age', 20)))
+    
+#     # Gender (one-hot encoding)
+#     # 1 for Male, 0 for Female, 0.5 for Other/Non-binary
+#     if user_profile.get('gender', '').lower() == 'male':
+#         features.append(1.0)
+#     elif user_profile.get('gender', '').lower() == 'female':
+#         features.append(0.0)
+#     else:
+#         features.append(0.5)  # Other/Non-binary
+    
+#     # Major 
+#     # We'll use a simple hash technique to convert string to number
+#     major = user_profile.get('majors', '')
+#     if major:
+#         # Use hash to create a number between 0-99
+#         major_hash = abs(hash(major)) % 100 / 100.0
+#         features.append(major_hash)
+#     else:
+#         features.append(0.5)  # Default value
+    
+#     # Residence hall
+#     hall_id = user_profile.get('residence_hall_id')
+#     if hall_id is not None:
+#         features.append(float(hall_id))
+#     else:
+#         features.append(-1.0)  # Default value for no hall
+    
+#     # --- Bio Features (optional) ---
+#     # For simplicity, we'll just use the length of bio as a feature
+#     bio = user_profile.get('bio', '')
+#     features.append(min(len(bio) / 500.0, 1.0))  # Normalize by max expected length
+    
+#     # --- Question Responses ---
+#     # Create a dictionary to map question_id to response
+#     response_map = {resp['question_id']: resp['selected_option'] for resp in user_responses}
+    
+#     # For each question in the system, add the user's response or a default value
+#     for question in all_questions:
+#         question_id = question['id']
+#         if question_id in response_map:
+#             # Get the option text and hash it to a number
+#             option_text = response_map[question_id]
+#             # Convert the option to a value between 0 and 1
+#             option_value = abs(hash(str(option_text))) % 1000 / 1000.0
+#             features.append(option_value)
+#         else:
+#             # User didn't answer this question
+#             features.append(-1.0)  # Special value to indicate missing
+    
+#     return np.array(features)
+
+
 def extract_user_features(
     user_profile: Dict[str, Any],
     user_responses: List[Dict[str, Any]],
@@ -9,69 +82,54 @@ def extract_user_features(
 ) -> np.ndarray:
     """
     Extract features for a single user based on profile and question responses
-    
-    Parameters:
-    - user_profile: Dictionary containing user profile data
-    - user_responses: List of dictionaries containing user's question responses
-    - all_questions: List of all questions in the system
-    
-    Returns:
-    - numpy array of numerical features
     """
-    features = []
-    
-    # --- Profile Features ---
-    # Age (normalized later)
-    features.append(float(user_profile.get('age', 20)))
-    
-    # Gender (one-hot encoding)
-    # 1 for Male, 0 for Female, 0.5 for Other/Non-binary
-    if user_profile.get('gender', '').lower() == 'male':
+    features: list[float] = []
+
+    # ── Profile features ────────────────────────────────────────────────
+    # 1️⃣ Age  ── guard against None so float() never fails
+    age_val = user_profile.get("age")          # may be None
+    if age_val is None:
+        age_val = 20                           # <-- fallback of your choice
+    features.append(float(age_val))            # ← safe float()
+
+    # 2️⃣ Gender (one-hot encoding)
+    gender = (user_profile.get("gender") or "").lower()
+    if gender == "male":
         features.append(1.0)
-    elif user_profile.get('gender', '').lower() == 'female':
+    elif gender == "female":
         features.append(0.0)
     else:
-        features.append(0.5)  # Other/Non-binary
-    
-    # Major 
-    # We'll use a simple hash technique to convert string to number
-    major = user_profile.get('majors', '')
+        features.append(0.5)                   # other / non-binary
+
+    # 3️⃣ Major  (hash → 0-1)
+    major = user_profile.get("majors", "")
     if major:
-        # Use hash to create a number between 0-99
         major_hash = abs(hash(major)) % 100 / 100.0
         features.append(major_hash)
     else:
-        features.append(0.5)  # Default value
-    
-    # Residence hall
-    hall_id = user_profile.get('residence_hall_id')
-    if hall_id is not None:
-        features.append(float(hall_id))
-    else:
-        features.append(-1.0)  # Default value for no hall
-    
-    # --- Bio Features (optional) ---
-    # For simplicity, we'll just use the length of bio as a feature
-    bio = user_profile.get('bio', '')
-    features.append(min(len(bio) / 500.0, 1.0))  # Normalize by max expected length
-    
-    # --- Question Responses ---
-    # Create a dictionary to map question_id to response
-    response_map = {resp['question_id']: resp['selected_option'] for resp in user_responses}
-    
-    # For each question in the system, add the user's response or a default value
-    for question in all_questions:
-        question_id = question['id']
-        if question_id in response_map:
-            # Get the option text and hash it to a number
-            option_text = response_map[question_id]
-            # Convert the option to a value between 0 and 1
-            option_value = abs(hash(str(option_text))) % 1000 / 1000.0
-            features.append(option_value)
+        features.append(0.5)
+
+    # 4️⃣ Residence hall ID (also guard against None)
+    hall_id = user_profile.get("residence_hall_id")
+    features.append(float(hall_id) if hall_id is not None else -1.0)
+
+    # 5️⃣ Bio length (0-1)
+    bio = user_profile.get("bio") or ""
+    features.append(min(len(bio) / 500.0, 1.0))
+
+    # ── Question-response features ──────────────────────────────────────
+    response_map = {
+        resp["question_id"]: resp["selected_option"] for resp in user_responses
+    }
+
+    for q in all_questions:
+        qid = q["id"]
+        if qid in response_map:
+            opt_val = abs(hash(str(response_map[qid]))) % 1000 / 1000.0
+            features.append(opt_val)
         else:
-            # User didn't answer this question
-            features.append(-1.0)  # Special value to indicate missing
-    
+            features.append(-1.0)              # missing answer marker
+
     return np.array(features)
 
 

@@ -11,6 +11,7 @@ import Inbox from "./Inbox";
 import Notifications from "./Notifications";
 import ResidenceHall from "./ResidenceHall";
 import AddNewUsers from "./users/AddNewUsers";
+import Chat from '../chat/Chat'
 
 const Admin = () => {
   const userRole = useSelector((state) => state.auth.role);
@@ -50,7 +51,7 @@ const Admin = () => {
             <Route path="/admin_rooms" element={<Rooms />} />
             <Route path="/admin_residence_halls" element={<ResidenceHall />} />
             <Route path="/admin_events" element={<Events />} />
-            <Route path="/admin_inbox" element={<Inbox />} />
+            <Route path="/admin_chat" element={<Chat/>} /> 
             <Route path="/admin_notifications" element={<Notifications />} />
           </Routes>
         </Box>
