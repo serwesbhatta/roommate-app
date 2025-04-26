@@ -17,9 +17,9 @@ const QuestionnairePage = ({
     onSubmit 
   }) => {
   // If  no questions, bail out gracefully.
-  if (!questions.length) {
-    return <Typography>Loading questions…</Typography>;
-  }
+  // if (!questions.length) {
+  //   return <Typography>Loading questions…</Typography>;
+  // }
 
   // Protect against out-of-range indexes
   const step = Math.min(Math.max(currentStep, 0), questions.length - 1);

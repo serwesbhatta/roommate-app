@@ -172,6 +172,7 @@ const UserHome = () => {
     );
   }
 
+  console.log("questions",questions)
   return (
     <Container>
       {isSubmitting ? (
@@ -180,12 +181,12 @@ const UserHome = () => {
         </Box>
       ) : !submitted ? (
         <QuestionnairePage 
-          currentQuestion={currentQuestion}
-          step={step}
+          questions={questions}
+          currentStep={step}
           totalSteps={questions.length}
           answers={answers}
           selectedMajor={selectedMajor}
-          onCheckboxChange={handleCheckboxChange}
+          onAnswerChange={handleCheckboxChange}
           onSelectChange={handleSelectChange}
           onNext={handleNext}
           onPrevious={handlePrevious}
